@@ -3,6 +3,10 @@ import LayoutDefault from "../layout/LayoutDefault";
 import Home from '../pages/Home';
 import Error from '../pages/Error';
 import UsersPage from "../pages/UserPage";
+import Dashboard from "../pages/admin/dashboard";
+import San from "../pages/admin/San";
+import Quyen from "../pages/admin/Quyen";
+import LayoutAdmin from "../pages/admin/layoutAdmin";
 
 export const router = createBrowserRouter([
 	{
@@ -13,18 +17,19 @@ export const router = createBrowserRouter([
 			{ index: true, element: <Home /> }
 		]
 	},
-
-	// {
-	// 	path: "/login",
-	// 	element: <Login />, // Route login, hiển thị Login
-	// },
-	// {
-	// 	path: "/register",
-	// 	element: <Register />, // Route register, hiển thị Register
-	// },
 	{
 		path: "/my_profile",
 		element: <UsersPage />, // Route register, hiển thị Register
-	}
-	
+	},
+	{
+		path: "/admin",
+		element: <LayoutAdmin></LayoutAdmin>, // Route register, hiển thị Register
+		errorElement: <Error></Error>,
+		children: [
+			{ index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
+			{ path: "dashboard", element: <Dashboard /> }, // Route con của admin
+			{ path: "quyen", element: <Quyen /> },         // Route con của admin
+			{ path: "san", element: <San /> }              // Route con của admin
+		]
+	},
 ]);
