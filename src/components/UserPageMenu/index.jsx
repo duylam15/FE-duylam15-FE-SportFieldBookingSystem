@@ -1,7 +1,7 @@
 import React from "react";
 import "./UserPageMenu.scss";
 import HumanIcon from "./icon/HumanIcon";
-import PlaneIcon from "./icon/PlaneIcon";
+import { FaSocks } from "react-icons/fa6";
 
 const UserPageMenu = () => {
   return (
@@ -19,7 +19,7 @@ const UserPageMenu = () => {
         </div>
         <div className="user-menu__item">
           <div className="user-menu__item-icon">
-            <PlaneIcon />
+            <FaSocks />
           </div>
           <span className="user-menu__item-title">Hoạt động gần đây</span>
         </div>

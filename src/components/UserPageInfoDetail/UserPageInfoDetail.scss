@@ -126,3 +126,10 @@ background-color: #e3e6e9;
   color: rgb(139, 217, 139);
   background-color: #e3e6e9;
 }
+
+.cursor_point {
+  cursor: pointer;
+}
+.user-info-detail__value label:nth-child(2) {
+  padding-left: 20px;
+}
