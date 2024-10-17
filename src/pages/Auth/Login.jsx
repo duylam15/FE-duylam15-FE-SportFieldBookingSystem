@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom"; // Import Link từ react-router-dom
+import { Link, useNavigate } from "react-router-dom"; // Import Link từ react-router-dom
 import { login } from "../../services/authServices"; // Đường dẫn đến authService
 import "./login.css";
 
@@ -12,15 +12,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // Điều hướng sau khi đăng nhập thành công
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     const result = await login(username, password);
     if (!result) {
-      setShow(true);
+      setShow(true); // Show error message
     } else {
       console.log("Đăng nhập thành công!");
+      navigate("/dashboard"); // Điều hướng đến trang khác sau khi đăng nhập thành công
     }
     setLoading(false);
   };
