@@ -1,0 +1,47 @@
+.fieldList {
+    .container {
+        width: 1128px; // Chiều rộng cố định
+        max-width: calc(100% - 48px);
+        margin: 0 auto;
+        overflow: hidden; // Ngăn không cho nội dung tràn ra ngoài
+    }
+
+    &__inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    &__left {
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        min-width: 200px;
+        margin-top: 80px;
+        &--type {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    &__right {
+        width: calc(
+            100% - 300px
+        ); // Đảm bảo phần danh sách sân không vượt quá container
+        padding: 0 16px; // Thêm padding để tạo khoảng cách từ bên trái và bên phải
+        &--heading {
+            text-align: center;
+        }
+        .ant-card {
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+        }
+        .pagination-container {
+            display: flex;
+            justify-content: flex-end; // Đặt Pagination bên phải
+            margin-top: 16px; // Thêm khoảng cách phía trên nếu cần
+        }
+    }
+}
