@@ -1,10 +1,15 @@
 // App.jsx
-import React from 'react';
-import UsersPage from './pages/UserPage';
-import { RouterProvider } from 'react-router-dom';
+import React, { useState } from 'react';
 import { router } from './routes';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 function App() {
+
   return (
     <div className="App">
       <RouterProvider router={router} />
