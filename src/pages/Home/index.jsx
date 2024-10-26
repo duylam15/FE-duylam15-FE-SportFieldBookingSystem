@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Button, Container, Row, Col, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./home.css";
 import BackgroundImage from "../../assets/images/background.jpg";
-import Logo from "../../assets/images/logo.png";
 
 const Home = () => {
 	const [fieldTypes, setFieldTypes] = useState([]); // Danh sách loại sân
@@ -31,32 +30,11 @@ const Home = () => {
 		console.log("Loại sân:", selectedFieldType, "Tên sân:", fieldName, "Khu vực:", region);
 	};
 
+	const navigate = useNavigate()
 	return (
 		<div>
 			{/* Navbar */}
-			<Navbar bg="light" expand="lg" sticky="top">
-				<Container>
-					<Navbar.Brand href="#home">
-						<img src={Logo} alt="logo" width="50" height="50" />
-					</Navbar.Brand>
-					<Navbar.Toggle aria-controls="basic-navbar-nav" />
-					<Navbar.Collapse id="basic-navbar-nav">
-						<Nav className="me-auto">
-							<Nav.Link href="#home">Home</Nav.Link>
-							<Nav.Link href="#features">Features</Nav.Link>
-							<Nav.Link href="#pricing">Pricing</Nav.Link>
-						</Nav>
-						<Link to="/login">
-							<Button variant="outline-primary" className="me-2">
-								Đăng nhập
-							</Button>
-						</Link>
-						<Link to="/register">
-							<Button variant="primary">Đăng ký</Button>
-						</Link>
-					</Navbar.Collapse>
-				</Container>
-			</Navbar>
+		
 
 			{/* Main Content */}
 			<div className="home__content-wrapper">
