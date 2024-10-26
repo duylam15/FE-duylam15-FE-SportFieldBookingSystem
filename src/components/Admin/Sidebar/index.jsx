@@ -8,11 +8,13 @@ const Sidebar = () => {
   return (
     <>
       <nav className="col-md-3 col-lg-2 d-md-block sidebar">
-        <img
-          src="https://www.bambooairways.com/o/wpbav-home-theme/css/assets/logo.png"
+       <div className="block_logo">
+       <img
+          src="/src/assets/images/logo.png"
           alt=""
           className="logo"
         />
+       </div>
         <div className="position-sticky">
           <div className="nav flex-column">
           <Link
@@ -20,7 +22,7 @@ const Sidebar = () => {
               to="/admin/dashboard"
             >
               <div className={`nav-item row ${location.pathname === "/admin/dashboard" ? "active" : ""}`}>
-                <MdSpaceDashboard />
+                {/* <MdSpaceDashboard /> */}
                 Dashboard
               </div>
             </Link>
@@ -29,7 +31,7 @@ const Sidebar = () => {
               to="/admin/san"
             >
               <div className={`nav-item row ${location.pathname === "/admin/san" ? "active" : ""}`}>
-                <GiSoccerField />
+                {/* <GiSoccerField /> */}
                 Sân
               </div>
             </Link>
@@ -38,7 +40,7 @@ const Sidebar = () => {
               to="/admin/quyen"
             >
               <div className={`nav-item row ${location.pathname === "/admin/quyen" ? "active" : ""}`}>
-                <GiSoccerField />
+                {/* <GiSoccerField /> */}
                 Nhóm quyền
               </div>
             </Link>

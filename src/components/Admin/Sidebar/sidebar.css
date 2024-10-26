@@ -1,3 +1,4 @@
+
 .sidebar {
   width: 270px;
   background-color: #fff; /* Màu nền sáng */
@@ -7,12 +8,15 @@
   overflow-y: auto;
 }
 
-.sidebar .nav-item {
-  margin-bottom: 15px;
+.block_logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .logo {
   margin-bottom: 25px;
+  width: 70px;
+  height: 70px;
 }
 .nav-item {
   color: #333;
