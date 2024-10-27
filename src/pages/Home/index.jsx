@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../services/authServices"; // Import the logout function from your service
+import { refreshToken } from "../../services/authServices";
 import "./home.css";
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
-
+import { getUsernameFromToken } from "../../utils/jwtHelper";
 const Home = () => {
 	const [fieldTypes, setFieldTypes] = useState([]); // Danh sách loại sân
 	const [selectedFieldType, setSelectedFieldType] = useState("");
@@ -13,14 +14,25 @@ const Home = () => {
 	const [region, setRegion] = useState("");
 	const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
 	const navigate = useNavigate();
+	const [username, setUsername] = useState(null);
+	useEffect(() => {
+		// Giả sử access token được lưu trong localStorage
+		const token = localStorage.getItem('accessToken');
+	
+		// Lấy ra username từ token
+		const usernameFromToken = getUsernameFromToken(token);
+		
+		// Cập nhật state với username
+		setUsername(usernameFromToken);
+	  }, []);
 
 	// Fetch danh sách loại sân từ API
 	useEffect(() => {
 		const fetchFieldTypes = async () => {
 			try {
-				const response = await fetch("http://localhost:8080/getAllTypeField"); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
+				const response = await fetch("http://localhost:8080/api/fieldType/getAll"); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
 				const data = await response.json();
-				setFieldTypes(data);
+				setFieldTypes(data.data);
 			} catch (error) {
 				console.error("Error fetching field types:", error);
 			}
@@ -45,17 +57,26 @@ const Home = () => {
 
 	// Handle logout logic
 	const handleLogout = async () => {
-		const token = localStorage.getItem("accessToken");
-		if (token) {
-			const result = await logout(token); // Call logout function from service
-			if (result) {
-				setIsLoggedIn(false); // Update UI state
-				navigate("/login"); // Redirect to login page after logout
-			} else {
-				console.error("Đăng xuất thất bại.");
-			}
+		// Refresh access token trước
+		const refreshedToken = await refreshToken();
+	  
+		if (refreshedToken) {
+		  const result = await logout(); // Gọi logout mà không cần truyền token (đã lưu trong localStorage)
+	  
+		  if (result) {
+			setIsLoggedIn(false); // Cập nhật UI state
+			navigate("/"); // Điều hướng đến trang chủ (hoặc trang login)
+		  } else {
+			console.error("Đăng xuất thất bại.");
+		  }
+		} else {
+		  console.error("Làm mới token thất bại.");
+		  alert("Đã hết phiên đăng nhập, vui lòng đăng nhập lại");
+		  localStorage.removeItem('accessToken');
+		  window.location.href='/login';
 		}
-	};
+	  };
+	  
 
 	return (
 		<div>
@@ -74,9 +95,16 @@ const Home = () => {
 						</Nav>
 						{/* Conditional rendering based on login status */}
 						{isLoggedIn ? (
+							<div style={{ display: 'flex', alignItems: 'center' }}>
+							{username ? (
+							  <p style={{ marginRight: '10px', marginBottom: '0px' }}>Xin chào {username} !</p>
+							) : (
+							  <p></p>
+							)}
 							<Button variant="outline-danger" onClick={handleLogout}>
-								Đăng xuất
+							  Đăng xuất
 							</Button>
+						  </div>
 						) : (
 							<>
 								<Link to="/login">
