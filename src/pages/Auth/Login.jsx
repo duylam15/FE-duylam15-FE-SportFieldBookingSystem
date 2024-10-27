@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom"; // Import Link từ react-router-dom
-import { login } from "../../services/authServices"; // Đường dẫn đến authService
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../services/authServices";
 import "./login.css";
 
 import BackgroundImage from "../../assets/images/background.jpg";
@@ -12,21 +12,20 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+
     const result = await login(username, password);
     if (!result) {
-      setShow(true);
+      setShow(true); // Show error message if login fails
     } else {
       console.log("Đăng nhập thành công!");
+      navigate("/home"); // Navigate to the home page after successful login
     }
     setLoading(false);
-  };
-
-  const handlePassword = () => {
-    console.log("Forgot password clicked");
   };
 
   return (
@@ -34,12 +33,9 @@ const Login = () => {
       className="sign-in__wrapper"
       style={{ backgroundImage: `url(${BackgroundImage})` }}
     >
-      {/* Overlay */}
       <div className="sign-in__backdrop"></div>
 
-      {/* Form */}
       <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
-        {/* Header */}
         <img
           className="img-thumbnail mx-auto d-block mb-2"
           src={Logo}
@@ -47,7 +43,6 @@ const Login = () => {
         />
         <div className="h4 mb-2 text-center">Đăng nhập</div>
 
-        {/* Alert */}
         {show ? (
           <Alert
             className="mb-2"
@@ -59,7 +54,6 @@ const Login = () => {
           </Alert>
         ) : null}
 
-        {/* Username */}
         <Form.Group className="mb-2" controlId="username">
           <Form.Label>Tên đăng nhập</Form.Label>
           <Form.Control
@@ -71,7 +65,6 @@ const Login = () => {
           />
         </Form.Group>
 
-        {/* Password */}
         <Form.Group className="mb-2" controlId="password">
           <Form.Label>Mật khẩu</Form.Label>
           <Form.Control
@@ -83,12 +76,10 @@ const Login = () => {
           />
         </Form.Group>
 
-        {/* Remember Me */}
         <Form.Group className="mb-2" controlId="checkbox">
           <Form.Check type="checkbox" label="Nhớ tài khoản" />
         </Form.Group>
 
-        {/* Submit Button */}
         {!loading ? (
           <Button className="w-100" variant="primary" type="submit">
             Đăng nhập
@@ -99,25 +90,18 @@ const Login = () => {
           </Button>
         )}
 
-        {/* Forgot Password */}
         <div className="d-grid justify-content-end mt-2">
-          <Button
-            className="text-muted px-0"
-            variant="link"
-            onClick={handlePassword}
-          >
+          <Button className="text-muted px-0" variant="link">
             Quên mật khẩu?
           </Button>
         </div>
 
-        {/* Link to Register */}
         <div className="text-center mt-2">
           <span>Chưa có tài khoản? </span>
-          <Link to="/register">Đăng ký</Link> {/* Thêm link đến trang đăng ký */}
+          <Link to="/register">Đăng ký</Link>
         </div>
       </Form>
 
-      {/* Footer */}
       <div className="w-100 mb-2 position-absolute bottom-0 start-50 translate-middle-x text-white text-center">
         Made by Tuan Kiet | &copy;2024
       </div>

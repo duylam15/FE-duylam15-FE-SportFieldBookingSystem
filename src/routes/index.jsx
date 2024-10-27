@@ -9,6 +9,8 @@ import Dashboard from "../pages/admin/dashboard";
 import San from "../pages/admin/San";
 import Quyen from "../pages/admin/Quyen";
 import LayoutAdmin from "../pages/admin/layoutAdmin";
+import Login from "../pages/Auth/Login";
+import Register from "../pages/Auth/Register";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +28,18 @@ export const router = createBrowserRouter([
         element: <FieldDetails />
       }
     ]
+  },
+  {
+    path: "/home",
+    element: <Home />
+  },
+  {
+    path: "/login",
+    element: <Login />, // Route register, hiển thị Register
+  },
+  {
+    path: "/register",
+    element: <Register />, // Route register, hiển thị Register
   },
   {
     path: "/my_profile",
