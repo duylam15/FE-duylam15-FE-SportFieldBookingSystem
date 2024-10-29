@@ -1,31 +1,48 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../services/authServices";
-import "./login.css";
 import { FaArrowLeft } from "react-icons/fa";
+import { forgotPassword } from "../../services/quenMatKhau_ResetMatKhau";
 
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
+import "./login.css";
 
 const ForgotPassword = () => {
-  const [username, setUsername] = useState("");
-  const [show, setShow] = useState(false);
+  const [email, setEmail] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
+    setShowError(false);
+    setShowSuccess(false);
 
-    const result = await login(username, password);
-    if (!result) {
-      setShow(true); // Show error message if login fails
-    } else {
-      console.log("Đăng nhập thành công!");
-      navigate("/home"); // Navigate to the home page after successful login
+    try {
+      const result = await forgotPassword({ email });
+      if (result.status === 200) {
+        setShowSuccess(true);
+        setErrorMessage("");
+      } else {
+        setShowError(true);
+        setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau.");
+      }
+    } catch (error) {
+        if(error.status == 404) {
+            setShowError(true);
+            setErrorMessage("Không tìm thấy tài khoản với email");
+        }
+        else {
+            setShowError(true);
+            setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau");
+        }
+   
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -42,27 +59,38 @@ const ForgotPassword = () => {
           alt="logo"
         />
         <div className="h4 mb-2 text-center title">Quên mật khẩu
-           <Link to="/login"><div className="block_icon"><FaArrowLeft /></div></Link>
+          <Link to="/login"><div className="block_icon"><FaArrowLeft /></div></Link>
         </div>
 
-        {show ? (
+        {showError && (
           <Alert
             className="mb-2"
             variant="danger"
-            onClose={() => setShow(false)}
+            onClose={() => setShowError(false)}
             dismissible
           >
-            Sai tên đăng nhập hoặc mật khẩu.
+            {errorMessage}
           </Alert>
-        ) : null}
+        )}
+        
+        {showSuccess && (
+          <Alert
+            className="mb-2"
+            variant="success"
+            onClose={() => setShowSuccess(false)}
+            dismissible
+          >
+            Email khôi phục mật khẩu đã được gửi thành công!
+          </Alert>
+        )}
 
-        <Form.Group className="mb-2" controlId="username">
+        <Form.Group className="mb-2" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
-            type="text"
-            value={username}
+            type="email"
+            value={email}
             placeholder="Nhập email của bạn"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </Form.Group>
