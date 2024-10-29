@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../services/authServices";
 import "./login.css";
+import { FaArrowLeft } from "react-icons/fa";
+
 
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
@@ -80,7 +82,10 @@ const Register = () => {
           src={Logo}
           alt="logo"
         />
-        <div className="h4 mb-2 text-center">Đăng ký</div>
+        <div className="h4 mb-2 text-center title">
+          Đăng ký
+          <Link to="/login"><div className="block_icon"><FaArrowLeft /></div></Link>
+        </div>
 
         {show ? (
           <Alert

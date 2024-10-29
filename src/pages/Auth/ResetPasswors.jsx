@@ -6,8 +6,9 @@ import "./login.css";
 
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
+import { FaArrowLeft } from "react-icons/fa";
 
-const Login = () => {
+const ResetPassword = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
@@ -41,7 +42,10 @@ const Login = () => {
           src={Logo}
           alt="logo"
         />
-        <div className="h4 mb-2 text-center">Đăng nhập</div>
+        <div className="h4 mb-2 text-center title">
+            Tạo mật khẩu mới
+            <Link to="/login"><div className="block_icon"><FaArrowLeft /></div></Link>
+        </div>
 
         {show ? (
           <Alert
@@ -55,54 +59,39 @@ const Login = () => {
         ) : null}
 
         <Form.Group className="mb-2" controlId="username">
-          <Form.Label>Tên đăng nhập</Form.Label>
+          <Form.Label>Mật khẩu</Form.Label>
           <Form.Control
-            type="text"
+            type="password"
             value={username}
-            placeholder="Tên đăng nhập"
+            placeholder="Nhập mật khẩu"
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </Form.Group>
 
         <Form.Group className="mb-2" controlId="password">
-          <Form.Label>Mật khẩu</Form.Label>
+          <Form.Label>Mật khẩu </Form.Label>
           <Form.Control
             type="password"
             value={password}
-            placeholder="Mật khẩu"
+            placeholder="Nhập lại mật khẩu"
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </Form.Group>
 
-        <Form.Group className="mb-2" controlId="checkbox">
-          <Form.Check type="checkbox" label="Nhớ tài khoản" />
-        </Form.Group>
+        <div className="block_distance"></div>
 
         {!loading ? (
           <Button className="w-100" variant="primary" type="submit">
-            Đăng nhập
+            Gửi
           </Button>
         ) : (
           <Button className="w-100" variant="primary" disabled>
-            Đang đăng nhập...
+            Đang gửi...
           </Button>
         )}
-
-        <div className="d-grid justify-content-end mt-2">
-          <Link to="/forgot_password">
-          <Button className="text-muted px-0" variant="link">
-            Quên mật khẩu?
-          </Button>
-          </Link>
-          
-        </div>
-
-        <div className="text-center mt-2">
-          <span>Chưa có tài khoản? </span>
-          <Link to="/register">Đăng ký</Link>
-        </div>
+        
       </Form>
 
       <div className="w-100 mb-2 position-absolute bottom-0 start-50 translate-middle-x text-white text-center">
@@ -112,4 +101,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

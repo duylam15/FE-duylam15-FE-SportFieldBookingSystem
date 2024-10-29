@@ -11,6 +11,8 @@ import Quyen from "../pages/admin/Quyen";
 import LayoutAdmin from "../pages/admin/layoutAdmin";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ResetPassword from "../pages/Auth/ResetPasswors";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +42,14 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />, // Route register, hiển thị Register
+  },
+  {
+    path: "/forgot_password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset_password",
+    element: <ResetPassword />,
   },
   {
     path: "/my_profile",

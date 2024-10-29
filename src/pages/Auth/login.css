@@ -43,4 +43,15 @@
       transform: translate(0, 0);
     }
   }
-  
+.block_distance {
+  padding: 10px;
+}
+.title {
+  position: relative;
+}
+.block_icon {
+  cursor: pointer;
+  top: -63px;
+  left: -4px;
+  position: absolute;
+}
