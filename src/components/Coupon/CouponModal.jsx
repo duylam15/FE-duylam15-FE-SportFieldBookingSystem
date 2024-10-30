@@ -30,9 +30,9 @@ const CouponModal = ({ show, handleClose, formValues, setFormValues, onSubmit, i
                         <Form.Label>Discount</Form.Label>
                         <Form.Control
                             type="number"
-                            name="discount"
+                            name="discountValue"
                             placeholder="Discount"
-                            value={formValues.discount}
+                            value={formValues.discountValue}
                             onChange={handleChange}
                             required
                         />
@@ -44,6 +44,16 @@ const CouponModal = ({ show, handleClose, formValues, setFormValues, onSubmit, i
                             name="user"
                             placeholder="User ID"
                             value={formValues.user}
+                            onChange={handleChange}
+                            required
+                        />
+                    </Form.Group>
+                    <Form.Group>
+                        <Form.Label>Expiration Date</Form.Label>
+                        <Form.Control
+                            type="date"
+                            name="expirationDate"
+                            value={formValues.expirationDate} // Thêm trường này
                             onChange={handleChange}
                             required
                         />

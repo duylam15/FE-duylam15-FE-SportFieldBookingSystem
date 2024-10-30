@@ -19,23 +19,29 @@ const BookingTable = ({ bookings, onEdit, onDelete }) => (
         </tr>
       </thead>
       <tbody>
-        {bookings.map(booking => (
-          <tr key={booking.bookingId}>
-            <td>{booking.bookingId}</td>
-            <td>{booking.bookingCode}</td>
-            <td>{booking.user?.username}</td>
-            <td>{booking.field?.name}</td>
-            <td>{booking.bookingDate}</td>
-            <td>{booking.startTime}</td>
-            <td>{booking.endTime}</td>
-            <td>{booking.status}</td>
-            <td>{booking.totalPrice}</td>
-            <td>
-              <button onClick={() => onEdit(booking)}>Edit</button>
-              <button onClick={() => onDelete(booking.bookingId)}>Delete</button>
-            </td>
+        {bookings && bookings.length > 0 ? (
+          bookings.map(booking => (
+            <tr key={booking.bookingId}>
+              <td>{booking.bookingId}</td>
+              <td>{booking.bookingCode}</td>
+              <td>{booking.user?.username}</td>
+              <td>{booking.field?.name}</td>
+              <td>{booking.bookingDate}</td>
+              <td>{booking.startTime}</td>
+              <td>{booking.endTime}</td>
+              <td>{booking.status}</td>
+              <td>{booking.totalPrice}</td>
+              <td>
+                {/* <button onClick={() => onEdit(booking)}>Edit</button> */}
+                <button onClick={() => onDelete(booking.bookingId)}>Delete</button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="10">No bookings available</td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   </div>

@@ -6,7 +6,7 @@ import CouponModal from './CouponModal';
 
 const Coupon = () => {
     const [coupons, setCoupons] = useState([]);
-    const [formValues, setFormValues] = useState({ code: '', discount: '', user: '' });
+    const [formValues, setFormValues] = useState({ code: '', discount: '', user: '', expirationDate:'' });
     const [isEditing, setIsEditing] = useState(false);
     const [selectedCouponId, setSelectedCouponId] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -25,7 +25,7 @@ const Coupon = () => {
     };
 
     const handleOpenAddModal = () => {
-        setFormValues({ code: '', discount: '', user: '' });
+        setFormValues({ code: '', discountValue: '', user: '' });
         setIsEditing(false);
         setShowModal(true);
     };
