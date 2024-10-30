@@ -91,9 +91,12 @@ const Login = () => {
         )}
 
         <div className="d-grid justify-content-end mt-2">
+          <Link to="/forgot_password">
           <Button className="text-muted px-0" variant="link">
             Quên mật khẩu?
           </Button>
+          </Link>
+          
         </div>
 
         <div className="text-center mt-2">

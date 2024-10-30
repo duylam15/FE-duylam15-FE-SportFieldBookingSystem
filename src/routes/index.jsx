@@ -14,6 +14,8 @@ import Register from "../pages/Auth/Register";
 import Coupon from "../components/Coupon/index"
 import InvoiceTable from '../components/Invoice/index';
 import Booking from "../components/Booking";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ResetPassword from "../pages/Auth/ResetPasswors";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />, // Route register, hiển thị Register
+  },
+  {
+    path: "/forgot_password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset_password",
+    element: <ResetPassword />,
   },
   {
     path: "/my_profile",
