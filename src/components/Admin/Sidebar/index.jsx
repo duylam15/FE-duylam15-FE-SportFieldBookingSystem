@@ -43,6 +43,33 @@ const Sidebar = () => {
                 Nhóm quyền
               </div>
             </Link>
+            <Link
+              className={`nav-link ${location.pathname === "/admin/coupons" ? "active" : ""}`}
+              to="/admin/coupons"
+            >
+              <div className={`nav-item row ${location.pathname === "/admin/coupons" ? "active" : ""}`}>
+                {/* <GiSoccerField /> */}
+                Khuyến mãi
+              </div>
+            </Link>
+            <Link
+              className={`nav-link ${location.pathname === "/admin/invoices" ? "active" : ""}`}
+              to="/admin/invoices"
+            >
+              <div className={`nav-item row ${location.pathname === "/admin/invoices" ? "active" : ""}`}>
+                {/* <GiSoccerField /> */}
+                Hóa đơn
+              </div>
+            </Link>
+            <Link
+              className={`nav-link ${location.pathname === "/admin/bookings" ? "active" : ""}`}
+              to="/admin/bookings"
+            >
+              <div className={`nav-item row ${location.pathname === "/admin/bookings" ? "active" : ""}`}>
+                {/* <GiSoccerField /> */}
+                Booking
+              </div>
+            </Link>
           </div>
         </div>
       </nav>

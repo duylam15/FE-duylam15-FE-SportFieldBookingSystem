@@ -16,6 +16,9 @@ import ResetPassword from "../pages/Auth/ResetPasswors";
 import QuyenListOverall from "../pages/admin/Quyen/QuyenListOverall";
 import QuyenThem from "../pages/admin/Quyen/QuyenThem";
 import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
+import QuyenListOverall from "../pages/admin/Quyen/QuyenListOverall";
+import QuyenThem from "../pages/admin/Quyen/QuyenThem";
+import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
 
 export const router = createBrowserRouter([
   {
@@ -65,6 +68,21 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
       { path: "dashboard", element: <Dashboard /> }, // Route con của admin
+      {
+         path: "quyen",
+         element: <Quyen />,
+         children: [
+           { index: true, element: <QuyenListOverall /> },
+           {
+             path: "add",
+             element: <QuyenThem></QuyenThem>,
+           },
+           {
+             path: "edit/:idQuyen",
+             element: <QuyenEdit></QuyenEdit>,
+           },
+         ],
+      },         // Route con của admin
       {
          path: "quyen",
          element: <Quyen />,
