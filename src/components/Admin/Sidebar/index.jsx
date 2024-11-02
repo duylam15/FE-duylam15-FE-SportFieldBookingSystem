@@ -21,7 +21,7 @@ const Sidebar = () => {
               className={`nav-link ${location.pathname === "/admin/dashboard" ? "active" : ""}`}
               to="/admin/dashboard"
             >
-              <div className={`nav-item row ${location.pathname === "/admin/dashboard" ? "active" : ""}`}>
+              <div className={`nav-item ${location.pathname === "/admin/dashboard" ? "active" : ""}`}>
                 {/* <MdSpaceDashboard /> */}
                 Dashboard
               </div>
@@ -30,7 +30,7 @@ const Sidebar = () => {
               className={`nav-link ${location.pathname === "/admin/san" ? "active" : ""}`}
               to="/admin/san"
             >
-              <div className={`nav-item row ${location.pathname === "/admin/san" ? "active" : ""}`}>
+              <div className={`nav-item ${location.pathname === "/admin/san" ? "active" : ""}`}>
                 {/* <GiSoccerField /> */}
                 Sân
               </div>
@@ -39,8 +39,7 @@ const Sidebar = () => {
               className={`nav-link ${location.pathname === "/admin/quyen" ? "active" : ""}`}
               to="/admin/quyen"
             >
-              <div className={`nav-item row ${location.pathname === "/admin/quyen" ? "active" : ""}`}>
-                {/* <GiSoccerField /> */}
+              <div className={`nav-item ${location.pathname === "/admin/quyen" ? "active" : ""}`}>
                 Nhóm quyền
               </div>
             </Link>

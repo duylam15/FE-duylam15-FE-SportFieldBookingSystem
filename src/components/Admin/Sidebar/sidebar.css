@@ -1,11 +1,13 @@
-
 .sidebar {
-  width: 270px;
+  width: 17%;
   background-color: #fff; /* Màu nền sáng */
   height: 100vh; /* Chiều cao full màn hình */
   padding: 20px;
   border-right: 1px solid #ddd; /* Đường viền ngăn cách */
   overflow-y: auto;
+  position: fixed;
+  top: 0;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 25px 25px;
 }
 
 .block_logo {
@@ -25,7 +27,7 @@
   align-items: center;
   gap: 14px;
   font-size: 20px;
-  padding: 14px 25px;
+  padding: 10px 25px;
   cursor: pointer;
 }
 .nav-item.active {
