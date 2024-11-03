@@ -16,9 +16,6 @@ import ResetPassword from "../pages/Auth/ResetPasswors";
 import QuyenListOverall from "../pages/admin/Quyen/QuyenListOverall";
 import QuyenThem from "../pages/admin/Quyen/QuyenThem";
 import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
-import QuyenListOverall from "../pages/admin/Quyen/QuyenListOverall";
-import QuyenThem from "../pages/admin/Quyen/QuyenThem";
-import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
 
 export const router = createBrowserRouter([
   {
