@@ -16,6 +16,8 @@ import ResetPassword from "../pages/Auth/ResetPasswors";
 import QuyenListOverall from "../pages/admin/Quyen/QuyenListOverall";
 import QuyenThem from "../pages/admin/Quyen/QuyenThem";
 import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
+import BookingPage from "../pages/BookingPage";
+import OrderPage from "../pages/fieldOrderPage";
 
 export const router = createBrowserRouter([
   {
@@ -97,5 +99,13 @@ export const router = createBrowserRouter([
       },         // Route con của admin
       { path: "san", element: <San /> }              // Route con của admin
     ]
+  },
+  {
+    path: "/calendar/:fieldId",
+    element: <BookingPage />, 
+  },
+  {
+    path: "/orderpage",
+    element: <OrderPage />, 
   },
 ]); 
