@@ -2,7 +2,7 @@ import React from "react";
 import "./quyen.css";
 import SearchBtn from "../../../components/Admin/ColorButtons/SearchBtn";
 import EditBtn from "../../../components/Admin/ColorButtons/EditBtn";
-import DeleteBtn from "../../../components/Admin/ColorButtons/DeleteBtn";
+import DeleteBtn from "../../../components/Admin/ColorButtons/deleteBtn";
 
 const QuyenList = ({
   nhomQuyen,

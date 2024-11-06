@@ -18,6 +18,10 @@ import QuyenThem from "../pages/admin/Quyen/QuyenThem";
 import QuyenEdit from "../pages/admin/Quyen/QuyenEdit";
 import BookingPage from "../pages/BookingPage";
 import OrderPage from "../pages/fieldOrderPage";
+import NguoiDung from "../pages/admin/nguoiDung";
+import NguoiDungAdd from "../pages/admin/nguoiDung/NguoiDungAdd";
+import NguoiDungEdit from "../pages/admin/nguoiDung/NguoiDungEdit";
+import NguoiDungListOverral from "../pages/admin/nguoiDung/NguoiDungListOverral";
 
 export const router = createBrowserRouter([
   {
@@ -83,17 +87,17 @@ export const router = createBrowserRouter([
          ],
       },         // Route con của admin
       {
-         path: "quyen",
-         element: <Quyen />,
+         path: "nguoidung",
+         element: <NguoiDung></NguoiDung>,
          children: [
-           { index: true, element: <QuyenListOverall /> },
+           { index: true, element: <NguoiDungListOverral /> },
            {
              path: "add",
-             element: <QuyenThem></QuyenThem>,
+             element: <NguoiDungAdd></NguoiDungAdd>,
            },
            {
-             path: "edit/:idQuyen",
-             element: <QuyenEdit></QuyenEdit>,
+             path: "edit/:idNguoiDung",
+             element: <NguoiDungEdit></NguoiDungEdit>,
            },
          ],
       },         // Route con của admin

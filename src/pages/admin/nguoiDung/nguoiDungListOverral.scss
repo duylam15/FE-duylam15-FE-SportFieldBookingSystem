@@ -1,0 +1,29 @@
+.nguoiDungListOverral {
+    .nutThem {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    .timkiem {
+        display: flex;
+        justify-content: space-evenly;
+        padding-bottom: 10px;
+    }
+    .timkiem label {
+        font-weight: 600;
+        padding-bottom: 5px;
+    }
+    a {
+        text-decoration: none !important;
+    }
+    .title {
+        font-size: 2em;
+        font-weight: bold;
+        text-align: center;
+        margin: 20px;
+    }
+    .center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

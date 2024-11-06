@@ -7,7 +7,7 @@ import "./quyen.css";
 import { searchQuyen } from "../../../services/quyenService";
 import IconLabelButtons from "../../../components/Admin/ColorButtons";
 
-const QuyenListOverall = ({ size = 2 }) => {
+const QuyenListOverall = ({ size = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");

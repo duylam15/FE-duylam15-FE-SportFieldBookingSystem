@@ -9,6 +9,9 @@
   top: 0;
   box-shadow: rgba(0, 0, 0, 0.3) 0px 25px 25px;
 }
+.nav-link {
+  width: -webkit-fill-available;
+}
 
 .block_logo {
   display: flex;
