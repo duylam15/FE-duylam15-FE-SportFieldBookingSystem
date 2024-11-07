@@ -1,0 +1,31 @@
+.edit_page {
+    .label {
+        font-weight: 500;
+        font-size: 17px;
+    }
+    
+    .form_edit .block_input {
+        display: flex;
+        gap: 10px;
+        padding-top: 10px;
+    }
+    .block_input {
+        width: 500px;
+    }
+    .form_edit {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    .w-300 {
+        width: 300px;
+    }
+    .btn_row_last {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 60px;
+        padding-top: 30px;
+    }
+}

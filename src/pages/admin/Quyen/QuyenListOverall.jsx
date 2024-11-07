@@ -24,7 +24,7 @@ const QuyenListOverall = ({ size = 10 }) => {
       if (result && result.data) {
         setNhomQuyen(result.data.data.content);
         setTotalPages(result.data.data.totalPages);
-        
+
         // Check if currentPage exceeds total pages and adjust if necessary
         if (page > result.data.data.totalPages) {
           setCurrentPage(result.data.data.totalPages);
@@ -81,16 +81,18 @@ const QuyenListOverall = ({ size = 10 }) => {
         onBlock={handleBlock}
       />
 
-      {/* Pagination Component */}
-      <Stack spacing={2}>
-        <Pagination
-          count={totalPages}
-          page={currentPage}
-          variant="outlined"
-          shape="rounded"
-          onChange={(event, value) => setCurrentPage(value)}
-        />
-      </Stack>
+      <div className="center_pagination">
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            variant="outlined"
+            shape="rounded"
+            onChange={(event, value) => setCurrentPage(value)}
+          />
+        </Stack>
+      </div>
+
     </>
   );
 };
