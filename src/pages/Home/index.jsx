@@ -32,7 +32,8 @@ const Home = () => {
 			try {
 				const response = await fetch("http://localhost:8080/api/fieldType/getAll"); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
 				const data = await response.json();
-				setFieldTypes(data.data);
+				console.log(data)
+				setFieldTypes(data);
 			} catch (error) {
 				console.error("Error fetching field types:", error);
 			}
@@ -143,8 +144,8 @@ const Home = () => {
 										>
 											<option value="">Chọn loại sân</option>
 											{fieldTypes.map((fieldType, index) => (
-												<option key={index} value={fieldType.id}>
-													{fieldType.name}
+												<option key={index} value={fieldType.fieldTypeId}>
+													{fieldType.fieldTypeName}
 												</option>
 											))}
 										</Form.Select>
