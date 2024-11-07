@@ -7,94 +7,128 @@ import Stack from "@mui/material/Stack";
 import './nguoiDungListOverral.scss'
 import IconLabelButtons from '../../../components/Admin/ColorButtons';
 import { UserOutlined } from '@ant-design/icons';
-import { Input } from 'antd';
-import { Select } from 'antd';
+import { Input, Select } from 'antd';
+import { getAllQuyen } from '../../../services/quyenService';
+
+const { Option } = Select;
 
 const NguoiDungListOverral = ({ size = 10 }) => {
     const [currentPage, setCurrentPage] = useState(1); // State for current page
     const [searchUserName, setSearchUserName] = useState("");
-    const [searchPhone, setSearchPhone] = useState("")
+    const [searchEmail, setSearchEmail] = useState("")
     const [searchQuyenName, setSearchQuyenName] = useState("")
     const [nguoiDung, setNguoiDung] = useState([]);
-    const [loading, setLoading] = useState("");
+    const [loading, setLoading] = useState(false);
     const [totalPages, setTotalPages] = useState(0); // State for total pages
     const navigate = useNavigate();
+    const [quyen, setQuyen] = useState([]); // Changed to array for storing permissions list
 
-    const fetchNguoiDung = async (page, size, searchUserName, searchPhone, searchQuyenName) => {
+    const fetchNguoiDung = async (page, size, username, email, roleName) => {
         try {
-
-            const result = await searchNguoiDung(page - 1, size, searchUserName, searchPhone, searchQuyenName)
+            setLoading(true);
+            const result = await searchNguoiDung(page - 1, size, username, email, roleName);
             if (result && result.data.data) {
                 setNguoiDung(result.data.data.content);
-                setTotalPages(result.data.data.totalPages); // Update total pages based on API response
+                setTotalPages(result.data.data.totalPages);
             } else {
                 setNguoiDung([]);
                 setTotalPages(0);
             }
         } catch (error) {
             console.error("Error fetching nguoi dung:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Fetch data when currentPage changes or when searchName changes
     useEffect(() => {
-        setCurrentPage(1); // Reset to page 1 when searchName or selectedDates change
-        fetchNguoiDung(1, size, searchUserName, searchPhone, searchQuyenName);
-    }, [searchUserName, searchPhone, searchQuyenName]);
+        const fetchQuyen = async () => {
+            try {
+                const allQuyen = await getAllQuyen(0, 100);
+                if (allQuyen && allQuyen.data.data) {
+                    setQuyen(allQuyen.data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching quyen:", error);
+            }
+        };
+        fetchQuyen();
+    }, []);
 
     useEffect(() => {
-        fetchNguoiDung(currentPage, size, searchUserName, searchPhone, searchQuyenName);
+        setCurrentPage(1); // Reset to page 1 when search filters change
+        fetchNguoiDung(1, size, searchUserName, searchEmail, searchQuyenName);
+    }, [searchUserName, searchEmail, searchQuyenName]);
+
+    useEffect(() => {
+        fetchNguoiDung(currentPage, size, searchUserName, searchEmail, searchQuyenName);
     }, [currentPage]);
 
-    console.log("Nguoi dung ~ ", nguoiDung)
-
     const handleEdit = (idNguoiDung) => {
-        navigate(`/admin/nguoidung/edit/${idNguoiDung}`); // Điều hướng đến trang sửa
+        navigate(`/admin/nguoidung/edit/${idNguoiDung}`);
     };
+
     return (
         <div className='nguoiDungListOverral'>
             <h1 className='title'>Danh sách người dùng</h1>
             <Link to="add" className='nutThem'>
-                <IconLabelButtons></IconLabelButtons>
+                <IconLabelButtons />
             </Link>
 
             <div className='timkiem'>
                 <div className='block_input'>
-                    <label htmlFor="inputMa">Mã</label>
-                    <Input placeholder="Nhập mã người dùng" prefix={<UserOutlined />} id='inputMa' />
+                    <label htmlFor="inputTen">User name</label>
+                    <Input
+                        placeholder="Nhập user name người dùng"
+                        prefix={<UserOutlined />}
+                        id='inputTen'
+                        value={searchUserName}
+                        onChange={(e) => setSearchUserName(e.target.value)}
+                    />
                 </div>
                 <div className='block_input'>
-                    <label htmlFor="inputTen">User name</label>
-                    <Input placeholder="Nhập user name người dùng" prefix={<UserOutlined />} id='inputTen' />
-                </div >
+                    <label htmlFor="inputEmail">Email</label>
+                    <Input
+                        placeholder="Nhập email người dùng"
+                        prefix={<UserOutlined />}
+                        id='inputEmail'
+                        value={searchEmail}
+                        onChange={(e) => setSearchEmail(e.target.value)}
+                    />
+                </div>
                 <div className='block_input'>
                     <label>Quyền</label>
                     <div>
                     <Select
                         style={{ width: 200 }}
+                        onChange={(value) => setSearchQuyenName(value)}
+                        value={searchQuyenName}
                     >
-                        <Option value="ACTIVE">Hoạt động</Option>
-                        <Option value="IN_ACTIVE">Không hoạt động</Option>
+                        <Option value="">Chọn quyền</Option>
+                        {quyen.map((e) => (
+                            <Option key={e.tenQuyen} value={e.tenQuyen}>
+                                {e.tenQuyen}
+                            </Option>
+                        ))}
                     </Select>
                     </div>
                 </div>
-
             </div>
-            
+
             <NguoiDungList
                 nguoiDung={nguoiDung}
                 loading={loading}
                 onEdit={handleEdit}
-            ></NguoiDungList>
+            />
 
             <div className="center">
                 <Stack spacing={2}>
                     <Pagination
-                        count={totalPages} // Total number of pages
-                        page={currentPage} // Current page
+                        count={totalPages}
+                        page={currentPage}
                         variant="outlined"
                         shape="rounded"
-                        onChange={(event, value) => setCurrentPage(value)} // Update current page
+                        onChange={(event, value) => setCurrentPage(value)}
                     />
                 </Stack>
             </div>
