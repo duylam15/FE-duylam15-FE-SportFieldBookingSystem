@@ -22,6 +22,9 @@ import NguoiDung from "../pages/admin/nguoiDung";
 import NguoiDungAdd from "../pages/admin/nguoiDung/NguoiDungAdd";
 import NguoiDungEdit from "../pages/admin/nguoiDung/NguoiDungEdit";
 import NguoiDungListOverral from "../pages/admin/nguoiDung/NguoiDungListOverral";
+import Booking from "../components/Booking/index";
+import Coupon from "../components/Coupon/index";
+import Invoice from "../components/Invoice/index";
 
 export const router = createBrowserRouter([
   {
@@ -101,7 +104,10 @@ export const router = createBrowserRouter([
            },
          ],
       },         // Route con của admin
-      { path: "san", element: <San /> }              // Route con của admin
+      { path: "san", element: <San /> },              // Route con của admin
+      { path: "bookings", element: <Booking /> },
+      { path: "coupons", element: <Coupon /> },
+      { path: "invoices", element: <Invoice /> }
     ]
   },
   {
