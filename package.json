@@ -30,7 +30,9 @@
         "react-redux": "8.0.5",
         "react-router-dom": "6.9.0",
         "react-spinners": "0.13.8",
-        "sass": "^1.77.8"
+        "react-toastify": "^10.0.6",
+        "sass": "^1.77.8",
+        "toast": "^0.5.4"
     },
     "devDependencies": {
         "@eslint/js": "^9.9.0",
