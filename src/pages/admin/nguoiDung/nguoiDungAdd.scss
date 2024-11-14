@@ -1,0 +1,28 @@
+.add_nguoiDung {
+    .title {
+        font-size: 2em;
+        font-weight: bold;
+        text-align: center;
+        margin: 20px;
+
+    }
+    .form-them_nguoiDung .flex_form{
+        display: flex;
+        justify-content: space-between;
+    }
+    .form-left, .form_right {
+        width: 500px;
+    }
+    .block_input {
+        margin-top: 10px;
+    }
+    .btn_row_last {
+        margin-top: 30px;
+        width: 90%;
+        justify-content: flex-end;
+    }
+    .error {
+        color: rgb(229, 81, 81);
+        font-style: italic;
+    }
+}

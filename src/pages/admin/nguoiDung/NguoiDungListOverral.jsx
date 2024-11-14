@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import './nguoiDungListOverral.scss'
 import IconLabelButtons from '../../../components/Admin/ColorButtons';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 import { getAllQuyen } from '../../../services/quyenService';
 
@@ -90,7 +90,7 @@ const NguoiDungListOverral = ({ size = 10 }) => {
                     <label htmlFor="inputEmail">Email</label>
                     <Input
                         placeholder="Nhập email người dùng"
-                        prefix={<UserOutlined />}
+                        prefix={<MailOutlined />}
                         id='inputEmail'
                         value={searchEmail}
                         onChange={(e) => setSearchEmail(e.target.value)}

@@ -15,3 +15,7 @@ export const getThongTinNguoiDungById = (userId) => {
 export const capNhatThongTinNguoiDung = (userId, data) => {
     return axios.post(`${REST_API_BASE_URL}/user/update/${userId}`, data)
 }
+
+export const themNguoiDung = (data) => {
+    return axios.post(`${REST_API_BASE_URL}/user/create`, data)
+}
