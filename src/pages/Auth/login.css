@@ -55,3 +55,27 @@
   left: -4px;
   position: absolute;
 }
+.btn_login_google {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background-color:rgb(245, 245, 245);
+  border-radius: 6px;
+  padding: 8px;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 18px;
+  margin-top: 10px;
+  position: relative;
+}
+.btn_login_google .img_google {
+  position: absolute;
+  top: 7px;
+  left: 14px;
+}
+.btn_login_google .text {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

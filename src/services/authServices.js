@@ -1,4 +1,6 @@
 const API_URL = 'http://localhost:8080/auth';
+import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 export const login = async (username, password) => {
   try {
@@ -89,4 +91,43 @@ export const refreshToken = async () => {
     console.error('Làm mới token lỗi:', error);
     return false;
   }
+};
+
+export const useGoogleLoginHandler = () => {
+  const navigate = useNavigate();
+
+  return useGoogleLogin({
+    onSuccess: (credentialResponse) => {
+      const googleAccessToken = credentialResponse?.access_token;
+      if (googleAccessToken) {
+        fetch(`http://localhost:8080/auth/google/${googleAccessToken}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("data Google login:", data);
+            if (data.statusCode === 200) {
+              console.log("Đăng nhập thành công!");
+              localStorage.setItem('accessToken', data.data); // Update token
+              navigate("/home");
+            } else {
+              alert("Login failed: " + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error during Google login:", error);
+            alert("Login error!");
+          });
+      } else {
+        console.error("No Google token received!");
+      }
+    },
+    onError: () => {
+      console.log("Login Failed");
+      alert("Login failed. Please try again.");
+    },
+  });
 };
