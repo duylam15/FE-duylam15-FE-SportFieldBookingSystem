@@ -1,21 +1,14 @@
 const API_URL = 'http://localhost:8080';
-    const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcyODQzNDc2MiwiZXhwIjoxNzI5MDM5NTYyfQ.HyW3mNDUpcn5tCQiR5ddZS7c0aNm3uYx08y8m6e8LfA"
-// Lấy thông tin cá nhân
-export const getMyProfile = async () => {
-	// const token = localStorage.getItem('token');
-	const response = await fetch(`${API_URL}/taikhoan/me`, {
-		method: 'GET',
-		headers: {
-			'Authorization': `Bearer ${token}`,
-			'Content-Type': 'application/json',
-		},
-	});
-	if (!response.ok) {
-		throw new Error('Failed to fetch profile');
-	}
-	return await response.json();
-};
+import axios from "./apiService";
 
+
+export const getMyProfile = (token) => {
+    return axios.get(`${API_URL}/user/me`, {
+		headers: {
+			'Authorization': `Bearer ${token}`
+		}
+	})
+}
 
 // Cập nhật mật khẩu
 export const updatePassword = async (passwordData) => {
