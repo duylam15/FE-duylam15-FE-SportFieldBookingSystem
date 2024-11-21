@@ -130,7 +130,7 @@ export const router = createBrowserRouter([
     element: <FieldFacilityPage />,
   },
   {
-    path: "fields",
+    path: "/fields",
     element: <FieldPage />,
   },
 ]);

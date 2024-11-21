@@ -51,6 +51,7 @@ const FieldOrder = () => {
       fieldId: dataBooking.fieldId, // ID sân
       date: new Date().toISOString().split("T")[0], // Ngày hiện tại (YYYY-MM-DD)
       selectedEvents: dataBooking.selectedEvents.map((event) => ({
+        id: event.id,
         start: new Date(event.start).toLocaleTimeString("en-GB"),
         end: new Date(event.end).toLocaleTimeString("en-GB"),
         totalPrice: event.totalPrice, // Tổng giá tiền
