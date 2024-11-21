@@ -14,6 +14,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [messError, setMessError] = useState('')
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -22,16 +23,19 @@ const Login = () => {
     setLoading(true);
 
     const result = await login(username, password);
-	  const token = localStorage.getItem('accessToken');
-    console.log("TOKEN lya duoc: ", token);
-    const myProfile = await getMyProfile(token)
-    localStorage.setItem('dataNguoiDung', JSON.stringify(myProfile.data.data));
-    console.log("HELLO : ", myProfile);
-    if (!result) {
+    console.log("LOC TÉT LOGIN: ", result);
+    if(result.statusCode == 888) {
       setShow(true); // Show error message if login fails
-    } else {
-      console.log("Đăng nhập thành công!");
+      setMessError("Tài khoản này được đăng ký bằng Google. Vui lòng sử dụng \"Đăng nhập bằng Google\".")
+    }
+    if(result.statusCode == 401) {
+      setShow(true); // Show error message if login fails
+      setMessError("Sai email hoặc mật khẩu")
+    }
+    if(result.statusCode == 200) {
+      setShow(false)
       navigate("/home"); // Navigate to the home page after successful login
+      localStorage.setItem("accessToken", result.data)
     }
     setLoading(false);
   };
@@ -60,7 +64,7 @@ const Login = () => {
             onClose={() => setShow(false)}
             dismissible
           >
-            Sai email hoặc mật khẩu.
+            {messError}
           </Alert>
         ) : null}
 

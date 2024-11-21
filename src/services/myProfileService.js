@@ -1,5 +1,5 @@
 const API_URL = 'http://localhost:8080';
-import axios from "./apiService";
+import axios from "../utils/axiosInstance";
 
 
 export const getMyProfile = (token) => {
@@ -10,16 +10,7 @@ export const getMyProfile = (token) => {
 	})
 }
 
-// Cập nhật mật khẩu
+// Cập nhật mật khẩu, // phai nho duoc mat khau cu
 export const updatePassword = async (passwordData) => {
-	// const token = localStorage.getItem('token');
-	const response = await fetch(`${API_URL}/taikhoan/update_password`, {
-		method: 'PUT',
-		headers: {
-			'Authorization': `Bearer ${token}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(passwordData),
-	});
-	return await response.json();
+	return axios.put(`${API_URL}/user/update_password`, passwordData)
 };

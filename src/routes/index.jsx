@@ -25,6 +25,7 @@ import NguoiDungListOverral from "../pages/admin/nguoiDung/NguoiDungListOverral"
 import Booking from "../components/Booking/index";
 import Coupon from "../components/Coupon/index";
 import Invoice from "../components/Invoice/index";
+import MyProfile from "../pages/admin/myProfile";
 
 export const router = createBrowserRouter([
   {
@@ -73,36 +74,38 @@ export const router = createBrowserRouter([
     errorElement: <Error></Error>,
     children: [
       { index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
-      { path: "dashboard", element: <Dashboard /> }, // Route con của admin
+      { path: "dashboard", element: <Dashboard /> },
       {
-         path: "quyen",
-         element: <Quyen />,
-         children: [
-           { index: true, element: <QuyenListOverall /> },
-           {
-             path: "add",
-             element: <QuyenThem></QuyenThem>,
-           },
-           {
-             path: "edit/:idQuyen",
-             element: <QuyenEdit></QuyenEdit>,
-           },
-         ],
+        path: "my_profile", element: <MyProfile />},
+      {
+        path: "quyen",
+        element: <Quyen />,
+        children: [
+          { index: true, element: <QuyenListOverall /> },
+          {
+            path: "add",
+            element: <QuyenThem></QuyenThem>,
+          },
+          {
+            path: "edit/:idQuyen",
+            element: <QuyenEdit></QuyenEdit>,
+          },
+        ],
       },         // Route con của admin
       {
-         path: "nguoidung",
-         element: <NguoiDung></NguoiDung>,
-         children: [
-           { index: true, element: <NguoiDungListOverral /> },
-           {
-             path: "add",
-             element: <NguoiDungAdd></NguoiDungAdd>,
-           },
-           {
-             path: "edit/:idNguoiDung",
-             element: <NguoiDungEdit></NguoiDungEdit>,
-           },
-         ],
+        path: "nguoidung",
+        element: <NguoiDung></NguoiDung>,
+        children: [
+          { index: true, element: <NguoiDungListOverral /> },
+          {
+            path: "add",
+            element: <NguoiDungAdd></NguoiDungAdd>,
+          },
+          {
+            path: "edit/:idNguoiDung",
+            element: <NguoiDungEdit></NguoiDungEdit>,
+          },
+        ],
       },         // Route con của admin
       { path: "san", element: <San /> },              // Route con của admin
       { path: "bookings", element: <Booking /> },
@@ -112,10 +115,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "/calendar/:fieldId",
-    element: <BookingPage />, 
+    element: <BookingPage />,
   },
   {
     path: "/orderpage",
-    element: <OrderPage />, 
+    element: <OrderPage />,
   },
 ]); 

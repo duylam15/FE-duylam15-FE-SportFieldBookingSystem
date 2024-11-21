@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { message } from "antd";
 import "./UserPageInfoPassword.scss";
-// import { updatePassword } from "../../services/myProfileService";
-// import SuccessToast from "../SuccessToast";
+import { updatePassword } from "../../services/myProfileService";
 
 const UserPageInfoPassword = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -18,9 +18,7 @@ const UserPageInfoPassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [error, setError] = useState("");
 
-  // State quản lý thông báo thành công
-  const [showToast, setShowToast] = useState(false);
-
+  // Toggle visibility for passwords
   const toggleCurrentPasswordVisibility = () => {
     setShowCurrentPassword(!showCurrentPassword);
   };
@@ -74,26 +72,28 @@ const UserPageInfoPassword = () => {
     }
 
     try {
+      let accessTokenWillBeSent = localStorage.getItem("accessToken");
       const response = await updatePassword({
+        accessToken: accessTokenWillBeSent,
         matKhauCu: currentPassword,
         matKhau: newPassword,
         reMatKhau: confirmPassword,
       });
+      console.log("SDFGHJK: ", response)
 
-      if (response?.statusCode === 200) {
+      if (response?.data?.statusCode === 200) {
         // Hiển thị thông báo thành công
-        setShowToast(true);
-      } else if (response?.statusCode === 409) {
-        setErrorMatKhau("Mật khẩu cũ không chính xác");
-        return;
+        message.success("Mật khẩu đã được cập nhật thành công!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
       }
-
-      // Reset password fields
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
     } catch (err) {
-      setError(err.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
+      console.log(err)
+      if (err.status == 409) {
+        setErrorMatKhau("Mật khẩu cũ không chính xác");
+        message.error("Mật khẩu cũ không chính xác. Vui lòng kiểm tra lại!");
+      }
     }
   };
 
@@ -166,7 +166,7 @@ const UserPageInfoPassword = () => {
             {showConfirmPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
           </div>
           {errorReNewMatKhau && (
-            <div className="user-info-password__error">{errorReNewMatkhau}</div>
+            <div className="user-info-password__error">{errorReNewMatKhau}</div>
           )}
         </div>
       </div>
@@ -185,14 +185,6 @@ const UserPageInfoPassword = () => {
         </button>
       </div>
       {error && <div className="user-info-password__error">{error}</div>}
-
-      {/* Thêm SuccessToast ở đây */}
-      {/* <SuccessToast
-        message="Đổi mật khẩu thành công!"
-        show={showToast}
-        onClose={() => setShowToast(false)}
-        duration={3000}
-      /> */}
     </div>
   );
 };

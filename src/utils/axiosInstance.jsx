@@ -9,13 +9,17 @@ const axiosInstance = axios.create({
 // Interceptor cho các request
 axiosInstance.interceptors.request.use(
   config => {
+    console.log('[Request Interceptor] - Original Config:', config);
+
     const token = localStorage.getItem('accessToken'); // Lấy access token từ localStorage
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + token; // Gắn access token vào header
+      console.log('[Request Interceptor] - Access Token Added:', token);
     }
     return config;
   },
   error => {
+    console.error('[Request Interceptor] - Error:', error);
     return Promise.reject(error);
   }
 );
@@ -23,24 +27,32 @@ axiosInstance.interceptors.request.use(
 // Interceptor cho các response
 axiosInstance.interceptors.response.use(
   response => {
+    console.log('[Response Interceptor] - Response:', response);
     return response;
   },
   async error => {
+    console.error('[Response Interceptor] - Error:', error);
+
     const originalRequest = error.config;
-    
-    // Kiểm tra xem lỗi 401 có xảy ra và yêu cầu chưa được retry lần nào
-    if (error.response.status === 401 && !originalRequest._retry) {
+    console.log('[Response Interceptor] - Original Request:', originalRequest);
+
+    if (error.response?.status === 403 && !originalRequest._retry) {
+      console.log('[Response Interceptor] - 403 Error: Attempting to refresh token...');
       originalRequest._retry = true; // Đánh dấu rằng yêu cầu này đã retry một lần
 
       try {
         // Gửi yêu cầu refresh token để lấy token mới
         const res = await axiosInstance.post('/auth/refresh_token');
+        console.log('[Response Interceptor] - Refresh Token Response:', res);
 
         // Lưu lại access token mới vào localStorage
-        localStorage.setItem('accessToken', res.data.data); // res.data.data chứa access token mới
+        const newAccessToken = res.data.data; // res.data.data chứa access token mới
+        localStorage.setItem('accessToken', newAccessToken);
+        console.log('[Response Interceptor] - New Access Token Saved:', newAccessToken);
 
         // Gắn lại access token mới vào header và thực hiện lại yêu cầu ban đầu
-        originalRequest.headers['Authorization'] = 'Bearer ' + res.data.data;
+        originalRequest.headers['Authorization'] = 'Bearer ' + newAccessToken;
+        console.log('[Response Interceptor] - Retrying Original Request with New Token:', originalRequest);
 
         // Thực hiện lại yêu cầu ban đầu với dữ liệu đi kèm (nếu có)
         return axiosInstance({
@@ -49,14 +61,15 @@ axiosInstance.interceptors.response.use(
         });
       } catch (refreshError) {
         // Nếu refresh token cũng thất bại
-        console.error('Refresh token failed:', refreshError);
+        console.error('[Response Interceptor] - Refresh Token Failed:', refreshError);
 
         // Điều hướng người dùng về trang đăng nhập hoặc thực hiện hành động khác
         window.location.href = '/login';
       }
     }
-    
-    // Nếu không phải lỗi 401 hoặc yêu cầu đã retry, trả về lỗi như bình thường
+
+    // Nếu không phải lỗi 403 hoặc yêu cầu đã retry, trả về lỗi như bình thường
+    console.error('[Response Interceptor] - Request Failed, Returning Error:', error);
     return Promise.reject(error);
   }
 );
