@@ -30,7 +30,7 @@ const Home = () => {
 	useEffect(() => {
 		const fetchFieldTypes = async () => {
 			try {
-				const response = await fetch("http://localhost:8080/api/fieldType/getAll"); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
+				const response = await fetch("http://localhost:8080/api/fieldType"); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
 				const data = await response.json();
 				console.log(data)
 				setFieldTypes(data);
