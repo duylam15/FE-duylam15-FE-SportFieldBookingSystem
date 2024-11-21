@@ -14,17 +14,17 @@ const Home = () => {
 	const [region, setRegion] = useState("");
 	const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
 	const navigate = useNavigate();
-	const [username, setUsername] = useState(null);
+	const [email, setEmail] = useState(null);
 	useEffect(() => {
 		// Giả sử access token được lưu trong localStorage
 		const token = localStorage.getItem('accessToken');
-	
+
 		// Lấy ra username từ token
-		const usernameFromToken = getUsernameFromToken(token);
-		
+		const emailFromToken = getUsernameFromToken(token);
+
 		// Cập nhật state với username
-		setUsername(usernameFromToken);
-	  }, []);
+		setEmail(emailFromToken);
+	}, []);
 
 	// Fetch danh sách loại sân từ API
 	useEffect(() => {
@@ -58,26 +58,15 @@ const Home = () => {
 
 	// Handle logout logic
 	const handleLogout = async () => {
-		// Refresh access token trước
-		const refreshedToken = await refreshToken();
-	  
-		if (refreshedToken) {
-		  const result = await logout(); // Gọi logout mà không cần truyền token (đã lưu trong localStorage)
-	  
-		  if (result) {
+		const result = await logout(); // Gọi logout mà không cần truyền token (đã lưu trong localStorage)
+		if (result) {
 			setIsLoggedIn(false); // Cập nhật UI state
 			navigate("/"); // Điều hướng đến trang chủ (hoặc trang login)
-		  } else {
-			console.error("Đăng xuất thất bại.");
-		  }
 		} else {
-		  console.error("Làm mới token thất bại.");
-		  alert("Đã hết phiên đăng nhập, vui lòng đăng nhập lại");
-		  localStorage.removeItem('accessToken');
-		  window.location.href='/login';
+			console.error("Đăng xuất thất bại.");
 		}
-	  };
-	  
+	};
+
 
 	return (
 		<div>
@@ -97,15 +86,15 @@ const Home = () => {
 						{/* Conditional rendering based on login status */}
 						{isLoggedIn ? (
 							<div style={{ display: 'flex', alignItems: 'center' }}>
-							{username ? (
-							  <p style={{ marginRight: '10px', marginBottom: '0px' }}>Xin chào {username} !</p>
-							) : (
-							  <p></p>
-							)}
-							<Button variant="outline-danger" onClick={handleLogout}>
-							  Đăng xuất
-							</Button>
-						  </div>
+								{email ? (
+									<p style={{ marginRight: '10px', marginBottom: '0px' }}>Xin chào {email} !</p>
+								) : (
+									<p></p>
+								)}
+								<Button variant="outline-danger" onClick={handleLogout}>
+									Đăng xuất
+								</Button>
+							</div>
 						) : (
 							<>
 								<Link to="/login">

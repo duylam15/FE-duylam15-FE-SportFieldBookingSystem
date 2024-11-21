@@ -8,6 +8,7 @@ import "./login.css";
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
 import { clientId } from "../../utils/thongTinChung";
+import { getMyProfile } from "../../services/myProfileService";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -21,6 +22,11 @@ const Login = () => {
     setLoading(true);
 
     const result = await login(username, password);
+	  const token = localStorage.getItem('accessToken');
+    console.log("TOKEN lya duoc: ", token);
+    const myProfile = await getMyProfile(token)
+    localStorage.setItem('dataNguoiDung', JSON.stringify(myProfile.data.data));
+    console.log("HELLO : ", myProfile);
     if (!result) {
       setShow(true); // Show error message if login fails
     } else {
@@ -54,7 +60,7 @@ const Login = () => {
             onClose={() => setShow(false)}
             dismissible
           >
-            Sai tên email hoặc mật khẩu.
+            Sai email hoặc mật khẩu.
           </Alert>
         ) : null}
 
