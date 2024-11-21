@@ -14,7 +14,7 @@ const { Option } = Select;
 
 const NguoiDungListOverral = ({ size = 10 }) => {
     const [currentPage, setCurrentPage] = useState(1); // State for current page
-    const [searchUserName, setSearchUserName] = useState("");
+    const [searchPhone, setSearchPhone] = useState("");
     const [searchEmail, setSearchEmail] = useState("")
     const [searchQuyenName, setSearchQuyenName] = useState("")
     const [nguoiDung, setNguoiDung] = useState([]);
@@ -23,10 +23,10 @@ const NguoiDungListOverral = ({ size = 10 }) => {
     const navigate = useNavigate();
     const [quyen, setQuyen] = useState([]); // Changed to array for storing permissions list
 
-    const fetchNguoiDung = async (page, size, username, email, roleName) => {
+    const fetchNguoiDung = async (page, size, email, phone, roleName) => {
         try {
             setLoading(true);
-            const result = await searchNguoiDung(page - 1, size, username, email, roleName);
+            const result = await searchNguoiDung(page - 1, size, email, phone, roleName);
             if (result && result.data.data) {
                 setNguoiDung(result.data.data.content);
                 setTotalPages(result.data.data.totalPages);
@@ -57,11 +57,11 @@ const NguoiDungListOverral = ({ size = 10 }) => {
 
     useEffect(() => {
         setCurrentPage(1); // Reset to page 1 when search filters change
-        fetchNguoiDung(1, size, searchUserName, searchEmail, searchQuyenName);
-    }, [searchUserName, searchEmail, searchQuyenName]);
+        fetchNguoiDung(1, size, searchEmail, searchPhone, searchQuyenName);
+    }, [searchEmail, searchPhone, searchQuyenName]);
 
     useEffect(() => {
-        fetchNguoiDung(currentPage, size, searchUserName, searchEmail, searchQuyenName);
+        fetchNguoiDung(currentPage, size, searchEmail, searchPhone, searchQuyenName);
     }, [currentPage]);
 
     const handleEdit = (idNguoiDung) => {
@@ -77,16 +77,6 @@ const NguoiDungListOverral = ({ size = 10 }) => {
 
             <div className='timkiem'>
                 <div className='block_input'>
-                    <label htmlFor="inputTen">User name</label>
-                    <Input
-                        placeholder="Nhập user name người dùng"
-                        prefix={<UserOutlined />}
-                        id='inputTen'
-                        value={searchUserName}
-                        onChange={(e) => setSearchUserName(e.target.value)}
-                    />
-                </div>
-                <div className='block_input'>
                     <label htmlFor="inputEmail">Email</label>
                     <Input
                         placeholder="Nhập email người dùng"
@@ -94,6 +84,16 @@ const NguoiDungListOverral = ({ size = 10 }) => {
                         id='inputEmail'
                         value={searchEmail}
                         onChange={(e) => setSearchEmail(e.target.value)}
+                    />
+                </div>
+                <div className='block_input'>
+                    <label htmlFor="inputPhone">Số điện thoại</label>
+                    <Input
+                        placeholder="Nhập số điện thoại người dùng"
+                        prefix={<UserOutlined />}
+                        id='inputPhone'
+                        value={searchPhone}
+                        onChange={(e) => setSearchPhone(e.target.value)}
                     />
                 </div>
                 <div className='block_input'>

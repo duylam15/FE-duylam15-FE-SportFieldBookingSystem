@@ -17,8 +17,8 @@ const NguoiDungList = ({
                     <tr>
                         <th>ID</th>
                         <th>Mã</th>
-                        <th>User name</th>
                         <th>Email</th>
+                        <th>Phone</th>
                         <th>Quyền</th>
                         <th>Trạng thái</th>
                         <th>Actions</th>
@@ -37,8 +37,8 @@ const NguoiDungList = ({
                             <tr key={v.userId}>
                                 <td>{v.userId}</td>
                                 <td>{v.userCode}</td>
-                                <td>{v.username}</td>
                                 <td>{v.email}</td>
+                                <td>{v.phone}</td>
                                 <td>{v.role.tenQuyen}</td>
                                 <td>{v.status}</td>
                                 <td>

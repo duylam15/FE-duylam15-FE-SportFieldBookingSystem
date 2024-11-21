@@ -72,7 +72,6 @@ const NguoiDungEdit = () => {
             return;
         }
         const dataToUpdate = {
-            username: nguoiDung.username,
             email: nguoiDung.email,
             phone: phone,
             fullName: hoTen,
@@ -102,10 +101,6 @@ const NguoiDungEdit = () => {
                     <div className='block_input'>
                         <label className='label'>Mã người dùng: </label>
                         <span>{nguoiDung.userCode || "N/A"}</span>
-                    </div>
-                    <div className='block_input'>
-                        <label className='label'>User name: </label>
-                        <span>{nguoiDung.username || "N/A"}</span>
                     </div>
                     <div className='block_input'>
                         <label className='label'>Email: </label>

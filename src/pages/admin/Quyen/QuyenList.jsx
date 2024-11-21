@@ -69,7 +69,7 @@ const QuyenList = ({
                 <td>
                   <div className="btn_row">
                     <div className="btn_block" onClick={() => onEdit(nq.idQuyen)}><EditBtn></EditBtn></div>
-                    <div className="btn_block"><DeleteBtn></DeleteBtn></div>
+                    {/* <div className="btn_block"><DeleteBtn></DeleteBtn></div> */}
                   </div>
                 </td>
               </tr>

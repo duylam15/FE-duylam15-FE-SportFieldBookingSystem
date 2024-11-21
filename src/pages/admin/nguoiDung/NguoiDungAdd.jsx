@@ -12,7 +12,6 @@ const { Option } = Select;
 const NguoiDungAdd = () => {
     const navigate = useNavigate();
     const [quyen, setQuyen] = useState([]);
-    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
     const [fullName, setFullName] = useState("");
@@ -23,7 +22,6 @@ const NguoiDungAdd = () => {
     const [errorEmail, setErrorEmail] = useState("")
     const [errorPhone, setErrorPhone] = useState("")
     const [errorFullname, setErrorFullname] = useState("")
-    const [errorUsername, setErrorUsername] = useState("")
 
 
 
@@ -50,20 +48,18 @@ const NguoiDungAdd = () => {
         setErrorEmail("");
         setErrorPhone("");
         setErrorFullname("");
-        setErrorUsername("");
 
         if (password !== rePassword) {
             notification.error({ message: 'Mật khẩu không khớp' });
             return;
         }
 
-        if (!username || !password || !fullName || !email || !phone || !selectedQuyen) {
+        if (!password || !fullName || !email || !phone || !selectedQuyen) {
             notification.error({ message: 'Vui lòng điền đầy đủ thông tin' });
             return;
         }
 
         const data = {
-            username,
             fullName,
             email,
             password,
@@ -91,9 +87,7 @@ const NguoiDungAdd = () => {
             if (validationErrors.fullName) {
                 setErrorFullname(validationErrors.fullName);
             }
-            if (validationErrors.username) {
-                setErrorUsername(validationErrors.username);
-            }
+           
 
             // Optional: display a notification if there are validation errors
             notification.error({
@@ -110,16 +104,16 @@ const NguoiDungAdd = () => {
                 <div className="flex_form">
                     <div className='form-left'>
                         <div className='block_input'>
-                            <label className='label'>Username</label>
+                            <label className='label'>Email</label>
                             <div className='w-300'>
                                 <Input
-                                    placeholder="Nhập username người dùng"
-                                    prefix={<UserOutlined />}
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    placeholder="Nhập email người dùng"
+                                    prefix={<MailOutlined />}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                 />
                             </div>
-                            {errorUsername && <span className="error">{errorUsername}</span>}
+                            {errorEmail && <span className='error'>{errorEmail}</span>}
                         </div>
                         <div className='block_input'>
                             <label className='label'>Password</label>
@@ -172,18 +166,7 @@ const NguoiDungAdd = () => {
                             </div>
                             {errorFullname && <span className='error'>{errorFullname}</span>}
                         </div>
-                        <div className='block_input'>
-                            <label className='label'>Email</label>
-                            <div className='w-300'>
-                                <Input
-                                    placeholder="Nhập email người dùng"
-                                    prefix={<MailOutlined />}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            {errorEmail && <span className='error'>{errorEmail}</span>}
-                        </div>
+
                         <div className='block_input'>
                             <label className='label'>Phone</label>
                             <div className='w-300'>
