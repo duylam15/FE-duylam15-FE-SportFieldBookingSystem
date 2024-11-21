@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutDefault from "../layout/LayoutDefault";
-import Home from '../pages/Home';
-import Error from '../pages/Error';
+import Home from "../pages/Home";
+import Error from "../pages/Error";
 import UsersPage from "../pages/UserPage";
 import FieldList from "../pages/FieldList";
 import FieldDetails from "../pages/FieldDetails";
@@ -26,6 +26,10 @@ import Booking from "../components/Booking/index";
 import Coupon from "../components/Coupon/index";
 import Invoice from "../components/Invoice/index";
 import MyProfile from "../pages/admin/myProfile";
+import FieldTypePage from "../pages/FieldType";
+import FieldFacilityPage from "../pages/FieldFacility";
+import FieldPage from "../pages/FieldPage";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -36,17 +40,17 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       {
         path: "fieldList",
-        element: <FieldList />
+        element: <FieldList />,
       },
       {
         path: "fieldDetails/:id",
-        element: <FieldDetails />
-      }
-    ]
+        element: <FieldDetails />,
+      },
+    ],
   },
   {
     path: "/home",
-    element: <Home />
+    element: <Home />,
   },
   {
     path: "/login",
@@ -76,7 +80,9 @@ export const router = createBrowserRouter([
       { index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
       { path: "dashboard", element: <Dashboard /> },
       {
-        path: "my_profile", element: <MyProfile />},
+        path: "my_profile",
+        element: <MyProfile />,
+      },
       {
         path: "quyen",
         element: <Quyen />,
@@ -91,7 +97,7 @@ export const router = createBrowserRouter([
             element: <QuyenEdit></QuyenEdit>,
           },
         ],
-      },         // Route con của admin
+      }, // Route con của admin// Route con của admin
       {
         path: "nguoidung",
         element: <NguoiDung></NguoiDung>,
@@ -106,19 +112,38 @@ export const router = createBrowserRouter([
             element: <NguoiDungEdit></NguoiDungEdit>,
           },
         ],
-      },         // Route con của admin
-      { path: "san", element: <San /> },              // Route con của admin
+      }, // Route con của admin
+      { path: "san", element: <San /> }, // Route con của admin
+      { path: "san", element: <San /> }, // Route con của admin
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
-      { path: "invoices", element: <Invoice /> }
-    ]
+      { path: "invoices", element: <Invoice /> },
+    ],
   },
   {
     path: "/calendar/:fieldId",
+    path: "/booking/:fieldId",
     element: <BookingPage />,
   },
   {
     path: "/orderpage",
     element: <OrderPage />,
+    element: (
+      <ProtectedRoute>
+        <OrderPage />
+      </ProtectedRoute>
+    ),
   },
-]); 
+  {
+    path: "/fieldType",
+    element: <FieldTypePage />,
+  },
+  {
+    path: "/fieldFacility",
+    element: <FieldFacilityPage />,
+  },
+  {
+    path: "/fields",
+    element: <FieldPage />,
+  },
+]);

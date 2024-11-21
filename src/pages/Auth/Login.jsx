@@ -3,6 +3,8 @@ import { Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { login, useGoogleLoginHandler } from "../../services/authServices";
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { login } from "../../services/authServices";
 import "./login.css";
 
 import BackgroundImage from "../../assets/images/background.jpg";
@@ -17,6 +19,7 @@ const Login = () => {
   const [messError, setMessError] = useState('')
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,6 +39,11 @@ const Login = () => {
       setShow(false)
       navigate("/home"); // Navigate to the home page after successful login
       localStorage.setItem("accessToken", result.data)
+    } else {
+      console.log("Đăng nhập thành công!");
+      const redirectTo = location.state?.from?.pathname || "/home"; // Trang đích mặc định
+      navigate(redirectTo);
+      // navigate("/home"); // Navigate to the home page after successful login
     }
     setLoading(false);
   };
