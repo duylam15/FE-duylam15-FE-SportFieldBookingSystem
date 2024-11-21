@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Container,
   Row,
@@ -18,11 +21,20 @@ const FieldOrder = () => {
   const navigate = useNavigate(); // Để điều hướng giữa các trang
   const { fieldName, dataBooking } = location.state || {};
 
+const FieldOrder = () => {
+  const location = useLocation();
+
+  const { selectedEvents, fieldAddress, fieldName, fieldId, totalAmount } =
+    location.state || {};
+  const [events, setEvents] = useState(selectedEvents || []);
+
   const googleMapsUrl = dataBooking.fieldAddress
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
         dataBooking.fieldAddress
       )}`
     : "#";
+    : "#"; // Nếu không có địa chỉ, đặt URL thành '#'
+  // State để lưu thông tin người dùng
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [userEmail, setUserEmail] = useState("");
@@ -76,10 +88,44 @@ const FieldOrder = () => {
     }
 
     // setMessage("Thông tin đã được gửi thành công!");
+  const handleSubmit = async () => {
+    const bookingData = {
+      userId: 1, // User ID from state or context
+      fieldId: fieldId, // Field ID from state or context
+      bookingDate: new Date().toISOString().split("T")[0],
+      selectedEvents: selectedEvents, // An array of selected time slots
+    };
+    // Xử lý thông tin người dùng
+
+    try {
+      const response = await fetch("http://localhost:8080/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (response.data) {
+        // Handle success
+        setMessage("Thông tin đã được gửi thành công!");
+        // navigate("/ordermodel", {
+        //   state: { selectedEvents, fieldAddress, fieldName },
+        // });
+      } else {
+        setMessage("Có lỗi xảy ra khi gửi thông tin!");
+      }
+    } catch (error) {
+      setMessage("Lỗi kết nối với máy chủ!");
+    }
+    setMessage("Thông tin đã được gửi thành công!");
+    // navigate("/ordermodel", {
+    //   state: { selectedEvents, fieldAddress, fieldName },
+    // });
+    // Hiển thị thông báo
   };
 
   // Hàm để xóa sự kiện và chuyển trang
   const handleDeleteEvent = (index) => {
+    // Xóa sự kiện khỏi danh sách
     const updatedEvents = events.filter(
       (_, eventIndex) => eventIndex !== index
     );
@@ -168,8 +214,10 @@ const FieldOrder = () => {
                     <thead>
                       <tr>
                         <th>Title</th>
+                        <th>Date</th>
                         <th>Start Time</th>
                         <th>End Time</th>
+                        <th>Amount</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -177,8 +225,10 @@ const FieldOrder = () => {
                       {events.map((event, index) => (
                         <tr key={index}>
                           <td>{event.title}</td>
+                          <td>{new Date(event.date).toDateString()}</td>
                           <td>{new Date(event.start).toLocaleString()}</td>
                           <td>{new Date(event.end).toLocaleString()}</td>
+                          <td>{event.amount.toLocaleString()}đ</td>
                           <td>
                             <Button
                               variant="danger"

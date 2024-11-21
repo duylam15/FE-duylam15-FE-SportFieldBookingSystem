@@ -28,6 +28,7 @@ import Invoice from "../components/Invoice/index";
 import FieldTypePage from "../pages/FieldType";
 import FieldFacilityPage from "../pages/FieldFacility";
 import FieldPage from "../pages/FieldPage";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -119,7 +120,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/orderpage",
-    element: <OrderPage />,
+    element: (
+      <ProtectedRoute>
+        <OrderPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/fieldType",

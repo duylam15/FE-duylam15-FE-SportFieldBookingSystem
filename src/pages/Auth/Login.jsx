@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { login } from "../../services/authServices";
 import "./login.css";
 
@@ -13,6 +13,7 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,7 +24,9 @@ const Login = () => {
       setShow(true); // Show error message if login fails
     } else {
       console.log("Đăng nhập thành công!");
-      navigate("/home"); // Navigate to the home page after successful login
+      const redirectTo = location.state?.from?.pathname || "/home"; // Trang đích mặc định
+      navigate(redirectTo);
+      // navigate("/home"); // Navigate to the home page after successful login
     }
     setLoading(false);
   };
@@ -92,11 +95,10 @@ const Login = () => {
 
         <div className="d-grid justify-content-end mt-2">
           <Link to="/forgot_password">
-          <Button className="text-muted px-0" variant="link">
-            Quên mật khẩu?
-          </Button>
+            <Button className="text-muted px-0" variant="link">
+              Quên mật khẩu?
+            </Button>
           </Link>
-          
         </div>
 
         <div className="text-center mt-2">
