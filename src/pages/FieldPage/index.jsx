@@ -3,7 +3,7 @@ import Field from "../../components/Field";
 
 function FieldPage() {
   return (
-    <div>
+    <div className="container">
       <Field />
     </div>
   );

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -10,47 +10,96 @@ import {
   Card,
 } from "react-bootstrap";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import crudService from "../../services/crudService";
+import { toast } from "react-toastify";
 
 const FieldOrder = () => {
   const location = useLocation();
-  const { selectedEvents, fieldAddress, fieldName } = location.state || {};
+  const navigate = useNavigate(); // Để điều hướng giữa các trang
+  const { fieldName, dataBooking } = location.state || {};
 
-  // Kiểm tra nếu fieldAddress không tồn tại
-  const googleMapsUrl = fieldAddress
+  const googleMapsUrl = dataBooking.fieldAddress
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        fieldAddress
+        dataBooking.fieldAddress
       )}`
-    : "#"; // Nếu không có địa chỉ, đặt URL thành '#'
-
-  // State để lưu thông tin người dùng
+    : "#";
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [userEmail, setUserEmail] = useState("");
-  const [message, setMessage] = useState(""); // Thông báo sau khi gửi thông tin
+  const [message, setMessage] = useState("");
+  const [events, setEvents] = useState(dataBooking.selectedEvents || []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      // Khi người dùng nhấn "Go Back", truyền `dataBooking` về
+      if (dataBooking) {
+        navigate(-1, { state: { dataBooking } });
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    // Dọn dẹp sự kiện khi component unmount
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [dataBooking, navigate]);
 
   const handleSubmit = () => {
-    // Xử lý thông tin người dùng
-    console.log("Tên:", userName);
-    console.log("Số điện thoại:", userPhone);
-    console.log("Email:", userEmail);
-    setMessage("Thông tin đã được gửi thành công!");
-    navigate("/ordermodel", {
-      state: { selectedEvents, fieldAddress, fieldName },
-    });
-    // Hiển thị thông báo
+    const booking = {
+      userId: dataBooking.userId, // ID người dùng
+      fieldId: dataBooking.fieldId, // ID sân
+      date: new Date().toISOString().split("T")[0], // Ngày hiện tại (YYYY-MM-DD)
+      selectedEvents: dataBooking.selectedEvents.map((event) => ({
+        start: new Date(event.start).toLocaleTimeString("en-GB"),
+        end: new Date(event.end).toLocaleTimeString("en-GB"),
+        totalPrice: event.totalPrice, // Tổng giá tiền
+      })),
+    };
+
+    const requestData = {
+      name: userName,
+      phoneNumber: userPhone,
+      email: userEmail,
+      bookingDate: new Date().toISOString().split("T")[0],
+      booking: booking,
+    };
+    console.log(requestData);
+
+    const rs = crudService.create("CustomerBooking", requestData);
+    if (rs) {
+      toast.success("Đặt sân thành công");
+      console.log(rs);
+    } else {
+      toast.error("Đặt sân thất bại");
+    }
+
+    // setMessage("Thông tin đã được gửi thành công!");
   };
 
-  // Hàm để xóa sự kiện
+  // Hàm để xóa sự kiện và chuyển trang
   const handleDeleteEvent = (index) => {
-    // Xóa sự kiện khỏi danh sách
-    const updatedEvents = selectedEvents.filter(
+    const updatedEvents = events.filter(
       (_, eventIndex) => eventIndex !== index
     );
-    setSelectedEvents(updatedEvents);
+    setEvents(updatedEvents);
+
+    // Nếu có sự kiện nào còn lại, truyền lại dataBooking
+    if (updatedEvents.length > 0) {
+      dataBooking.selectedEvents = updatedEvents;
+      // Truyền dataBooking khi điều hướng
+    } else {
+      toast.error("Không còn sự kiện nào.");
+      navigate(`/booking/${dataBooking.fieldId}`, {
+        state: { dataBooking: dataBooking },
+      });
+    }
+    console.log(dataBooking);
   };
 
   return (
     <Container fluid className="p-4" style={{ backgroundColor: "#f8f9fa" }}>
+      <Button className="col-1 m-3">Back</Button>
       <Row className="mb-4">
         <Col md={5}>
           <Card>
@@ -111,9 +160,9 @@ const FieldOrder = () => {
           <Card>
             <Card.Body>
               <h2>Đặt lịch sân: {fieldName}</h2>
-              {selectedEvents && selectedEvents.length > 0 ? (
+              {events && events.length > 0 ? (
                 <div>
-                  <h4 className="mb-3">Danh sách sự kiện đã chọn</h4>
+                  <h4 className="mb-3">Danh sách thời gian đã chọn</h4>
                   <table className="table table-striped table-hover">
                     <thead>
                       <tr>
@@ -124,7 +173,7 @@ const FieldOrder = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedEvents.map((event, index) => (
+                      {events.map((event, index) => (
                         <tr key={index}>
                           <td>{event.title}</td>
                           <td>{new Date(event.start).toLocaleString()}</td>
@@ -147,7 +196,7 @@ const FieldOrder = () => {
               )}
 
               <h4 className="mt-4">Địa chỉ sân:</h4>
-              <p>{fieldAddress}</p>
+              <p>{dataBooking.fieldAddress}</p>
               <Button
                 variant="link"
                 href={googleMapsUrl}

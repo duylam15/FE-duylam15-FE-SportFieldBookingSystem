@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import crudService from "../../services/crudService";
 import { Table, Button, Form, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 const Field = () => {
   const [fields, setFields] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [fieldTypes, setFieldTypes] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [fieldData, setFieldData] = useState({
     fieldId: "",
     fieldCode: "",
@@ -18,17 +20,35 @@ const Field = () => {
     status: "",
   });
   const [isEditing, setIsEditing] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
   useEffect(() => {
     fetchFields();
+    fetchFieldTypes();
+    fetchLocations();
   }, []);
-
+  const fetchFieldTypes = async () => {
+    try {
+      const response = await crudService.read("fieldType");
+      setFieldTypes(response);
+    } catch (error) {
+      console.error("Error fetching field types:", error);
+    }
+  };
   const fetchFields = async () => {
     try {
       const response = await crudService.read("fields"); // URL backend của bạn
       setFields(response);
     } catch (error) {
       console.error("Error fetching fields:", error);
+    }
+  };
+  const fetchLocations = async () => {
+    try {
+      const response = await crudService.read("locations");
+      setLocations(response);
+    } catch (error) {
+      console.error("Error fetching locations:", error);
     }
   };
 
@@ -63,16 +83,51 @@ const Field = () => {
 
   const handleSubmit = async () => {
     try {
+      const formData = new FormData();
+      Object.entries(fieldData).forEach(([key, value]) => {
+        if (key === "fieldType" && typeof value === "object") {
+          formData.append(key, value.fieldTypeId); // Hoặc value.name
+          console.log(`${key}, ${value.fieldTypeId}`);
+        } else {
+          formData.append(key, value);
+          console.log(`${key}, ${value}`);
+        }
+      });
+      console.log(formData);
       if (isEditing) {
-        await crudService.update("fields", id, fieldData);
+        await crudService.updateWithFile("fields", fieldData.fieldId, formData);
       } else {
-        await crudService.create("fields", fieldData);
+        await crudService.createWithFile("fields", formData);
       }
       fetchFields();
       setShowModal(false);
+      toast.success("Field saved successfully!");
     } catch (error) {
       console.error("Error submitting field data:", error);
+      toast.error("Error submitting field data.");
     }
+  };
+
+  const handleSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+
+    const sortedFields = [...fields].sort((a, b) => {
+      if (a[key] < b[key]) return direction === "ascending" ? -1 : 1;
+      if (a[key] > b[key]) return direction === "ascending" ? 1 : -1;
+      return 0;
+    });
+    setFields(sortedFields);
+  };
+
+  const getSortIcon = (key) => {
+    if (sortConfig.key === key) {
+      return sortConfig.direction === "ascending" ? " 🔼" : " 🔽";
+    }
+    return " ↕";
   };
 
   return (
@@ -83,10 +138,21 @@ const Field = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>Field Code</th>
-            <th>Field Name</th>
-            <th>Capacity</th>
-            <th>Price per Hour</th>
+            <th onClick={() => handleSort("fieldCode")}>
+              Field Code {getSortIcon("fieldCode")}
+            </th>
+            <th onClick={() => handleSort("fieldName")}>
+              Field Name {getSortIcon("fieldName")}
+            </th>
+            <th onClick={() => handleSort("capacity")}>
+              Capacity {getSortIcon("capacity")}
+            </th>
+            <th onClick={() => handleSort("pricePerHour")}>
+              Price per Hour {getSortIcon("pricePerHour")}
+            </th>
+            <th onClick={() => handleSort("status")}>
+              Status {getSortIcon("status")}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -97,6 +163,7 @@ const Field = () => {
               <td>{field.fieldName}</td>
               <td>{field.capacity}</td>
               <td>{field.pricePerHour}</td>
+              <td>{field.status === "ACTIVE" ? "Active" : "Inactive"}</td>
               <td>
                 <Button
                   variant="warning"
@@ -169,25 +236,39 @@ const Field = () => {
             </Form.Group>
 
             <Form.Group controlId="formFieldTypeId">
-              <Form.Label>Field Type ID</Form.Label>
+              <Form.Label>Field Type</Form.Label>
               <Form.Control
-                type="number"
+                as="select"
                 value={fieldData.fieldTypeId}
                 onChange={(e) =>
                   setFieldData({ ...fieldData, fieldTypeId: e.target.value })
                 }
-              />
+              >
+                <option value="">Select Field Type</option>
+                {fieldTypes.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.fieldTypeName}
+                  </option>
+                ))}
+              </Form.Control>
             </Form.Group>
 
             <Form.Group controlId="formLocationId">
-              <Form.Label>Location ID</Form.Label>
+              <Form.Label>Location</Form.Label>
               <Form.Control
-                type="number"
+                as="select"
                 value={fieldData.locationId}
                 onChange={(e) =>
                   setFieldData({ ...fieldData, locationId: e.target.value })
                 }
-              />
+              >
+                <option value="">Select Location</option>
+                {locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
+                ))}
+              </Form.Control>
             </Form.Group>
 
             <Form.Group controlId="formStatus">
@@ -202,6 +283,15 @@ const Field = () => {
                 <option value="ACTIVE">Active</option>
                 <option value="INACTIVE">Inactive</option>
               </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formImageUpload">
+              <Form.Label>Upload Image</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) =>
+                  setFieldData({ ...fieldData, image: e.target.files[0] })
+                }
+              />
             </Form.Group>
           </Form>
         </Modal.Body>

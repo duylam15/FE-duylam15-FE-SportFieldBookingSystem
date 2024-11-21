@@ -1,6 +1,6 @@
 // components/BookingCalendar.jsx
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -11,41 +11,58 @@ import crudService from "../../services/crudService";
 const localizer = momentLocalizer(moment);
 
 const BookingCalendar = () => {
+  // Lấy dữ liệu từ state khi điều hướng
+  const location = useLocation();
   const { fieldId } = useParams();
   const navigate = useNavigate();
-  const [selectedEvents, setSelectedEvents] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(""); // State để lưu thông báo lỗi
-  const [fieldAddress, setFieldAddress] = useState("");
-  const [fieldPrice, setFieldPrice] = useState(0);
-  const [fieldName, setFieldName] = useState("");
+
+  // Dữ liệu chính của booking
+  const [dataBooking, setDataBooking] = useState(null);
+  const [events, setEvents] = useState([]); // Dữ liệu sự kiện
+  const [errorMessage, setErrorMessage] = useState(""); // Lỗi
+
+  const now = new Date();
+  const filteredEvents = events.filter((event) => new Date(event.start) >= now);
 
   useEffect(() => {
     const fetchFieldDetails = async () => {
       try {
         const field = await crudService.read(`fields`, fieldId);
-        if (field != null) {
+
+        if (field) {
           const timeSlotToEvents = field.timeSlotList.map((slot) => {
-            // Tạo đối tượng Date từ date và startTime/endTime
             const startDate = new Date(`${slot.date}T${slot.startTime}`);
             const endDate = new Date(`${slot.date}T${slot.endTime}`);
+            const durationInHours = (endDate - startDate) / (1000 * 60 * 60);
+            const totalAmount = durationInHours * field.pricePerHour;
 
             return {
-              title: `Available from ${slot.startTime} to ${slot.endTime}`,
+              id: slot.id,
+              title: `${totalAmount.toLocaleString()} đ`,
               start: startDate,
               end: endDate,
-              allDay: false, // Xác định đây không phải là sự kiện cả ngày
+              totalPrice: totalAmount,
             };
           });
+
           setEvents(timeSlotToEvents);
-          setFieldPrice(field.pricePerHour); // Giá tiền theo giờ
-          // setFieldAddress(field.location.locationNumber); // Địa chỉ của sân
-          setFieldAddress("abc");
-          setFieldName(field.fieldName);
-          setErrorMessage(""); // Xóa thông báo lỗi nếu tìm thấy sân
+          setErrorMessage("");
+
+          if (!dataBooking) {
+            const data = {
+              userId: "1",
+              fieldId: fieldId,
+              fieldName: field.fieldName,
+              fieldAddress: field.address || "Không có địa chỉ",
+              date: new Date(),
+              fieldPrice: field.pricePerHour,
+              selectedEvents: [],
+            };
+            setDataBooking(data);
+          }
         } else {
-          setEvents([]); // Đặt danh sách sự kiện thành rỗng nếu không tìm thấy
-          setErrorMessage("Không tìm thấy sân với ID đã cho."); // Thiết lập thông báo lỗi
+          setEvents([]);
+          setErrorMessage("Không tìm thấy sân với ID đã cho.");
         }
       } catch (error) {
         setErrorMessage("Đã có lỗi khi tải dữ liệu sân.");
@@ -53,57 +70,81 @@ const BookingCalendar = () => {
     };
 
     fetchFieldDetails();
-  }, [fieldId]);
+  }, [fieldId, dataBooking]);
 
   const handleSelectEvent = (event) => {
-    const isSelected = selectedEvents.some((e) => e.title === event.title);
-    if (isSelected) {
-      setSelectedEvents(selectedEvents.filter((e) => e.title !== event.title));
-    } else {
-      setSelectedEvents([...selectedEvents, event]);
-    }
+    const isSelected = dataBooking.selectedEvents.some(
+      (e) => e.id === event.id
+    );
+    const updatedEvents = isSelected
+      ? dataBooking.selectedEvents.filter((e) => e.id !== event.id)
+      : [...dataBooking.selectedEvents, event];
+
+    setDataBooking({ ...dataBooking, selectedEvents: updatedEvents });
   };
 
-  const totalAmount = selectedEvents.reduce((sum, event) => {
-    const hours = (event.end - event.start) / (1000 * 60 * 60); // Tính số giờ từ start và end
-    return sum + hours * fieldPrice;
-  }, 0);
+  const totalAmount =
+    dataBooking?.selectedEvents?.reduce((sum, event) => {
+      const hours = (event.end - event.start) / (1000 * 60 * 60);
+      return sum + hours * dataBooking.fieldPrice;
+    }, 0) || 0;
 
-  // Hàm để lấy style cho các sự kiện
   const eventStyleGetter = (event) => {
-    const isSelected = selectedEvents.some((e) => e.title === event.title);
-    const backgroundColor = isSelected ? "lightblue" : "white"; // Màu nền
-    const color = isSelected ? "black" : "black"; // Màu chữ
-
+    const isSelected = dataBooking.selectedEvents.some(
+      (e) => e.id === event.id
+    );
+    const backgroundColor = isSelected ? "lightblue" : "white";
     return {
       style: {
         backgroundColor,
-        color,
+        color: "black",
       },
     };
   };
 
-  // Hàm xử lý đặt lịch
   const handleBooking = () => {
     navigate("/orderpage", {
-      state: { selectedEvents, fieldAddress, fieldName },
-    }); // Điều hướng đến trang FieldOrder và truyền dữ liệu
+      state: { dataBooking },
+    });
+  };
+
+  const slotPropGetter = (date) => {
+    const twoWeeksLater = new Date();
+    twoWeeksLater.setDate(now.getDate() + 14);
+    if (date < now || date > twoWeeksLater) {
+      return {
+        style: {
+          backgroundColor: "#e0e0e0",
+          pointerEvents: "none",
+        },
+      };
+    }
+    return {};
+  };
+
+  const handleSelectSlot = (slotInfo) => {
+    const twoWeeksLater = new Date();
+    twoWeeksLater.setDate(now.getDate() + 14);
+    if (slotInfo.start < now || slotInfo.start > twoWeeksLater) {
+      toast.error("Thời gian chọn không khả dụng!");
+    }
   };
 
   return (
     <Container fluid className="bg-light p-4">
-      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}{" "}
-      {/* Hiển thị thông báo lỗi */}
-      <h2>Sân {fieldName}</h2>
+      {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
+      <h2>Sân {dataBooking?.fieldName}</h2>
       <Row>
         <Col md={8}>
           <Card>
             <Card.Body>
               <Calendar
                 localizer={localizer}
-                events={events}
+                events={filteredEvents}
                 startAccessor="start"
                 endAccessor="end"
+                min={new Date().setHours(8, 0, 0)}
+                max={new Date().setHours(23, 30, 0)}
                 style={{
                   height: "calc(100vh - 250px)",
                   backgroundColor: "white",
@@ -112,7 +153,9 @@ const BookingCalendar = () => {
                 defaultView="week"
                 selectable
                 onSelectEvent={handleSelectEvent}
-                eventPropGetter={eventStyleGetter} // Gán hàm lấy style cho các sự kiện
+                eventPropGetter={eventStyleGetter}
+                slotPropGetter={slotPropGetter}
+                onSelectSlot={handleSelectSlot}
                 messages={{
                   week: "Tuần",
                   day: "Ngày",
@@ -128,12 +171,16 @@ const BookingCalendar = () => {
           <Card>
             <Card.Body>
               <h5>Chi Tiết Đặt Sân</h5>
-              <p>Địa chỉ sân: {fieldAddress}</p>
-              <p>Giá tiền: {fieldPrice.toLocaleString()} đ / giờ</p>
-              <p>Đã chọn {selectedEvents.length} khung giờ</p>
+              <p>Địa chỉ sân: {dataBooking?.fieldAddress}</p>
+              <p>
+                Giá tiền: {dataBooking?.fieldPrice?.toLocaleString()} đ / giờ
+              </p>
+              <p>
+                Đã chọn {dataBooking?.selectedEvents?.length || 0} khung giờ
+              </p>
               <p>Tổng tiền: {totalAmount.toLocaleString()} đ</p>
 
-              {selectedEvents.length > 0 ? (
+              {dataBooking?.selectedEvents?.length > 0 ? (
                 <Button variant="primary" onClick={handleBooking}>
                   Đặt lịch
                 </Button>
