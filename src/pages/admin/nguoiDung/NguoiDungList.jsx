@@ -44,7 +44,7 @@ const NguoiDungList = ({
                                 <td>
                                    <div className="row_btn">
                                     <div className="btn_block" onClick={() => onEdit(v.userId)}><EditBtn></EditBtn></div>
-                                    <div className="btn_block"><DeleteBtn></DeleteBtn></div>
+                                    {/* <div className="btn_block"><DeleteBtn></DeleteBtn></div> */}
                                    </div>
                                 </td>
                             </tr>

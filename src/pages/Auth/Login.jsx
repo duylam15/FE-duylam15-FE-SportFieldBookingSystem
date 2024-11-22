@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
 import { login, useGoogleLoginHandler } from "../../services/authServices";
-import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { login } from "../../services/authServices";
 import "./login.css";
 
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
-import { clientId } from "../../utils/thongTinChung";
-import { getMyProfile } from "../../services/myProfileService";
 
 const Login = () => {
   const [username, setUsername] = useState("");
