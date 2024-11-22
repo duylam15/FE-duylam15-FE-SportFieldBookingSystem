@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/auth';
+const API_URL = "http://localhost:8080/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { getMyProfile } from "./myProfileService";
@@ -6,71 +6,61 @@ import { getMyProfile } from "./myProfileService";
 export const login = async (email, password) => {
   try {
     const response = await fetch(`${API_URL}/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
-      credentials: 'include'
+      credentials: "include",
     });
-
-    if (response.ok) {
-      const data = await response.json();
-      localStorage.setItem('accessToken', data.data); // Save accessToken
-      return true; // Login successful
-    }
-    return false; // Login failed
+    return response.json();
   } catch (error) {
-    console.error('Đăng nhập lỗi:', error);
-    return false;
+    console.error(error);
   }
 };
 
 export const register = async (userData) => {
   try {
     const response = await fetch(`${API_URL}/signup`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(userData),
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return true; // Registration successful
-    }
-    return false; // Registration failed
+    return await response.json();
   } catch (error) {
-    console.error('Đăng ký lỗi:', error);
-    return false;
+    console.error("Đăng ký lỗi:", error);
   }
 };
 
 export const logout = async () => {
   try {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (!token) return false;
 
     const response = await fetch(`${API_URL}/logout`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify({ token }),
     });
-    const responseData = await response.json(); 
+    const responseData = await response.json();
 
     console.log("response: ", responseData);
     if (response.ok) {
-      localStorage.removeItem('accessToken'); // Clear token
-      localStorage.removeItem('dataNguoiDung'); // Clear token
+      localStorage.removeItem("accessToken"); // Clear token
+      localStorage.removeItem("dataNguoiDung"); // Clear token
       return true; // Logout successful
     }
     return false; // Logout failed
   } catch (error) {
-    console.error('Đăng xuất lỗi:', error);
+    localStorage.removeItem("accessToken"); // Clear token
+    localStorage.removeItem("dataNguoiDung"); // Clear token
+    console.error("Đăng xuất lỗi:", error);
     return false;
   }
 };
@@ -78,19 +68,19 @@ export const logout = async () => {
 export const refreshToken = async () => {
   try {
     const response = await fetch(`${API_URL}/refresh_token`, {
-      method: 'POST',
-      credentials: 'include',
+      method: "POST",
+      credentials: "include",
     });
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem('accessToken', data.data); // Update token
+      localStorage.setItem("accessToken", data.data); // Update token
       alert(data.data);
       return true;
     }
     return false;
   } catch (error) {
-    console.error('Làm mới token lỗi:', error);
+    console.error("Làm mới token lỗi:", error);
     return false;
   }
 };
@@ -108,12 +98,15 @@ export const useGoogleLoginHandler = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:8080/auth/google/${googleAccessToken}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://localhost:8080/auth/google/${googleAccessToken}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         const data = await response.json();
         console.log("Google login response:", data);
@@ -125,7 +118,10 @@ export const useGoogleLoginHandler = () => {
 
           // Fetch user profile
           const myProfile = await getMyProfile(accessToken);
-          localStorage.setItem("dataNguoiDung", JSON.stringify(myProfile.data.data));
+          localStorage.setItem(
+            "dataNguoiDung",
+            JSON.stringify(myProfile.data.data)
+          );
 
           navigate("/home");
         } else {

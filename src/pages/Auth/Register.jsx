@@ -4,16 +4,17 @@ import { Link, useNavigate } from "react-router-dom";
 import { register } from "../../services/authServices";
 import "./login.css";
 import { FaArrowLeft } from "react-icons/fa";
+import { message } from "antd";
 
 
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [messError, setMessError] = useState("");
 
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -22,10 +23,6 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    // Kiểm tra tên đăng nhập
-    if (!username) newErrors.username = "Tên đăng nhập là bắt buộc";
-
     // Kiểm tra email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -58,12 +55,16 @@ const Register = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    const result = await register({ username, email, password, rePassword });
-
-    if (!result) {
+    const result = await register({ email, password, rePassword });
+    console.log("ANH NHO RA LA MINH BIET: ", result);
+    console.log(result);
+    if (result.statusCode == 400) {
+      setMessError("Email đã tồn tại")
       setShow(true);
-    } else {
-      console.log("Đăng ký thành công!");
+    }
+    if (result.statusCode == 200) {
+      // Thông báo thành công
+      message.success("Đăng ký thành công! Bạn sẽ được chuyển hướng đến trang đăng nhập.", 2); // 2 giây
       navigate("/login");
     }
     setLoading(false);
@@ -94,24 +95,10 @@ const Register = () => {
             onClose={() => setShow(false)}
             dismissible
           >
-            Đăng ký thất bại.
+            {messError}
           </Alert>
         ) : null}
 
-        <Form.Group className="mb-2" controlId="username">
-          <Form.Label>Tên đăng nhập</Form.Label>
-          <Form.Control
-            type="text"
-            value={username}
-            placeholder="Tên đăng nhập"
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            isInvalid={!!errors.username}
-          />
-          <Form.Control.Feedback type="invalid">
-            {errors.username}
-          </Form.Control.Feedback>
-        </Form.Group>
 
         <Form.Group className="mb-2" controlId="email">
           <Form.Label>Email</Form.Label>

@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import LayoutDefault from "../layout/LayoutDefault";
-import Home from '../pages/Home';
-import Error from '../pages/Error';
+import Home from "../pages/Home";
+import Error from "../pages/Error";
 import UsersPage from "../pages/UserPage";
 import FieldList from "../pages/FieldList";
 import FieldDetails from "../pages/FieldDetails";
@@ -25,6 +25,11 @@ import NguoiDungListOverral from "../pages/admin/nguoiDung/NguoiDungListOverral"
 import Booking from "../components/Booking/index";
 import Coupon from "../components/Coupon/index";
 import Invoice from "../components/Invoice/index";
+import MyProfile from "../pages/admin/myProfile";
+import FieldTypePage from "../pages/FieldType";
+import FieldFacilityPage from "../pages/FieldFacility";
+import FieldPage from "../pages/FieldPage";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -35,17 +40,17 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       {
         path: "fieldList",
-        element: <FieldList />
+        element: <FieldList />,
       },
       {
         path: "fieldDetails/:id",
-        element: <FieldDetails />
-      }
-    ]
+        element: <FieldDetails />,
+      },
+    ],
   },
   {
     path: "/home",
-    element: <Home />
+    element: <Home />,
   },
   {
     path: "/login",
@@ -73,49 +78,72 @@ export const router = createBrowserRouter([
     errorElement: <Error></Error>,
     children: [
       { index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
-      { path: "dashboard", element: <Dashboard /> }, // Route con của admin
+      { path: "dashboard", element: <Dashboard /> },
       {
-         path: "quyen",
-         element: <Quyen />,
-         children: [
-           { index: true, element: <QuyenListOverall /> },
-           {
-             path: "add",
-             element: <QuyenThem></QuyenThem>,
-           },
-           {
-             path: "edit/:idQuyen",
-             element: <QuyenEdit></QuyenEdit>,
-           },
-         ],
-      },         // Route con của admin
+        path: "my_profile",
+        element: <MyProfile />,
+      },
       {
-         path: "nguoidung",
-         element: <NguoiDung></NguoiDung>,
-         children: [
-           { index: true, element: <NguoiDungListOverral /> },
-           {
-             path: "add",
-             element: <NguoiDungAdd></NguoiDungAdd>,
-           },
-           {
-             path: "edit/:idNguoiDung",
-             element: <NguoiDungEdit></NguoiDungEdit>,
-           },
-         ],
-      },         // Route con của admin
-      { path: "san", element: <San /> },              // Route con của admin
+        path: "quyen",
+        element: <Quyen />,
+        children: [
+          { index: true, element: <QuyenListOverall /> },
+          {
+            path: "add",
+            element: <QuyenThem></QuyenThem>,
+          },
+          {
+            path: "edit/:idQuyen",
+            element: <QuyenEdit></QuyenEdit>,
+          },
+        ],
+      }, // Route con của admin// Route con của admin
+      {
+        path: "nguoidung",
+        element: <NguoiDung></NguoiDung>,
+        children: [
+          { index: true, element: <NguoiDungListOverral /> },
+          {
+            path: "add",
+            element: <NguoiDungAdd></NguoiDungAdd>,
+          },
+          {
+            path: "edit/:idNguoiDung",
+            element: <NguoiDungEdit></NguoiDungEdit>,
+          },
+        ],
+      }, // Route con của admin
+      { path: "san", element: <San /> }, // Route con của admin
+      { path: "san", element: <San /> }, // Route con của admin
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
-      { path: "invoices", element: <Invoice /> }
-    ]
+      { path: "invoices", element: <Invoice /> },
+    ],
   },
   {
     path: "/calendar/:fieldId",
-    element: <BookingPage />, 
+    path: "/booking/:fieldId",
+    element: <BookingPage />,
   },
   {
     path: "/orderpage",
-    element: <OrderPage />, 
+    element: <OrderPage />,
+    element: (
+      <ProtectedRoute>
+        <OrderPage />
+      </ProtectedRoute>
+    ),
   },
-]); 
+  {
+    path: "/fieldType",
+    element: <FieldTypePage />,
+  },
+  {
+    path: "/fieldFacility",
+    element: <FieldFacilityPage />,
+  },
+  {
+    path: "/fields",
+    element: <FieldPage />,
+  },
+]);

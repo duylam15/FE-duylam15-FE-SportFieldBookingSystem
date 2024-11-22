@@ -35,6 +35,10 @@ const ForgotPassword = () => {
             setShowError(true);
             setErrorMessage("Không tìm thấy tài khoản với email");
         }
+        if(error.status == 400) {
+            setShowError(true);
+            setErrorMessage("Vui lòng đăng nhập bằng Google với tài khoản này");
+        }
         else {
             setShowError(true);
             setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau");

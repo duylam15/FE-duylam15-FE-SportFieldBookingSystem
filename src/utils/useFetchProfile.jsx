@@ -12,7 +12,7 @@ export const useFetchProfile = (token) => {
 			try {
 				setLoading(true);
 				const data = await getMyProfile(token); // Gọi dịch vụ để lấy thông tin hồ sơ
-				setProfile(data);
+				setProfile(data.data.data);
 			} catch (err) {
 				setError(err.message); // Bắt lỗi và lưu vào state
 			} finally {
@@ -29,20 +29,20 @@ export const useFetchProfile = (token) => {
 };
 
 
-import axiosInstance from './axiosInstance'; // Import axiosInstance đã tạo
+// import axiosInstance from './axiosInstance'; // Import axiosInstance đã tạo
 
-// Hàm để đăng bài viết mới
-const postNewArticle = async (title, content) => {
-  try {
-    const response = await axiosInstance.post('/articles', {
-      title: title,        // Tiêu đề bài viết
-      content: content     // Nội dung bài viết
-    });
-    console.log('Bài viết đã được đăng thành công:', response.data);
-  } catch (error) {
-    console.error('Lỗi khi đăng bài viết:', error);
-  }
-};
+// // Hàm để đăng bài viết mới
+// const postNewArticle = async (title, content) => {
+//   try {
+//     const response = await axiosInstance.post('/articles', {
+//       title: title,        // Tiêu đề bài viết
+//       content: content     // Nội dung bài viết
+//     });
+//     console.log('Bài viết đã được đăng thành công:', response.data);
+//   } catch (error) {
+//     console.error('Lỗi khi đăng bài viết:', error);
+//   }
+// };
 
-// Gọi hàm với dữ liệu cụ thể
-postNewArticle('Bài viết đầu tiên', 'Đây là nội dung của bài viết đầu tiên.');
+// // Gọi hàm với dữ liệu cụ thể
+// postNewArticle('Bài viết đầu tiên', 'Đây là nội dung của bài viết đầu tiên.');
