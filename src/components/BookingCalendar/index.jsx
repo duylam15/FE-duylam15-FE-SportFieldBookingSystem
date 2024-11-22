@@ -53,7 +53,7 @@ const BookingCalendar = () => {
               userId: "1",
               fieldId: fieldId,
               fieldName: field.fieldName,
-              fieldAddress: field.fieldAddress || "Không có địa chỉ",
+              fieldAddress: field.address || "Không có địa chỉ",
               date: new Date(),
               fieldPrice: field.pricePerHour,
               selectedEvents: [],
@@ -106,7 +106,6 @@ const BookingCalendar = () => {
     navigate("/orderpage", {
       state: { dataBooking },
     });
-    console.log(dataBooking);
   };
 
   const slotPropGetter = (date) => {
