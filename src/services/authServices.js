@@ -2,6 +2,9 @@ const API_URL = "http://localhost:8080/auth";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import { getMyProfile } from "./myProfileService";
+import { clientGithubId } from "../utils/thongTinChung";
+import { useEffect } from "react";
+import axios from "axios";
 
 export const login = async (email, password) => {
   try {
@@ -138,4 +141,112 @@ export const useGoogleLoginHandler = () => {
       alert("Google login failed. Please try again.");
     },
   });
+};
+
+// export const useGitHubLoginHandler = () => {
+//   const navigate = useNavigate();
+//   const redirectUri = "http://localhost:5173/login";
+
+//   const handleLogin = () => {
+//     const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientGithubId}&redirect_uri=${encodeURIComponent(
+//       redirectUri
+//     )}&scope=user`;
+//     window.location.href = githubAuthUrl; // Redirect đến GitHub
+//   };
+
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const code = urlParams.get("code");
+//   console.log("Code git: ", code);
+
+//   if (!code) {
+//     console.error("No code found in URL");
+//     return;
+//   }
+//   const handleFetchLoginGithub = async () => {
+//     const response = await axios.post(
+//       `http://localhost:8080/auth/github/${code}`
+//     );
+//     console.log(response);
+
+//     if (response.ok) {
+//       console.log("Login successful!");
+//       const accessToken = response.data.data
+//       localStorage.setItem("accessToken", accessToken);
+
+//       // Fetch user profile
+//       const myProfile = await getMyProfile(accessToken);
+//       localStorage.setItem(
+//         "dataNguoiDung",
+//         JSON.stringify(myProfile.data.data)
+//       );
+
+//       navigate("/home");
+//     } else {
+//       console.error("Login failed:", response.data.message);
+//       alert("Login failed: " + response.data.message);
+//     }
+//   };
+//   handleFetchLoginGithub();
+
+//   return handleLogin;
+// };
+
+
+
+export const useGitHubLoginHandler = () => {
+  const navigate = useNavigate();
+  const redirectUri = "http://localhost:5173/login";
+
+  // Hàm để điều hướng người dùng đến GitHub
+  const handleLogin = () => {
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientGithubId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&scope=user`;
+    window.location.href = githubAuthUrl; // Redirect đến GitHub
+  };
+
+  useEffect(() => {
+    // Kiểm tra `code` sau khi người dùng quay lại
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+
+    if (code) {
+      console.log("GitHub code: ", code);
+
+      const handleFetchLoginGithub = async () => {
+        try {
+          const response = await axios.post(
+            `http://localhost:8080/auth/github/${code}`
+          );
+
+          if (response.status === 200) {
+            console.log("Login successful!");
+            const accessToken = response.data.data;
+
+            // Lưu accessToken
+            localStorage.setItem("accessToken", accessToken);
+
+            // Lấy thông tin người dùng
+            const myProfile = await getMyProfile(accessToken);
+            localStorage.setItem(
+              "dataNguoiDung",
+              JSON.stringify(myProfile.data.data)
+            );
+
+            navigate("/home"); // Điều hướng tới trang chủ
+          } else {
+            console.error("Login failed:", response.data.message);
+            alert("Login failed: " + response.data.message);
+          }
+        } catch (error) {
+          console.error("Error during GitHub login:", error.message);
+          alert("An error occurred: " + error.message);
+        }
+      };
+
+      handleFetchLoginGithub();
+    }
+  }, [navigate]);
+
+  return handleLogin; // Trả về hàm để sử dụng
 };

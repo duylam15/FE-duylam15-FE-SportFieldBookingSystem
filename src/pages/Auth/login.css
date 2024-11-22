@@ -55,7 +55,7 @@
   left: -4px;
   position: absolute;
 }
-.btn_login_google {
+.btn_login_google, .btn_login_github {
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -68,12 +68,12 @@
   margin-top: 10px;
   position: relative;
 }
-.btn_login_google .img_google {
+.btn_login_google .img_google, .btn_login_github .img_github{
   position: absolute;
   top: 7px;
   left: 14px;
 }
-.btn_login_google .text {
+.btn_login_google .text, .btn_login_github .text {
   width: 100%;
   display: flex;
   align-items: center;
