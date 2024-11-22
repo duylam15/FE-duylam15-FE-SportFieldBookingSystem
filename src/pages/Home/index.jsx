@@ -7,6 +7,9 @@ import "./home.css";
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
 import { getUsernameFromToken } from "../../utils/jwtHelper";
+import axios from "axios"
+import { notification } from "antd";
+
 const Home = () => {
 	const [fieldTypes, setFieldTypes] = useState([]); // Danh sách loại sân
 	const [selectedFieldType, setSelectedFieldType] = useState("");
@@ -40,6 +43,30 @@ const Home = () => {
 		};
 		fetchFieldTypes();
 	}, []);
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		console.log("Loại sân:", selectedFieldType, "Tên sân:", fieldName, "Khu vực:", region);
+		// http://localhost:8080/api/fields/search?loai=1&ten=sân&diaChi=1
+		const url = `http://localhost:8080/api/fields/search?loai=${selectedFieldType}&ten=${fieldName}&diaChi=${region}`;
+
+		try {
+			const res = await axios.get(url);
+			console.log("res", res.data)
+			navigate(`/fieldList`, {
+				state: {
+					listField: res.data,
+				},
+			});
+		} catch (error) {
+			notification.error({
+				message: 'Không tìm thấy sân',
+				description: `Vui lòng nhập lại thông tin.`,
+				duration: 3,
+			});
+		}
+	};
 
 	// Check if user is logged in by checking token in localStorage
 	useEffect(() => {
@@ -122,7 +149,7 @@ const Home = () => {
 					<Container className="home__search-container1">
 						<h1 className="text-white text-center">Welcome to Our Website</h1>
 						<div className="home__search-container">
-							<Form className="mt-3" onSubmit={handleSearch}>
+							<Form className="mt-3" onSubmit={handleSubmit}>
 								<Row className="home__search-container no-gutters">
 									{/* Cột 1: Dropdown loại sân */}
 									<Col xs={12} md={3} className="form-group">

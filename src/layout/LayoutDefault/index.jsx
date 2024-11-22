@@ -9,7 +9,7 @@ export default function LayoutDefault() {
 
 	return (
 		<div className='layout-app'>
-			<NavigateBar />
+			{/* <NavigateBar /> */}
 			<Outlet />
 			<Footer />
 		</div>
