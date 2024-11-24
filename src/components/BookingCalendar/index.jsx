@@ -7,6 +7,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Container, Alert, Button, Row, Col, Card } from "react-bootstrap";
 import { toast } from "react-toastify";
 import crudService from "../../services/crudService";
+import { useBooking } from "../BookingContext";
 
 const localizer = momentLocalizer(moment);
 
@@ -17,7 +18,7 @@ const BookingCalendar = () => {
   const navigate = useNavigate();
 
   // Dữ liệu chính của booking
-  const [dataBooking, setDataBooking] = useState(null);
+  const { dataBooking, setDataBooking } = useBooking();
   const [events, setEvents] = useState([]); // Dữ liệu sự kiện
   const [errorMessage, setErrorMessage] = useState(""); // Lỗi
 
@@ -28,14 +29,16 @@ const BookingCalendar = () => {
     const fetchFieldDetails = async () => {
       try {
         const field = await crudService.read(`fields`, fieldId);
-
-        if (field) {
-          const timeSlotToEvents = field.timeSlotList.map((slot) => {
+        if (!field) {
+          setErrorMessage("Không tìm thấy sân với ID đã cho.");
+          return;
+        }
+        const timeSlotToEvents =
+          field.timeSlotList?.map((slot) => {
             const startDate = new Date(`${slot.date}T${slot.startTime}`);
             const endDate = new Date(`${slot.date}T${slot.endTime}`);
             const durationInHours = (endDate - startDate) / (1000 * 60 * 60);
-            const totalAmount = durationInHours * field.pricePerHour;
-
+            const totalAmount = durationInHours * (field.pricePerHour || 0);
             return {
               id: slot.id,
               title: `${totalAmount.toLocaleString()} đ`,
@@ -44,32 +47,24 @@ const BookingCalendar = () => {
               totalPrice: totalAmount,
               status: slot.status,
             };
+          }) || [];
+        setEvents(timeSlotToEvents);
+        setErrorMessage("");
+        if (!dataBooking) {
+          setDataBooking({
+            userId: "1",
+            fieldId: fieldId,
+            fieldName: field.fieldName,
+            fieldAddress: "Không có địa chỉ",
+            date: new Date(),
+            fieldPrice: field.pricePerHour || 0,
+            selectedEvents: [],
           });
-
-          setEvents(timeSlotToEvents);
-          setErrorMessage("");
-
-          if (!dataBooking) {
-            const data = {
-              userId: "1",
-              fieldId: fieldId,
-              fieldName: field.fieldName,
-              fieldAddress: "Không có địa chỉ",
-              date: new Date(),
-              fieldPrice: field.pricePerHour,
-              selectedEvents: [],
-            };
-            setDataBooking(data);
-          }
-        } else {
-          setEvents([]);
-          setErrorMessage("Không tìm thấy sân với ID đã cho.");
         }
       } catch (error) {
         setErrorMessage("Đã có lỗi khi tải dữ liệu sân.");
       }
     };
-
     fetchFieldDetails();
   }, [fieldId, dataBooking]);
   console.log(events);
@@ -87,7 +82,7 @@ const BookingCalendar = () => {
 
     setDataBooking({ ...dataBooking, selectedEvents: updatedEvents });
   };
-
+  console.log(dataBooking);
   const totalAmount =
     dataBooking?.selectedEvents?.reduce((sum, event) => {
       const hours = (event.end - event.start) / (1000 * 60 * 60);

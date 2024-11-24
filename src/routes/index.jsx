@@ -121,7 +121,6 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/calendar/:fieldId",
     path: "/booking/:fieldId",
     element: <BookingPage />,
   },

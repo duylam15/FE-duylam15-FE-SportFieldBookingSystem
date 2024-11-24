@@ -19,9 +19,9 @@ const FieldOrder = () => {
   const navigate = useNavigate(); // Để điều hướng giữa các trang
   const { dataBooking } = useBooking();
   console.log(dataBooking);
-  const googleMapsUrl = dataBooking.fieldAddress
+  const googleMapsUrl = dataBooking?.fieldAddress
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-        dataBooking.fieldAddress
+        dataBooking?.fieldAddress
       )}`
     : "#";
   const [userName, setUserName] = useState("");
@@ -94,9 +94,8 @@ const FieldOrder = () => {
       // Truyền dataBooking khi điều hướng
     } else {
       toast.error("Không còn sự kiện nào.");
-      navigate(`/booking/${dataBooking.fieldId}`, {
-        state: { dataBooking: dataBooking },
-      });
+      dataBooking.selectedEvents = updatedEvents;
+      navigate(`/booking/${dataBooking.fieldId}`, {});
     }
   };
 
