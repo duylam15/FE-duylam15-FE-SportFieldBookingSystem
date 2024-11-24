@@ -42,6 +42,7 @@ const BookingCalendar = () => {
               start: startDate,
               end: endDate,
               totalPrice: totalAmount,
+              status: slot.status,
             };
           });
 
@@ -53,7 +54,7 @@ const BookingCalendar = () => {
               userId: "1",
               fieldId: fieldId,
               fieldName: field.fieldName,
-              fieldAddress: field.address || "Không có địa chỉ",
+              fieldAddress: "Không có địa chỉ",
               date: new Date(),
               fieldPrice: field.pricePerHour,
               selectedEvents: [],
@@ -71,8 +72,12 @@ const BookingCalendar = () => {
 
     fetchFieldDetails();
   }, [fieldId, dataBooking]);
-
+  console.log(events);
   const handleSelectEvent = (event) => {
+    if (event.status === "BOOKED" || event.status === "PENDING") {
+      toast.error("Khung giờ này không khả dụng!");
+      return;
+    }
     const isSelected = dataBooking.selectedEvents.some(
       (e) => e.id === event.id
     );
@@ -93,11 +98,26 @@ const BookingCalendar = () => {
     const isSelected = dataBooking.selectedEvents.some(
       (e) => e.id === event.id
     );
-    const backgroundColor = isSelected ? "lightblue" : "white";
+
+    // Xác định màu nền dựa trên trạng thái sự kiện
+    const backgroundColor =
+      event.status === "BOOKED" || event.status === "PENDING"
+        ? "#e0e0e0" // Màu xám cho trạng thái không khả dụng
+        : isSelected
+        ? "lightblue" // Màu xanh nhạt nếu đã chọn
+        : "white"; // Màu trắng cho trạng thái khả dụng
+
     return {
       style: {
         backgroundColor,
-        color: "black",
+        color:
+          event.status === "BOOKED" || event.status === "PENDING"
+            ? "#6c757d"
+            : "black", // Màu chữ xám cho trạng thái không khả dụng
+        pointerEvents:
+          event.status === "BOOKED" || event.status === "PENDING"
+            ? "none" // Không cho phép chọn
+            : "auto", // Cho phép chọn
       },
     };
   };

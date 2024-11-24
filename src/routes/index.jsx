@@ -129,9 +129,9 @@ export const router = createBrowserRouter([
     path: "/orderpage",
     element: <OrderPage />,
     element: (
-      <ProtectedRoute>
-        <OrderPage />
-      </ProtectedRoute>
+      // <ProtectedRoute>
+      <OrderPage />
+      // </ProtectedRoute>
     ),
   },
   {

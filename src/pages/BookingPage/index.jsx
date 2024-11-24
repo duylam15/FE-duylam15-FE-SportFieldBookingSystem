@@ -1,7 +1,9 @@
 import React from "react";
 import { Button, Container } from "react-bootstrap";
 import BookingCalendar from "../../components/BookingCalendar";
-
+if (typeof global === "undefined") {
+  window.global = window;
+}
 function BookingPage() {
   const handleBooking = (selectedSlots) => {
     console.log("Danh sách các slot đã chọn:", selectedSlots);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Container,
   Row,
@@ -12,12 +12,13 @@ import {
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
 import crudService from "../../services/crudService";
 import { toast } from "react-toastify";
+//THONG TIN BOOKING
+import { useBooking } from "../../components/BookingContext";
 
 const FieldOrder = () => {
-  const location = useLocation();
   const navigate = useNavigate(); // Để điều hướng giữa các trang
-  const { fieldName, dataBooking } = location.state || {};
-
+  const { dataBooking } = useBooking();
+  console.log(dataBooking);
   const googleMapsUrl = dataBooking.fieldAddress
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
         dataBooking.fieldAddress
@@ -50,7 +51,9 @@ const FieldOrder = () => {
       userId: dataBooking.userId, // ID người dùng
       fieldId: dataBooking.fieldId, // ID sân
       date: new Date().toISOString().split("T")[0], // Ngày hiện tại (YYYY-MM-DD)
+
       selectedEvents: dataBooking.selectedEvents.map((event) => ({
+        id: event.id,
         start: new Date(event.start).toLocaleTimeString("en-GB"),
         end: new Date(event.end).toLocaleTimeString("en-GB"),
         totalPrice: event.totalPrice, // Tổng giá tiền
@@ -62,10 +65,11 @@ const FieldOrder = () => {
       phoneNumber: userPhone,
       email: userEmail,
       bookingDate: new Date().toISOString().split("T")[0],
+      totalAmount: dataBooking.totalAmount,
       booking: booking,
     };
     console.log(requestData);
-
+    toast.success("oke");
     const rs = crudService.create("CustomerBooking", requestData);
     if (rs) {
       toast.success("Đặt sân thành công");
@@ -94,7 +98,6 @@ const FieldOrder = () => {
         state: { dataBooking: dataBooking },
       });
     }
-    console.log(dataBooking);
   };
 
   return (
@@ -159,7 +162,7 @@ const FieldOrder = () => {
         <Col md={6}>
           <Card>
             <Card.Body>
-              <h2>Đặt lịch sân: {fieldName}</h2>
+              <h2>Đặt lịch sân: {dataBooking.fieldName}</h2>
               {events && events.length > 0 ? (
                 <div>
                   <h4 className="mb-3">Danh sách thời gian đã chọn</h4>
@@ -190,6 +193,7 @@ const FieldOrder = () => {
                       ))}
                     </tbody>
                   </table>
+                  <div>Tổng tiền {dataBooking.totalAmount}</div>
                 </div>
               ) : (
                 <p>Không có khung giờ nào được chọn.</p>

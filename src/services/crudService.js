@@ -1,4 +1,3 @@
-import { message } from "antd";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -11,7 +10,7 @@ const crudService = {
             // toast.success(`Create ${entity} successfully.!`, "Thông báo");
             return response.data;
         } catch(error) {
-            toast.error(`Error while creating ${entityName}: ${error,message} `, `Lỗi`);
+            toast.error(`Error while creating ${entityName}: ${error.message} `, `Lỗi`);
             throw error;
         }
     },
