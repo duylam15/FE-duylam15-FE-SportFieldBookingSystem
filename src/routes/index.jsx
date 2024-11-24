@@ -30,7 +30,7 @@ import FieldTypePage from "../pages/FieldType";
 import FieldFacilityPage from "../pages/FieldFacility";
 import FieldPage from "../pages/FieldPage";
 import ProtectedRoute from "../components/ProtectedRoute";
-
+import PaymentResultPage from "../components/fieldOrder/PaymentResultPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -71,6 +71,10 @@ export const router = createBrowserRouter([
   {
     path: "/my_profile",
     element: <UsersPage />, // Route register, hiển thị Register
+  },
+  {
+    path: "/payment-result",
+    element: <Home />, // Route register, hiển thị Register
   },
   {
     path: "/admin",

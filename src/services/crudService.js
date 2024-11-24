@@ -44,5 +44,19 @@ const crudService = {
             throw error;
         }
     },
+    getPaymentUrl: async (entityName, data) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/${entityName}`, {
+                params: {
+                  amount: data,
+                }
+              });
+            // toast.success(`Create ${entity} successfully.!`, "Thông báo");
+            return response.data;
+        } catch(error) {
+            toast.error(`Error while creating ${entityName}: ${error.message} `, `Lỗi`);
+            throw error;
+        }
+    },
 }
 export default crudService;

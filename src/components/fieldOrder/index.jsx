@@ -46,7 +46,7 @@ const FieldOrder = () => {
     };
   }, [dataBooking, navigate]);
 
-  const handleSubmit = () => {
+  const handleSubmit  = async () => {
     const booking = {
       userId: dataBooking.userId, // ID người dùng
       fieldId: dataBooking.fieldId, // ID sân
@@ -69,13 +69,26 @@ const FieldOrder = () => {
       booking: booking,
     };
     console.log(requestData);
-    toast.success("oke");
-    const rs = crudService.create("CustomerBooking", requestData);
-    if (rs) {
-      toast.success("Đặt sân thành công");
-      console.log(rs);
-    } else {
-      toast.error("Đặt sân thất bại");
+    // toast.success("oke");
+    try {
+      const totalAmount = dataBooking?.selectedEvents?.reduce(
+        (sum, event) => sum + (event.totalPrice || 0),
+        0
+      ) || 0;
+      
+      // In ra tổng số tiền
+      console.log("Tổng số tiền:", totalAmount);
+      // Gửi request tạo URL thanh toán
+      const paymentResponse = await crudService.getPaymentUrl("payment/url", totalAmount);
+      const rs = crudService.create("CustomerBooking", requestData);
+      if (paymentResponse && paymentResponse.data) {
+        // Chuyển đến trang thanh toán
+        window.location.href = paymentResponse.data;
+      } else {
+        toast.error("Không thể tạo URL thanh toán!");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi tạo URL thanh toán: " + error.message);
     }
 
     // setMessage("Thông tin đã được gửi thành công!");

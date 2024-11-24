@@ -9,6 +9,8 @@ import Logo from "../../assets/images/logo.png";
 import { getUsernameFromToken } from "../../utils/jwtHelper";
 import axios from "axios"
 import { notification } from "antd";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Home = () => {
 	const [fieldTypes, setFieldTypes] = useState([]); // Danh sách loại sân
@@ -18,6 +20,18 @@ const Home = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
 	const navigate = useNavigate();
 	const [email, setEmail] = useState(null);
+	const [searchParams] = useSearchParams();
+
+	useEffect(() => {
+		const statusCode = searchParams.get("statusCode");
+		const message = searchParams.get("message");
+
+		if (statusCode === "200") {
+			toast.success(message || "Thanh toán thành công!");
+		} else if (statusCode === "400"){
+			toast.error(message || "Thanh toán thất bại!");
+		}
+	}, [searchParams]);
 	useEffect(() => {
 		// Giả sử access token được lưu trong localStorage
 		const token = localStorage.getItem('accessToken');
