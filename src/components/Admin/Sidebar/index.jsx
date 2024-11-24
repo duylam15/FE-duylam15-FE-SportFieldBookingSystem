@@ -1,89 +1,118 @@
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import React from "react";
-import "./sidebar.css";
 import { MdSpaceDashboard } from "react-icons/md";
 import { GiSoccerField } from "react-icons/gi";
-const Sidebar = () => {
-    const location = useLocation();
+import { Link, useLocation } from "react-router-dom";
+import "./sidebar.css";
+import EditBtn from '../ColorButtons/EditBtn';
+import XemChiTietBtn from '../ColorButtons/XemChiTietBtn.jsx';
+import { getMyProfile } from "../../../services/myProfileService.js";
+
+// Function to check if a specific permission exists for a feature
+const hasPermission = (featureName, action) => {
+  const dataNguoiDung = JSON.parse(localStorage.getItem("dataNguoiDungSport"))
+  console.log("data de render UI side bar: ", dataNguoiDung);
+  const chiTietQuyenDTOList = dataNguoiDung?.role?.rolePermissionDTOList || [];
+  const permissionsArray = chiTietQuyenDTOList.map(
+    (permission) => `${permission.permissionName}:${permission.action}`
+  );
+  const permissionSet = new Set(permissionsArray);
+
+  return permissionSet.has(`${featureName}:${action}`);
+};
+
+
+const PermissionAddButton = ({ feature, children }) => { // ẩn hoặc hiện nút thêm theo tên chức năng
+  const isAllowed = hasPermission(feature, "CREATE");
+  console.log("Cho phep hay khong cua: ", feature, " - ", isAllowed)
+  return isAllowed ? children : null;
+};
+
+export { PermissionAddButton }
+
+
+const PermissionEditButton = ({ feature, children }) => { // ẩn hoặc hiện nút sửa theo tên chức năng
+  const isAllowed = hasPermission(feature, "EDIT");
+  return isAllowed ? children : null;
+};
+
+export { PermissionEditButton }
+
+
+const PermissionButton = ({ feature, idButton, onEdit }) => {  // cái nào mà có lồng tính năng xem chi tiết
+  const hasEditPermission = hasPermission(feature, "EDIT"); // trong nút sửa thì phải dùng cái này
+  const hasViewPermission = hasPermission(feature, "VIEW"); // cách dùng mẫu xem file phan quyen admin, user admin
+
+  if (hasEditPermission) {
+    return (
+      <div onClick={() => onEdit(idButton)}>
+        <EditBtn />
+      </div>
+    );
+  }
+
+  if (hasViewPermission) {
+    return (
+      <div onClick={() => onEdit(idButton)}>
+        <XemChiTietBtn />
+      </div>
+    );
+  }
+
+  return null;
+};
+
+export { PermissionButton };
+
+
+// Component to display a menu item if the user has permission to view it
+const SidebarItem = ({ path, feature, icon, name }) => {
+  const location = useLocation();
+  const isActive = location.pathname.includes(path);
+
+  if (!hasPermission(feature, "VIEW")) return null;
+
   return (
-    <>
-      <nav className="col-md-3 col-lg-2 d-md-block sidebar">
-       <div className="block_logo">
-       <img
-          src="/src/assets/images/logo.png"
-          alt=""
-          className="logo"
-        />
-       </div>
-        <div className="position-sticky">
-          <div className="nav flex-column">
-          <Link
-              className={`nav-link ${location.pathname.includes("/admin/dashboard") ? "active" : ""}`}
-              to="/admin/dashboard"
-            >
-              <div className={`nav-item ${location.pathname.includes("/admin/dashboard") ? "active" : ""}`}>
-                {/* <MdSpaceDashboard /> */}
-                Dashboard
-              </div>
-            </Link>
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/san") ? "active" : ""}`}
-              to="/admin/san"
-            >
-              <div className={`nav-item ${location.pathname.includes("/admin/san") ? "active" : ""}`}>
-                {/* <GiSoccerField /> */}
-                Sân
-              </div>
-            </Link>
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/quyen") ? "active" : ""}`}
-              to="/admin/quyen"
-            >
-              <div className={`nav-item ${location.pathname.includes("/admin/quyen") ? "active" : ""}`}>
-                Nhóm quyền
-              </div>
-            </Link>
+    <Link className={`nav-link ${isActive ? "active" : ""}`} to={path}>
+      <div className={`nav-item ${isActive ? "active" : ""}`}>
+        {icon}
+        {name}
+      </div>
+    </Link>
+  );
+};
 
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/nguoidung") ? "active" : ""}`}
-              to="/admin/nguoidung"
-            >
-              <div className={`nav-item ${location.pathname.includes("/admin/nguoidung") ? "active" : ""}`}>
-                Người dùng
-              </div>
-            </Link>
+// Sidebar component
+const Sidebar = () => {
+  const menuItems = [
+    { name: "Thống kê", path: "/admin/dashboard", feature: "Quản lí thống kê", icon: <MdSpaceDashboard /> },
+    { name: "Nhóm quyền", path: "/admin/quyen", feature: "Quản lí nhóm quyền", icon: <GiSoccerField /> },
+    { name: "Người dùng", path: "/admin/nguoidung", feature: "Quản lí người dùng", icon: <GiSoccerField /> },
+    { name: "Loại sân", path: "/admin/loaisan", feature: "Quản lí loại sân", icon: <GiSoccerField />},
+    { name: "Sân", path: "/admin/san", feature: "Quản lí sân", icon: <GiSoccerField /> },
+    { name: "Khuyến mãi", path: "/admin/coupons", feature: "Quản lí khuyến mãi", icon: <GiSoccerField /> },
+    { name: "Hóa đơn", path: "/admin/invoices", feature: "Quản lí hoá đơn", icon: <GiSoccerField /> },
+    { name: "Booking", path: "/admin/bookings", feature: "Quản lí booking", icon: <GiSoccerField /> },
+  ];
 
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/coupons") ? "active" : ""}`}
-              to="/admin/coupons"
-            >
-              <div className={`nav-item row ${location.pathname.includes("/admin/coupons") ? "active" : ""}`}>
-                {/* <GiSoccerField /> */}
-                Khuyến mãi
-              </div>
-            </Link>
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/invoices") ? "active" : ""}`}
-              to="/admin/invoices"
-            >
-              <div className={`nav-item row ${location.pathname.includes("/admin/invoices") ? "active" : ""}`}>
-                {/* <GiSoccerField /> */}
-                Hóa đơn
-              </div>
-            </Link>
-            <Link
-              className={`nav-link ${location.pathname.includes("/admin/bookings") ? "active" : ""}`}
-              to="/admin/bookings"
-            >
-              <div className={`nav-item row ${location.pathname.includes("/admin/bookings") ? "active" : ""}`}>
-                {/* <GiSoccerField /> */}
-                Booking
-              </div>
-            </Link>
-          </div>
+  return (
+    <nav className="col-md-3 col-lg-2 d-md-block sidebar">
+      <div className="block_logo">
+        <img src="/src/assets/images/logo.png" alt="" className="logo" />
+      </div>
+      <div className="position-sticky">
+        <div className="nav flex-column">
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item.path}
+              path={item.path}
+              feature={item.feature}
+              icon={item.icon}
+              name={item.name}
+            />
+          ))}
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 

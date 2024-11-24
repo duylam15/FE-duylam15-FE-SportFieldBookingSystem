@@ -3,13 +3,24 @@ import SideBarAdmin from "../../../components/Admin/Sidebar";
 import { LogoutOutlined } from '@ant-design/icons';
 import { Button, message } from 'antd';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Routes, Outlet, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Outlet, Link, useNavigate } from "react-router-dom";
 import "./layoutAdmin.css";
 import Dashboard from "../dashboard";
 import Quyen from "../Quyen";
 import San from "../San";
+import { logout } from "../../../services/authServices";
 
 const LayoutAdmin = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result) {
+      navigate("/home");
+    } else {
+      navigate("/home");
+    }
+  };
   return (
     <>
       <div className="container-fluid">
@@ -17,7 +28,7 @@ const LayoutAdmin = () => {
           <SideBarAdmin></SideBarAdmin>
           <div className="container_header_admin">
             <div className="flex_header_admin">
-              <div className="button_logout">
+              <div className="button_logout" onClick={handleLogout}>
                 <Button color="danger" variant="outlined" iconPosition="start" icon={<LogoutOutlined />}>
                   Logout
                 </Button>

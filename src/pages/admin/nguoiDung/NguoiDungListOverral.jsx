@@ -9,10 +9,11 @@ import IconLabelButtons from '../../../components/Admin/ColorButtons';
 import { UserOutlined, MailOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 import { getAllQuyen } from '../../../services/quyenService';
+import { PermissionAddButton } from '../../../components/Admin/Sidebar';
 
 const { Option } = Select;
 
-const NguoiDungListOverral = ({ size = 10 }) => {
+const NguoiDungListOverral = ({ size = 7 }) => {
     const [currentPage, setCurrentPage] = useState(1); // State for current page
     const [searchPhone, setSearchPhone] = useState("");
     const [searchEmail, setSearchEmail] = useState("")
@@ -71,9 +72,12 @@ const NguoiDungListOverral = ({ size = 10 }) => {
     return (
         <div className='nguoiDungListOverral'>
             <h1 className='title'>Danh sách người dùng</h1>
-            <Link to="add" className='nutThem'>
-                <IconLabelButtons />
-            </Link>
+            <PermissionAddButton feature="Quản lí người dùng">
+                <Link to="add" className='nutThem'>
+                    <IconLabelButtons />
+                </Link>
+            </PermissionAddButton>
+
 
             <div className='timkiem'>
                 <div className='block_input'>
@@ -99,18 +103,18 @@ const NguoiDungListOverral = ({ size = 10 }) => {
                 <div className='block_input'>
                     <label>Quyền</label>
                     <div>
-                    <Select
-                        style={{ width: 200 }}
-                        onChange={(value) => setSearchQuyenName(value)}
-                        value={searchQuyenName}
-                    >
-                        <Option value="">Chọn quyền</Option>
-                        {quyen.map((e) => (
-                            <Option key={e.tenQuyen} value={e.tenQuyen}>
-                                {e.tenQuyen}
-                            </Option>
-                        ))}
-                    </Select>
+                        <Select
+                            style={{ width: 200 }}
+                            onChange={(value) => setSearchQuyenName(value)}
+                            value={searchQuyenName}
+                        >
+                            <Option value="">Chọn quyền</Option>
+                            {quyen.map((e) => (
+                                <Option key={e.tenQuyen} value={e.tenQuyen}>
+                                    {e.tenQuyen}
+                                </Option>
+                            ))}
+                        </Select>
                     </div>
                 </div>
             </div>

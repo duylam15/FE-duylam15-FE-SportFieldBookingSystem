@@ -7,6 +7,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ChonTatCa from '../../../components/Admin/ButtonForTableQuyen/ChonTatCa';
 import HuyChonTatCa from '../../../components/Admin/ButtonForTableQuyen/HuyChonTatCa';
 import { Select } from 'antd';
+import { PermissionEditButton } from '../../../components/Admin/Sidebar';
+import { getMyProfile } from '../../../services/myProfileService';
 
 const QuyenEdit = () => {
     const { idQuyen } = useParams();
@@ -17,6 +19,7 @@ const QuyenEdit = () => {
     const navigate = useNavigate();
     const { Option } = Select;
     const [selectedValue, setSelectedValue] = useState(null);
+    const [capNhatDataNguoiDungSport, setCapNhatDataNguoiDungSport] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,7 +28,7 @@ const QuyenEdit = () => {
                 setChucNang(chucNangResponse.data.data);
 
                 const initialPermissions = chucNangResponse.data.data.reduce((acc, item) => {
-                    acc[item.permissionName] = { view: false, create: false, edit: false, delete: false };
+                    acc[item.permissionName] = { view: false, create: false, edit: false };
                     return acc;
                 }, {});
                 setPermissions(initialPermissions);
@@ -77,7 +80,6 @@ const QuyenEdit = () => {
                 view: true,
                 create: true,
                 edit: true,
-                delete: true
             }
         }));
     };
@@ -89,14 +91,13 @@ const QuyenEdit = () => {
                 view: false,
                 create: false,
                 edit: false,
-                delete: false
             }
         }));
     };
 
     // Function to handle the update permission
     const handleUpdatePermissions = async () => {
-        if(tenQuyen.trim().length == 0) {
+        if (tenQuyen.trim().length == 0) {
             message.error('Tên quyền không bỏ trống!');
             return;
         }
@@ -115,20 +116,26 @@ const QuyenEdit = () => {
             rolePermissionDTOList: permissionsToSend,
             activeEnum: selectedValue // Pass the selectedValue as activeEnum
         };
+        console.log("data to send sua quyen: ", dataToSend);
 
         suaQuyen(dataToSend)
             .then(response => {
                 if (response.data.statusCode === 200) {
                     message.success('Cập nhật quyền thành công!');
+                    setCapNhatDataNguoiDungSport(true)
                 } else if (response.data.statusCode === 234) {
                     message.error('Tên quyền đã tồn tại!');
+                    setCapNhatDataNguoiDungSport(false)
                 }
                 else {
                     message.error('Nguoi code k biet loi gi. hihi');
+                    setCapNhatDataNguoiDungSport(false)
+                    console.log(response)
                 }
             })
             .catch(error => {
                 message.error('Có lỗi xảy ra khi thêm quyền.');
+                setCapNhatDataNguoiDungSport(false)
                 console.error("Lỗi khi thêm quyền:", error);
             });
     };
@@ -136,7 +143,18 @@ const QuyenEdit = () => {
     const handleChangeSelectBox = (value) => {
         setSelectedValue(value);
     };
-    
+
+    useEffect(() => {
+        const handleCapNhatDataNguoiDungSport = async () => {
+            const myProfile = await getMyProfile(localStorage.getItem("accessToken")); // update data nguoi dung sau moi lan lam moi token
+            localStorage.setItem(
+                "dataNguoiDungSport",
+                JSON.stringify(myProfile.data.data)
+            );
+        }
+        handleCapNhatDataNguoiDungSport()
+    }, [capNhatDataNguoiDungSport])
+
     return (
         <div className='them_quyen_container'>
             <h1 className="title">Chỉnh sửa nhóm quyền</h1>
@@ -145,6 +163,7 @@ const QuyenEdit = () => {
                     placeholder="Nhập tên nhóm quyền"
                     value={tenQuyen}
                     onChange={(e) => setTenQuyen(e.target.value)}
+                    disabled={idQuyen === "1" || idQuyen === "2" || idQuyen === "3"} // Vô hiệu hóa nếu idQuyen là 1 ~ admin, 2 ~ chuSan, 3 ~ Khach hang
                 />
                 <Select
                     value={selectedValue} // Set the value of the Select
@@ -162,7 +181,6 @@ const QuyenEdit = () => {
                         <td>Xem</td>
                         <td>Tạo mới</td>
                         <td>Sửa</td>
-                        <td>Xoá</td>
                         <td>Hành động</td>
                     </tr>
                 </thead>
@@ -173,8 +191,9 @@ const QuyenEdit = () => {
                             <td>
                                 <input
                                     type='checkbox'
-                                    checked={permissions[item.permissionName]?.view  || false}
+                                    checked={permissions[item.permissionName]?.view || false}
                                     onChange={() => handleCheckboxChange(item.permissionName, 'view')}
+                                    disabled={item.permissionName == "Quản lí nhóm quyền" && idQuyen == 1 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 2 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 3}
                                 />
                             </td>
                             <td>
@@ -182,6 +201,7 @@ const QuyenEdit = () => {
                                     type='checkbox'
                                     checked={permissions[item.permissionName]?.create || false}
                                     onChange={() => handleCheckboxChange(item.permissionName, 'create')}
+                                    disabled={item.permissionName == "Quản lí nhóm quyền" && idQuyen == 1 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 2 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 3}
                                 />
                             </td>
                             <td>
@@ -189,13 +209,7 @@ const QuyenEdit = () => {
                                     type='checkbox'
                                     checked={permissions[item.permissionName]?.edit || false}
                                     onChange={() => handleCheckboxChange(item.permissionName, 'edit')}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type='checkbox'
-                                    checked={permissions[item.permissionName]?.delete || false}
-                                    onChange={() => handleCheckboxChange(item.permissionName, 'delete')}
+                                    disabled={item.permissionName == "Quản lí nhóm quyền" && idQuyen == 1 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 2 || item.permissionName === "Quản lí nhóm quyền" && idQuyen == 3}
                                 />
                             </td>
                             <td>
@@ -216,7 +230,9 @@ const QuyenEdit = () => {
                 <div onClick={handleBack}> <GradientButtonBack /> </div>
                 <div className="btn_row_last">
                     <div onClick={handleCancel}> <GradientButtonCancel /> </div>
-                    <div onClick={handleUpdatePermissions}> <GradientButton /> </div> {/* Save Button */}
+                    <PermissionEditButton feature="Quản lí nhóm quyền">
+                        <div onClick={handleUpdatePermissions}> <GradientButton /> </div> {/* Save Button */}
+                    </PermissionEditButton>
                 </div>
             </div>
         </div>

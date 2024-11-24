@@ -7,6 +7,7 @@ import "./login.css";
 import BackgroundImage from "../../assets/images/background.jpg";
 import Logo from "../../assets/images/logo.png";
 import { clientGithubId } from "../../utils/thongTinChung";
+import { getMyProfile } from "../../services/myProfileService";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -22,7 +23,11 @@ const Login = () => {
     setLoading(true);
 
     const result = await login(username, password);
-    console.log("DN LOIX",result);
+    console.log("DN LOIX", result);
+    if (result.message == "Không có tài khoản với email này") {
+      setShow(true); // Show error message if login fails
+      setMessError("Không có tài khoản với email này")
+    }
     if (result.statusCode == 888) {
       setShow(true); // Show error message if login fails
       setMessError("Tài khoản này được đăng ký bằng Google. Vui lòng sử dụng \"Đăng nhập bằng Google\".")
@@ -39,6 +44,12 @@ const Login = () => {
       setShow(false)
       navigate("/home"); // Navigate to the home page after successful login
       localStorage.setItem("accessToken", result.data)
+      // Fetch user profile
+      const myProfile = await getMyProfile(result.data);
+      localStorage.setItem(
+        "dataNguoiDungSport",
+        JSON.stringify(myProfile.data.data)
+      );
     }
     // } else {
     //   const redirectTo = location.state?.from?.pathname || "/home"; // Trang đích mặc định
@@ -98,11 +109,6 @@ const Login = () => {
             required
           />
         </Form.Group>
-
-        <Form.Group className="mb-2" controlId="checkbox">
-          <Form.Check type="checkbox" label="Nhớ tài khoản" />
-        </Form.Group>
-
         {!loading ? (
           <Button className="w-100" variant="primary" type="submit">
             Đăng nhập
@@ -122,7 +128,7 @@ const Login = () => {
           </div>
         </div>
 
-        
+
         <div className="btn_login_github" onClick={handleLoginGithub}>
           <div className="img_github">
             <span data-v-66f6a142="" class="klk-login-third-party-logo">

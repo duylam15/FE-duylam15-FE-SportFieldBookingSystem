@@ -35,14 +35,20 @@ const ForgotPassword = () => {
             setShowError(true);
             setErrorMessage("Không tìm thấy tài khoản với email");
         }
-        if(error.status == 400) {
+        if(error.response.data.statusCode == 799) {
+            console.log(error);
             setShowError(true);
             setErrorMessage("Vui lòng đăng nhập bằng Google với tài khoản này");
         }
-        else {
-            setShowError(true);
-            setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau");
+        if(error.response.data.statusCode == 666) {
+          console.log(error);
+          setShowError(true);
+          setErrorMessage("Vui lòng đăng nhập bằng Github với tài khoản này");
         }
+        // else {
+        //     setShowError(true);
+        //     setErrorMessage("Có lỗi xảy ra, vui lòng thử lại sau");
+        // }
    
     } finally {
       setLoading(false);

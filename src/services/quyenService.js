@@ -1,4 +1,4 @@
-import axios from "./apiService"
+import axios from "../utils/axiosInstance"
 
 const REST_API_BASE_URL = 'http://localhost:8080';
 

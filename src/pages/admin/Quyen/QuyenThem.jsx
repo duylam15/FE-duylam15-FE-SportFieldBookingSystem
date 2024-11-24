@@ -28,7 +28,7 @@ const QuyenThem = () => {
             .then(response => {
                 setChucNang(response.data.data);
                 const initialPermissions = response.data.data.reduce((acc, item) => {
-                    acc[item.permissionName] = { view: false, create: false, edit: false, delete: false };
+                    acc[item.permissionName] = { view: false, create: false, edit: false };
                     return acc;
                 }, {});
                 setPermissions(initialPermissions);
@@ -54,8 +54,7 @@ const QuyenThem = () => {
             [tenChucNang]: {
                 view: true,
                 create: true,
-                edit: true,
-                delete: true
+                edit: true
             }
         }));
     };
@@ -66,8 +65,7 @@ const QuyenThem = () => {
             [tenChucNang]: {
                 view: false,
                 create: false,
-                edit: false,
-                delete: false
+                edit: false
             }
         }));
     };
@@ -78,7 +76,7 @@ const QuyenThem = () => {
 
     const handleCancel = () => {
         const resetPermissions = Object.keys(permissions).reduce((acc, key) => {
-            acc[key] = { view: false, create: false, edit: false, delete: false };
+            acc[key] = { view: false, create: false, edit: false};
             return acc;
         }, {});
         setPermissions(resetPermissions);
@@ -96,7 +94,6 @@ const QuyenThem = () => {
                 if (value.create) actions.push({ permissionId: chucNang.find(c => c.permissionName === key)?.permissionId, action: 'CREATE' });
                 if (value.edit) actions.push({ permissionId: chucNang.find(c => c.permissionName === key)?.permissionId, action: 'EDIT' });
                 if (value.view) actions.push({ permissionId: chucNang.find(c => c.permissionName === key)?.permissionId, action: 'VIEW' });
-                if (value.delete) actions.push({ permissionId: chucNang.find(c => c.permissionName === key)?.permissionId, action: 'DELETE' });
                 return actions; // Return the actions for the current permission
             });
     
@@ -135,7 +132,6 @@ const QuyenThem = () => {
                         <td>Xem</td>
                         <td>Tạo mới</td>
                         <td>Sửa</td>
-                        <td>Xoá</td>
                         <td>Hành động</td>
                     </tr>
                 </thead>
@@ -162,13 +158,6 @@ const QuyenThem = () => {
                                     type='checkbox'
                                     checked={permissions[item.permissionName]?.edit || false}
                                     onChange={() => handleCheckboxChange(item.permissionName, 'edit')}
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type='checkbox'
-                                    checked={permissions[item.permissionName]?.delete || false}
-                                    onChange={() => handleCheckboxChange(item.permissionName, 'delete')}
                                 />
                             </td>
                             <td>

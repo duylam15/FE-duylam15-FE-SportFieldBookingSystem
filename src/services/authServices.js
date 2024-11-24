@@ -56,13 +56,13 @@ export const logout = async () => {
     console.log("response: ", responseData);
     if (response.ok) {
       localStorage.removeItem("accessToken"); // Clear token
-      localStorage.removeItem("dataNguoiDung"); // Clear token
+      localStorage.removeItem("dataNguoiDungSport"); // Clear data nguoi dung
       return true; // Logout successful
     }
     return false; // Logout failed
   } catch (error) {
     localStorage.removeItem("accessToken"); // Clear token
-    localStorage.removeItem("dataNguoiDung"); // Clear token
+    localStorage.removeItem("dataNguoiDungSport"); // Clear data nguoi dung
     console.error("Đăng xuất lỗi:", error);
     return false;
   }
@@ -77,8 +77,12 @@ export const refreshToken = async () => {
 
     if (response.ok) {
       const data = await response.json();
-      localStorage.setItem("accessToken", data.data); // Update token
-      alert(data.data);
+      localStorage.setItem("accessToken", data.data); // update token
+      const myProfile = await getMyProfile(data.data); // update data nguoi dung sau moi lan lam moi token
+      localStorage.setItem(
+        "dataNguoiDungSport",
+        JSON.stringify(myProfile.data.data)
+      );
       return true;
     }
     return false;
@@ -122,7 +126,7 @@ export const useGoogleLoginHandler = () => {
           // Fetch user profile
           const myProfile = await getMyProfile(accessToken);
           localStorage.setItem(
-            "dataNguoiDung",
+            "dataNguoiDungSport",
             JSON.stringify(myProfile.data.data)
           );
 

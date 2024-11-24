@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 const API = 'http://localhost:8080/'
 
 export const forgotPassword = async (data) => {

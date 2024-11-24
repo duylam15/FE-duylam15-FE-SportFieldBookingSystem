@@ -23,7 +23,7 @@ const UserPageInfoDetail = ({ profile, loading, error }) => {
           <input
             type="email"
             className="contact-info__input email"
-            value="lockbkbang@gmail.com"
+            value={accountData?.email}
             readOnly
           />
           <div className="contact-info__item--icon">

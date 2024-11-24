@@ -7,6 +7,7 @@ import { GradientButton, GradientButtonBack } from '../../../components/Admin/Gr
 import { capNhatThongTinNguoiDung, getThongTinNguoiDungById } from '../../../services/nguoiDungService';
 import { useNavigate, useParams } from 'react-router-dom';
 import { notification } from 'antd';
+import { PermissionEditButton } from '../../../components/Admin/Sidebar';
 
 const { Option } = Select;
 
@@ -63,11 +64,11 @@ const NguoiDungEdit = () => {
     };
 
     const handleSave = async () => {
-        if(hoTen.trim().length == 0) {
+        if (hoTen.trim().length == 0) {
             openNotificationWithIcon('error', 'Cập nhật thất bại', 'Tên người dùng được không bỏ trống!');
             return;
         }
-        if(phone.trim().length != 10) {
+        if (phone.trim().length != 10) {
             openNotificationWithIcon('error', 'Cập nhật thất bại', 'Số điện thoại phải 10 số');
             return;
         }
@@ -112,14 +113,14 @@ const NguoiDungEdit = () => {
                     </div>
                 </div>
                 <div>
-                <div className='block_input'>
+                    <div className='block_input'>
                         <label className='label'>Họ tên: </label>
                         <div className='w-300'>
                             <Input
                                 placeholder="Nhập họ tên người dùng"
                                 prefix={<UserOutlined />}
                                 value={hoTen}
-                                onChange={(e) => {setHoTen(e.target.value)}}
+                                onChange={(e) => { setHoTen(e.target.value) }}
                             />
                         </div>
                     </div>
@@ -175,7 +176,9 @@ const NguoiDungEdit = () => {
 
             <div className="btn_row_last">
                 <div onClick={handleBack}><GradientButtonBack /></div>
-                <div onClick={handleSave}><GradientButton /></div> {/* Save Button */}
+                <PermissionEditButton feature="Quản lí người dùng">
+                    <div onClick={handleSave}><GradientButton /></div> {/* Save Button */}
+                </PermissionEditButton>
             </div>
         </div>
     );

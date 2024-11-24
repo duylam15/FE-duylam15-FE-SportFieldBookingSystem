@@ -12,6 +12,7 @@ import Logo from "../../assets/images/logo.png";
 
 const Register = () => {
   const [email, setEmail] = useState("");
+  const [hoTen, setHoTen] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [messError, setMessError] = useState("");
@@ -23,6 +24,11 @@ const Register = () => {
 
   const validateForm = () => {
     const newErrors = {};
+    // Kiểm tra họ tên
+    if (!hoTen) {
+      newErrors.hoTen = "Họ tên là bắt buộc";
+    }
+
     // Kiểm tra email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -55,7 +61,7 @@ const Register = () => {
     if (!validateForm()) return;
 
     setLoading(true);
-    const result = await register({ email, password, rePassword });
+    const result = await register({hoTen, email, password, rePassword });
     console.log("ANH NHO RA LA MINH BIET: ", result);
     console.log(result);
     if (result.statusCode == 400) {
@@ -99,7 +105,20 @@ const Register = () => {
           </Alert>
         ) : null}
 
-
+        <Form.Group className="mb-2" controlId="hoTen">
+          <Form.Label>Họ tên</Form.Label>
+          <Form.Control
+            type="text"
+            value={hoTen}
+            placeholder="Họ tên"
+            onChange={(e) => setHoTen(e.target.value)}
+            required
+            isInvalid={!!errors.hoTen}
+          />
+          <Form.Control.Feedback type="invalid">
+            {errors.email}
+          </Form.Control.Feedback>
+        </Form.Group>
         <Form.Group className="mb-2" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control

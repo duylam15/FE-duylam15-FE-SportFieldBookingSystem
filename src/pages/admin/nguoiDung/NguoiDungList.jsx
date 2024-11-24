@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import EditBtn from "../../../components/Admin/ColorButtons/EditBtn";
 import DeleteBtn from "../../../components/Admin/ColorButtons/deleteBtn";
 import './nguoiDungList.scss'
+import { PermissionButton } from "../../../components/Admin/Sidebar";
 const NguoiDungList = ({
     nguoiDung,
     loading,
@@ -43,7 +44,8 @@ const NguoiDungList = ({
                                 <td>{v.status}</td>
                                 <td>
                                    <div className="row_btn">
-                                    <div className="btn_block" onClick={() => onEdit(v.userId)}><EditBtn></EditBtn></div>
+                                    <PermissionButton feature="Quản lí người dùng" idButton={v.userId} onEdit={onEdit}></PermissionButton>
+                                    {/* <div className="btn_block" onClick={() => onEdit(v.userId)}><EditBtn></EditBtn></div> */}
                                     {/* <div className="btn_block"><DeleteBtn></DeleteBtn></div> */}
                                    </div>
                                 </td>

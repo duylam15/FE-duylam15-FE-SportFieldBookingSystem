@@ -33,6 +33,7 @@
   font-size: 20px;
   padding: 10px 25px;
   cursor: pointer;
+  padding-right: 0px;
 }
 .nav-item.active {
   color: #fff;
