@@ -8,6 +8,9 @@ import { Container, Alert, Button, Row, Col, Card } from "react-bootstrap";
 import { toast } from "react-toastify";
 import crudService from "../../services/crudService";
 import { useBooking } from "../BookingContext";
+import { Client, Stomp } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import axios from "axios";
 
 const localizer = momentLocalizer(moment);
 
@@ -24,6 +27,46 @@ const BookingCalendar = () => {
 
   const now = new Date();
   const filteredEvents = events.filter((event) => new Date(event.start) >= now);
+
+  const [idTimeSlot, setidTimeSlot] = useState(null); // Lỗi
+  const [status, setStatus] = useState('');
+  const [client, setClient] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+  // socket from kiet code
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClientInstance = Stomp.over(socket);
+    stompClientInstance.connect({},
+      (frame) => {
+        console.log('Connected: ' + frame);
+        stompClientInstance.subscribe('/topic/holdTimeslot', (message) => {
+          const heldSlotId = message.body; // Giả sử message.body là ID của time slot
+          console.log('Time slot held:', heldSlotId);
+
+          // Cập nhật màu nền của time slot đã được giữ
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.id === parseInt(heldSlotId)
+                ? { ...event, status: 'PENDING', backgroundColor: 'lightcoral' } // Cập nhật trạng thái và màu nền
+                : event
+            )
+          );
+        });
+        stompClientInstance.subscribe('/topic/seatCancelHold', (message) => {
+          alert('Canceled seat after 20 seconds: ' + message.body);
+        });
+      },
+      (error) => {
+        console.error('WebSocket connection error:', error);  // Xử lý lỗi kết nối
+      }
+    );
+    setStompClient(stompClientInstance);
+
+    // Ngắt kết nối khi component bị hủy
+    return () => {
+      if (stompClientInstance) stompClientInstance.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const fetchFieldDetails = async () => {
@@ -68,7 +111,10 @@ const BookingCalendar = () => {
     fetchFieldDetails();
   }, [fieldId, dataBooking]);
   console.log(events);
+
+  // -------------------------------------------------------------------------------------------------
   const handleSelectEvent = (event) => {
+    setidTimeSlot(event.id)
     if (event.status === "BOOKED" || event.status === "PENDING") {
       toast.error("Khung giờ này không khả dụng!");
       return;
@@ -99,8 +145,8 @@ const BookingCalendar = () => {
       event.status === "BOOKED" || event.status === "PENDING"
         ? "#e0e0e0" // Màu xám cho trạng thái không khả dụng
         : isSelected
-        ? "lightblue" // Màu xanh nhạt nếu đã chọn
-        : "white"; // Màu trắng cho trạng thái khả dụng
+          ? "lightblue" // Màu xanh nhạt nếu đã chọn
+          : "white"; // Màu trắng cho trạng thái khả dụng
 
     return {
       style: {
@@ -117,7 +163,9 @@ const BookingCalendar = () => {
     };
   };
 
-  const handleBooking = () => {
+  const handleBooking = async  () => {
+    const response = await axios.put(`http://localhost:8080/api/timeSlot/hold/${idTimeSlot}`);
+    console.log(response)
     navigate("/orderpage", {
       state: { dataBooking },
     });

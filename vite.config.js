@@ -5,6 +5,6 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   plugins: [react()],
   define: {
-    global: {}, // Định nghĩa biến global
+    global: 'window', // Định nghĩa biến global
   },
 })
