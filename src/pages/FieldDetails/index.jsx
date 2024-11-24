@@ -46,7 +46,7 @@ function FieldDetails() {
 
 	// Handle booking button click
 	const handleBookingClick = () => {
-		navigate(`/calendar/${id}`); // Navigate to /calendar/:fieldId
+		navigate(`/booking/${id}`); // Navigate to /calendar/:fieldId
 	};
 
 	return (
