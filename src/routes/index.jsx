@@ -3,7 +3,6 @@ import LayoutDefault from "../layout/LayoutDefault";
 import Home from "../pages/Home";
 import Error from "../pages/Error";
 import UsersPage from "../pages/UserPage";
-import FieldList from "../pages/FieldList";
 import FieldDetails from "../pages/FieldDetails";
 import Dashboard from "../pages/admin/dashboard";
 import San from "../pages/admin/San";
@@ -29,8 +28,11 @@ import MyProfile from "../pages/admin/myProfile";
 import FieldTypePage from "../pages/FieldType";
 import FieldFacilityPage from "../pages/FieldFacility";
 import FieldPage from "../pages/FieldPage";
+import FieldListPage from "../pages/FieldList";
+import FieldFormPage from "../pages/Field/FieldForm";
 import ProtectedRoute from "../components/ProtectedRoute";
-import PaymentResultPage from "../components/fieldOrder/PaymentResultPage";
+import PaymentResultPage from "../components/Customer/FieldOrder/PaymentResultPage";
+import FieldList from "../pages/FieldList";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -148,5 +150,14 @@ export const router = createBrowserRouter([
   {
     path: "/fields",
     element: <FieldPage />,
+  },
+
+  {
+    path: "/fields/create",
+    element: <FieldFormPage />,
+  },
+  {
+    path: "/fieldListPage",
+    element: <FieldFormPage />,
   },
 ]);

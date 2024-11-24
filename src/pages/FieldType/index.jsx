@@ -1,5 +1,5 @@
 import React from "react";
-import FieldType from "../../components/FieldType";
+import FieldType from "../../components/Field/FieldType";
 
 function FieldTypePage() {
   return (

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import crudService from "../../services/crudService";
+import crudService from "../../../services/crudService";
 import { Button, Table, Modal, Form } from "react-bootstrap";
-import { useConfirm } from "../ConfirmProvider";
+import { useConfirm } from "../../ConfirmProvider";
 
 const URL_NAME = `fieldType`;
 

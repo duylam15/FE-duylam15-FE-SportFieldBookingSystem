@@ -10,10 +10,10 @@ import {
   Card,
 } from "react-bootstrap";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-import crudService from "../../services/crudService";
+import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
 //THONG TIN BOOKING
-import { useBooking } from "../../components/BookingContext";
+import { useBooking } from "../../BookingContext";
 
 const FieldOrder = () => {
   const navigate = useNavigate(); // Để điều hướng giữa các trang
@@ -46,7 +46,7 @@ const FieldOrder = () => {
     };
   }, [dataBooking, navigate]);
 
-  const handleSubmit  = async () => {
+  const handleSubmit = async () => {
     const booking = {
       userId: dataBooking.userId, // ID người dùng
       fieldId: dataBooking.fieldId, // ID sân
@@ -71,15 +71,19 @@ const FieldOrder = () => {
     console.log(requestData);
     // toast.success("oke");
     try {
-      const totalAmount = dataBooking?.selectedEvents?.reduce(
-        (sum, event) => sum + (event.totalPrice || 0),
-        0
-      ) || 0;
-      
+      const totalAmount =
+        dataBooking?.selectedEvents?.reduce(
+          (sum, event) => sum + (event.totalPrice || 0),
+          0
+        ) || 0;
+
       // In ra tổng số tiền
       console.log("Tổng số tiền:", totalAmount);
       // Gửi request tạo URL thanh toán
-      const paymentResponse = await crudService.getPaymentUrl("payment/url", totalAmount);
+      const paymentResponse = await crudService.getPaymentUrl(
+        "payment/url",
+        totalAmount
+      );
       const rs = crudService.create("CustomerBooking", requestData);
       if (paymentResponse && paymentResponse.data) {
         // Chuyển đến trang thanh toán

@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Container } from "react-bootstrap";
-import FieldOrder from "../../components/fieldOrder";
+import FieldOrder from "../../components/Customer/FieldOrder";
 
 function OrderPage() {
   return (
