@@ -6,6 +6,8 @@ import ImageUploader from "../ImageUploader";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "../ConfirmProvider";
+import IconLabelButtons from "../Admin/ColorButtons";
+import './index'
 
 const Field = () => {
   const [fields, setFields] = useState([]);
@@ -132,12 +134,10 @@ const Field = () => {
   };
   return (
     <div>
+        <h1 className="title_center_page">Danh sách sân</h1>
       <Link to="/admin/san/create">
-        <Button variant="primary">
-        Add New Field
-        </Button>
+        <IconLabelButtons></IconLabelButtons>
       </Link>
-     
       <Table striped bordered hover>
         <thead>
           <tr>

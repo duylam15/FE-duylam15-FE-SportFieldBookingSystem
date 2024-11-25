@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import crudService from "../../../services/crudService";
 import { Button, Table, Modal, Form } from "react-bootstrap";
 import { useConfirm } from "../../ConfirmProvider";
+import IconLabelButtons from "../../Admin/ColorButtons";
 
 const URL_NAME = `fieldType`;
 
@@ -78,10 +79,10 @@ const FieldType = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Quản lý Loại Sân</h2>
-      <Button variant="primary" onClick={() => openModal()}>
-        Thêm Loại Sân
-      </Button>
+      <h1 className="title_center_page">Danh sách loại sân</h1>
+      <div onClick={openModal}>
+        <IconLabelButtons></IconLabelButtons>
+      </div>
 
       {/* Bảng hiển thị danh sách FieldType */}
       <Table striped bordered hover className="mt-3">

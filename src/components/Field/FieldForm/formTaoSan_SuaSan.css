@@ -6,5 +6,10 @@
 }
 
 .field-form-actions {
+    width: 84%;
+    justify-content: flex-end;
     margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }

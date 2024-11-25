@@ -8,8 +8,12 @@ import FormThemSuaSan from "../Form_Them_Sua_San";
 import ImageUploader from "../ImageUploader";
 import './formTaoSan_SuaSan.css'
 import { uploadImageSan } from "../../../services/sanService";
+import { GradientButton, GradientButtonBack } from "../../Admin/GradientButton";
+import { Spin } from "antd";
+
 
 const FieldForm = () => {
+  const [loading, setLoading] = useState(false);
   const [fieldData, setFieldData] = useState({
     fieldName: "",
     capacity: "",
@@ -41,6 +45,7 @@ const FieldForm = () => {
 
   const fetchFieldData = async (id) => {
     try {
+      setLoading(true);
       const response = await crudService.read("fields", id);
       setFieldData({
         ...fieldData,
@@ -54,78 +59,102 @@ const FieldForm = () => {
       });
     } catch (error) {
       toast.error("Failed to fetch field data.");
+    } finally {
+      setLoading(false)
     }
+    
   };
 
+  const handleBack = () => {
+    navigate('/admin/san');
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       if (fieldId) {
+        // Cập nhật sân
         const confirmMessage = `Bạn có chắc chắn muốn cập nhật field có id: ${fieldId} không?`;
         const confirmed = await showConfirmMessage(confirmMessage);
         if (confirmed) {
-          await taoSan(fieldData)
-          console.log("data to send update: ", fieldData)
+          // Lọc ảnh
+          const oldImages = fieldData.fieldImageUrls.filter((image) => image.fieldImageURL);
+          const newImages = fieldData.fieldImageUrls.filter((image) => !image.fieldImageURL);
+
+          // Chuẩn bị dữ liệu cập nhật
+          const modifiedFieldData = {
+            ...fieldData,
+            fieldImageList: oldImages.map((image) => image.fieldImageURL),
+          };
+
+          console.log("Updating field with data:", modifiedFieldData);
+          await crudService.update("fields", fieldId, modifiedFieldData);
+
+          // Upload ảnh mới
+          if (newImages.length > 0) {
+            const formData = new FormData();
+            newImages.forEach((file) => formData.append("files", file.originFileObj));
+
+            const responseUploadImage = await uploadImageSan(fieldId, formData);
+            console.log("Uploaded new images:", responseUploadImage);
+          }
+
           toast.success("Field updated successfully!");
         }
       } else {
-        console.log("data to send create: ", fieldData)
+        // Tạo mới sân
+        console.log("Creating field with data:", fieldData);
         const respTaoSan = await crudService.create("fields", fieldData);
+
         if (respTaoSan) {
-          // Gửi ảnh lên server sau khi tạo sân
-          const formData = new FormData();
+          const newImages = fieldData.fieldImageUrls;
+          if (newImages.length > 0) {
+            const formData = new FormData();
+            newImages.forEach((file) => formData.append("files", file.originFileObj));
 
-          // Log trước khi thêm các tệp ảnh vào FormData
-          console.log("Bắt đầu thêm ảnh vào FormData...");
-          fieldData.fieldImageUrls.forEach((file, index) => {
-            console.log("Đang thêm file thứ " + (index + 1) + ": ", file.originFileObj);  // Log tệp thực tế
-            formData.append("files", file.originFileObj);  // Thêm file thực tế vào FormData
-        });
-
-          // Log sau khi đã thêm hết ảnh vào FormData
-          console.log("Đã thêm tất cả các ảnh vào FormData:", formData);
-
-          // Gửi FormData chứa tệp hình ảnh lên server
-          const responseUploadImage = await uploadImageSan(respTaoSan.fieldId, formData);
-          console.log("resp tao san ", respTaoSan);
+            const responseUploadImage = await uploadImageSan(respTaoSan.fieldId, formData);
+            console.log("Uploaded new images:", responseUploadImage);
+          }
           toast.success("Field created successfully!");
         }
-        console.log("resp tao san ", respTaoSan)
-        toast.success("Field created successfully!");
       }
-      // navigate("/admin/san");
+
+      // navigate("/admin/san"); // Điều hướng sau khi xử lý xong
     } catch (error) {
       toast.error("Error submitting field data.");
+      console.error("Error:", error);
+    }
+    finally {
+      setLoading(false);
     }
   };
-
   return (
-    <div className="field-form-container">
-      <h2>{fieldId ? "Chỉnh sửa sân" : "Tạo mới sân"}</h2>
-      <Form onSubmit={handleSubmit}>
-        <FormThemSuaSan
-          fieldData={fieldData}
-          setFieldData={setFieldData}
-          fieldTypes={fieldTypes}
-        />
-        <div className="list_uploader">
-          <span>Ảnh sân</span>
-          <ImageUploader
-            fileList={fieldData.fieldImageUrls}
-            setFileList={(fileList) =>
-              setFieldData({ ...fieldData, fieldImageUrls: fileList })
-            }
+    <Spin spinning={loading} tip="Đang tải...">
+      <div className="field-form-container">
+        <h2>{fieldId ? "Chỉnh sửa sân" : "Tạo mới sân"}</h2>
+        <Form onSubmit={handleSubmit}>
+          <FormThemSuaSan
+            fieldData={fieldData}
+            setFieldData={setFieldData}
+            fieldTypes={fieldTypes}
           />
-        </div>
+          <div className="list_uploader">
+            <span>Ảnh sân</span>
+            <ImageUploader
+              fileList={fieldData.fieldImageUrls}
+              setFileList={(fileList) =>
+                setFieldData({ ...fieldData, fieldImageUrls: fileList })
+              }
+            />
+          </div>
 
-        <div className="field-form-actions">
-          <Button type="submit">{fieldId ? "Update" : "Create"} Sân</Button>
-          <Link to="/admin/san">
-            <Button variant="secondary">Huỷ</Button>
-          </Link>
-        </div>
-      </Form>
-    </div>
+          <div className="field-form-actions">
+            <div onClick={handleBack}> <GradientButtonBack /> </div>
+            <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
+          </div>
+        </Form>
+      </div>
+    </Spin>
   );
 };
 

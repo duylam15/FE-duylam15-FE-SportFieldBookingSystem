@@ -1,10 +1,10 @@
 import React from "react";
-import FieldType from "../../components/Field/FieldType";
+import FieldType from "../../../components/Field/FieldType";
 
 function FieldTypePage() {
   return (
     <div>
-      <FieldType />
+      <FieldType></FieldType>
     </div>
   );
 }

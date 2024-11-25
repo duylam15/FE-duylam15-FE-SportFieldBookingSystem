@@ -229,3 +229,9 @@ tbody tr:hover {
 .table {
     border: 1px solid #ddd;
 }
+.title_center_page {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px;
+}
