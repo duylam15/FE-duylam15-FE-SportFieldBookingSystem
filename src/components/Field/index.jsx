@@ -61,7 +61,7 @@ const Field = () => {
   };
 
   const handleEditField = (fieldId) => {
-    navigate(`/fields/edit/${fieldId}`);
+    navigate(`/admin/san/edit/${fieldId}`);
   };
 
   const handleDeleteField = async (fieldId) => {

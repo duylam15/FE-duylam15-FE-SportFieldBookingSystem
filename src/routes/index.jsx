@@ -31,6 +31,7 @@ import FieldFormPage from "../pages/admin/Field/FieldForm";
 import FieldList from "../pages/FieldList";
 import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 import FieldType from "../components/Field/FieldType";
+import FieldForm from "../components/Field/FieldForm";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -123,6 +124,7 @@ export const router = createBrowserRouter([
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
       { path: "san/create", element: <FieldFormPage />},
+      { path: "san/edit/:fieldId", element: <FieldForm></FieldForm>}
     ],
   },
   {
@@ -141,10 +143,6 @@ export const router = createBrowserRouter([
   {
     path: "/fieldFacility",
     element: <FieldFacilityPage />,
-  },
-  {
-    path: "/fields/edit/:fieldId",
-    element: <FieldFormPage />,
   },
   {
     path: "/fields/fieldTimeRule/:fieldId",

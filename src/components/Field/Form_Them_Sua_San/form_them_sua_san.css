@@ -1,0 +1,11 @@
+.container-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.container_form .left {
+    width: 40%;
+}
+.container_form .right {
+    width: 40%;
+}

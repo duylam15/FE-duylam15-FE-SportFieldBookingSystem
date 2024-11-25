@@ -1,0 +1,10 @@
+.list_uploader {
+    margin-top: 30px;
+    display: flex;
+    align-self: center;
+    gap: 20px;
+}
+
+.field-form-actions {
+    margin-top: 30px;
+}

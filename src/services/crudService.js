@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '../utils/axiosInstance'
 import { toast } from "react-toastify";
 
 const API_BASE_URL = "http://localhost:8080/api";
