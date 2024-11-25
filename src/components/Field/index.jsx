@@ -60,7 +60,6 @@ const Field = () => {
   const handleEditField = (field) => {
     setIsEditing(true);
     setFieldData(field);
-    setShowModal(true);
   };
 
   const handleDeleteField = async (fieldId) => {

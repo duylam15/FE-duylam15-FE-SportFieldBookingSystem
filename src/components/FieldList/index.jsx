@@ -33,9 +33,8 @@ const FieldList = () => {
     }
   };
 
-  const handleEdit = (field) => {
-    setSelectedField(field);
-    setShowModal(true);
+  const handleEdit = (fieldId) => {
+    navigate(`/fields/create/${fieldId}`);
   };
 
   return (
@@ -64,7 +63,7 @@ const FieldList = () => {
               <td>{field.fieldAddress}</td>
               <td>{field.pricePerHour}</td>
               <td>
-                <Button onClick={() => handleEdit(field)}>Sửa</Button>
+                <Button onClick={() => handleEdit(field.fieldId)}>Sửa</Button>
                 <Button
                   variant="danger"
                   onClick={() => handleDelete(field.fieldId)}
