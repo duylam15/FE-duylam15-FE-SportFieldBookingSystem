@@ -21,7 +21,7 @@ const FieldTimeRules = ({ fieldId }) => {
 
   const fetchFieldTimeRules = async (fieldId) => {
     try {
-      const response = await crudService.read(`fieldTimeRules`);
+      const response = await crudService.read(`fieldTimeRules`, fieldId);
       setFieldTimeRules(response);
     } catch (error) {
       toast.error("Error fetching time rules.");

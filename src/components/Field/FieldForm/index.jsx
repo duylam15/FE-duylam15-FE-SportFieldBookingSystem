@@ -5,8 +5,11 @@ import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import FieldTimeRules from "../FieldTimeRule"; // Import mới
+import { useConfirm } from "../../ConfirmProvider";
 
 const FieldForm = () => {
+  //confirm modal
+  const { showConfirmMessage } = useConfirm();
   const navigate = useNavigate();
   const { fieldId } = useParams(); // Dùng để kiểm tra nếu đang edit
   const [fieldData, setFieldData] = useState({
@@ -25,7 +28,7 @@ const FieldForm = () => {
     fetchFieldTypes();
     if (fieldId) fetchFieldData(fieldId); // Nếu có ID, fetch dữ liệu để edit
   }, [fieldId]);
-
+  console.log(fieldData);
   const fetchFieldTypes = async () => {
     try {
       const response = await crudService.read("fieldType");
@@ -38,7 +41,17 @@ const FieldForm = () => {
   const fetchFieldData = async (id) => {
     try {
       const response = await crudService.read("fields", id);
-      setFieldData(response);
+      setFieldData((prevState) => ({
+        ...prevState,
+        // Cập nhật các giá trị nếu có `fieldId`
+        fieldName: response.fieldName,
+        capacity: response.capacity,
+        pricePerHour: response.pricePerHour,
+        fieldTypeId: response.fieldType.fieldTypeId,
+        fieldAddress: response.fieldAddress,
+        fieldImageUrls: response.fieldImageList,
+        status: response.status,
+      }));
     } catch (error) {
       console.error("Error fetching field data:", error);
       toast.error("Failed to fetch field data.");
@@ -56,8 +69,12 @@ const FieldForm = () => {
       console.log(fieldData);
 
       if (fieldId) {
-        await crudService.update("fields", fieldId, fieldData);
-        toast.success("Field updated successfully!");
+        const confirmMessage = `Bạn có chắc chắn muốn cập nhật field có id: ${fieldId} không?`;
+        const confirmed = await showConfirmMessage(confirmMessage);
+        if (confirmed) {
+          await crudService.update("fields", fieldId, fieldData);
+          toast.success("Field updated successfully!");
+        }
       } else {
         await crudService.create("fields", fieldData);
         toast.success("Field created successfully!");
@@ -158,7 +175,7 @@ const FieldForm = () => {
       </Form>
 
       {/* Include Field Time Rules */}
-      {fieldId && <FieldTimeRules fieldId={fieldId} />}
+      {/* {fieldId && <FieldTimeRules fieldId={fieldId} />} */}
     </div>
   );
 };

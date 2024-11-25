@@ -5,9 +5,12 @@ import { toast } from "react-toastify";
 import ImageUploader from "../ImageUploader";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "../ConfirmProvider";
 
 const Field = () => {
   const [fields, setFields] = useState([]);
+  //confirm modal
+  const { showConfirmMessage } = useConfirm();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [fieldTypes, setFieldTypes] = useState([]);
@@ -57,15 +60,18 @@ const Field = () => {
     setShowModal(true);
   };
 
-  const handleEditField = (field) => {
-    setIsEditing(true);
-    setFieldData(field);
+  const handleEditField = (fieldId) => {
+    navigate(`/fields/edit/${fieldId}`);
   };
 
   const handleDeleteField = async (fieldId) => {
     try {
-      await crudService.delete("fields", fieldId);
-      toast.success("Field deleted successfully.");
+      const confirmMessage = `Bạn có chắc chắn muốn xóa field có id: ${fieldId} không?`;
+      const confirmed = await showConfirmMessage(confirmMessage);
+      if (confirmed) {
+        await crudService.delete("fields", fieldId);
+        toast.success("Field deleted successfully.");
+      }
       fetchFields();
     } catch (error) {
       toast.error("Error deleting field.");
@@ -158,6 +164,7 @@ const Field = () => {
               <td>{field.capacity}</td>
               <td>{field.pricePerHour}</td>
               <td>{field.status === "ACTIVE" ? "Active" : "Inactive"}</td>
+              <td>Images Placeholder</td>
               <td>
                 <Button
                   variant="primary"
@@ -166,10 +173,9 @@ const Field = () => {
                   Time Rule
                 </Button>
               </td>
-              <td>Images Placeholder</td>
               <td>
                 <Button
-                  onClick={() => handleEditField(field)}
+                  onClick={() => handleEditField(field.fieldId)}
                   variant="warning"
                 >
                   Edit

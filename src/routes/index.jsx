@@ -158,7 +158,7 @@ export const router = createBrowserRouter([
     element: <FieldFormPage />,
   },
   {
-    path: "/fieldListPage",
+    path: "/fields/edit/:fieldId",
     element: <FieldFormPage />,
   },
   {
