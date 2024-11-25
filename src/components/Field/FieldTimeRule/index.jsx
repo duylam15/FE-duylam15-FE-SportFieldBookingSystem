@@ -21,7 +21,7 @@ const FieldTimeRules = ({ fieldId }) => {
 
   const fetchFieldTimeRules = async (fieldId) => {
     try {
-      const response = await crudService.read(`fields/${fieldId}/timeRules`);
+      const response = await crudService.read(`fieldTimeRules`);
       setFieldTimeRules(response);
     } catch (error) {
       toast.error("Error fetching time rules.");
@@ -31,9 +31,10 @@ const FieldTimeRules = ({ fieldId }) => {
 
   const handleAddTimeRule = async () => {
     try {
-      await crudService.create(`fields/${fieldId}/timeRules`, newTimeRule);
+      await crudService.create(`fieldTimeRules`, newTimeRule);
       toast.success("Time rule added successfully.");
       setNewTimeRule({
+        fieldId: fieldId,
         startTime: "",
         endTime: "",
         startDate: "",
@@ -49,7 +50,7 @@ const FieldTimeRules = ({ fieldId }) => {
 
   const handleDeleteTimeRule = async (ruleId) => {
     try {
-      await crudService.delete(`fields/${fieldId}/timeRules/${ruleId}`);
+      await crudService.delete(`fieldTimeRules/${ruleId}`);
       toast.success("Time rule deleted successfully.");
       fetchFieldTimeRules(fieldId);
     } catch (error) {

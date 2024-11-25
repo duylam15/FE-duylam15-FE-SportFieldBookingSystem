@@ -33,6 +33,7 @@ import FieldFormPage from "../pages/Field/FieldForm";
 import ProtectedRoute from "../components/ProtectedRoute";
 import PaymentResultPage from "../components/Customer/FieldOrder/PaymentResultPage";
 import FieldList from "../pages/FieldList";
+import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -159,5 +160,9 @@ export const router = createBrowserRouter([
   {
     path: "/fieldListPage",
     element: <FieldFormPage />,
+  },
+  {
+    path: "/fields/fieldTimeRule/:fieldId",
+    element: <FieldTimeRulesPage />,
   },
 ]);

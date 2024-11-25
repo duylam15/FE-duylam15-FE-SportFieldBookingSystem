@@ -4,9 +4,11 @@ import { Table, Button, Form, Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import ImageUploader from "../ImageUploader";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Field = () => {
   const [fields, setFields] = useState([]);
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [fieldTypes, setFieldTypes] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -120,6 +122,9 @@ const Field = () => {
     return " ↕";
   };
 
+  const handleTimeRuleClick = (fieldId) => {
+    navigate(`/fields/fieldTimeRule/${fieldId}`);
+  };
   return (
     <div>
       <Button as={Link} to="/fields/create" variant="primary">
@@ -129,9 +134,9 @@ const Field = () => {
         <thead>
           <tr>
             {[
-              "fieldCode",
-              "fieldName",
-              "fieldType",
+              "field Code",
+              "field Name",
+              "field Type",
               "capacity",
               "pricePerHour",
               "status",
@@ -141,6 +146,7 @@ const Field = () => {
               </th>
             ))}
             <th>Images</th>
+            <th>Time Rules</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -153,6 +159,14 @@ const Field = () => {
               <td>{field.capacity}</td>
               <td>{field.pricePerHour}</td>
               <td>{field.status === "ACTIVE" ? "Active" : "Inactive"}</td>
+              <td>
+                <Button
+                  variant="primary"
+                  onClick={() => handleTimeRuleClick(field.fieldId)}
+                >
+                  Time Rule
+                </Button>
+              </td>
               <td>Images Placeholder</td>
               <td>
                 <Button
