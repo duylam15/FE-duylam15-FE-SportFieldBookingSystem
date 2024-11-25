@@ -79,7 +79,7 @@ const FieldForm = () => {
         await crudService.create("fields", fieldData);
         toast.success("Field created successfully!");
       }
-      navigate("/fields");
+      navigate("/admin/san");
     } catch (error) {
       console.error("Error submitting field data:", error);
       toast.error("Error submitting field data.");
@@ -168,7 +168,7 @@ const FieldForm = () => {
 
         <div className="field-form-actions">
           <Button type="submit">{fieldId ? "Update" : "Create"} Field</Button>
-          <Link to="/fields">
+          <Link to="/admin/san">
             <Button variant="secondary">Cancel</Button>
           </Link>
         </div>

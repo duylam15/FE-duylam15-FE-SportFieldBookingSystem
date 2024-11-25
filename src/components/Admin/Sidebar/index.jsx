@@ -10,7 +10,6 @@ import { getMyProfile } from "../../../services/myProfileService.js";
 // Function to check if a specific permission exists for a feature
 const hasPermission = (featureName, action) => {
   const dataNguoiDung = JSON.parse(localStorage.getItem("dataNguoiDungSport"))
-  console.log("data de render UI side bar: ", dataNguoiDung);
   const chiTietQuyenDTOList = dataNguoiDung?.role?.rolePermissionDTOList || [];
   const permissionsArray = chiTietQuyenDTOList.map(
     (permission) => `${permission.permissionName}:${permission.action}`
@@ -23,7 +22,6 @@ const hasPermission = (featureName, action) => {
 
 const PermissionAddButton = ({ feature, children }) => { // ẩn hoặc hiện nút thêm theo tên chức năng
   const isAllowed = hasPermission(feature, "CREATE");
-  console.log("Cho phep hay khong cua: ", feature, " - ", isAllowed)
   return isAllowed ? children : null;
 };
 

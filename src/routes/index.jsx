@@ -25,15 +25,12 @@ import Booking from "../components/Booking/index";
 import Coupon from "../components/Coupon/index";
 import Invoice from "../components/Invoice/index";
 import MyProfile from "../pages/admin/myProfile";
-import FieldTypePage from "../pages/FieldType";
 import FieldFacilityPage from "../pages/FieldFacility";
-import FieldPage from "../pages/FieldPage";
-import FieldListPage from "../pages/FieldList";
-import FieldFormPage from "../pages/Field/FieldForm";
-import ProtectedRoute from "../components/ProtectedRoute";
-import PaymentResultPage from "../components/Customer/FieldOrder/PaymentResultPage";
+import FieldPage from "../pages/admin/FieldPage";
+import FieldFormPage from "../pages/admin/Field/FieldForm";
 import FieldList from "../pages/FieldList";
 import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
+import FieldType from "../components/Field/FieldType";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -120,11 +117,12 @@ export const router = createBrowserRouter([
           },
         ],
       }, // Route con của admin
-      { path: "san", element: <San /> }, // Route con của admin
-      { path: "san", element: <San /> }, // Route con của admin
+      { path: "san", element: <FieldPage /> }, // Route con của admin
+      { path: "loaisan", element: <FieldType></FieldType>},
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
+      { path: "san/create", element: <FieldFormPage />},
     ],
   },
   {
@@ -141,25 +139,20 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/fieldType",
-    element: <FieldTypePage />,
-  },
-  {
     path: "/fieldFacility",
     element: <FieldFacilityPage />,
   },
   {
-    path: "/fields",
-    element: <FieldPage />,
-  },
-
-  {
-    path: "/fields/create",
-    element: <FieldFormPage />,
-  },
-  {
     path: "/fields/edit/:fieldId",
     element: <FieldFormPage />,
+  },
+  {
+    path: "/fields/fieldTimeRule/:fieldId",
+    element: <FieldTimeRulesPage />,
+  },
+  {
+    path: "/fields/fieldTimeRule/:fieldId",
+    element: <FieldTimeRulesPage />,
   },
   {
     path: "/fields/fieldTimeRule/:fieldId",

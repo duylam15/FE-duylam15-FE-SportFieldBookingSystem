@@ -132,9 +132,12 @@ const Field = () => {
   };
   return (
     <div>
-      <Button as={Link} to="/fields/create" variant="primary">
+      <Link to="/admin/san/create">
+        <Button variant="primary">
         Add New Field
-      </Button>
+        </Button>
+      </Link>
+     
       <Table striped bordered hover>
         <thead>
           <tr>
