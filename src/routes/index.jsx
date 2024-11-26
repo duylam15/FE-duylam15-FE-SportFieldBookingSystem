@@ -32,6 +32,7 @@ import FieldList from "../pages/FieldList";
 import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 import FieldType from "../components/Field/FieldType";
 import FieldForm from "../components/Field/FieldForm";
+import ChatBox from "../components/ChatBox/ChatBox";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
         element: <FieldDetails />,
       },
     ],
+  },
+  {
+    path: "/chat",
+    element: <ChatBox />,
   },
   {
     path: "/home",
