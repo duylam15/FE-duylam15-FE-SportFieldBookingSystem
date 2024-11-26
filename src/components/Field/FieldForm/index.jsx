@@ -12,6 +12,7 @@ import { GradientButton, GradientButtonBack } from "../../Admin/GradientButton";
 import { Spin } from "antd";
 import Map from "../Map";
 import axios from "axios";
+import { PermissionEditButton } from "../../Admin/Sidebar";
 
 
 const FieldForm = () => {
@@ -83,7 +84,7 @@ const FieldForm = () => {
     }
   };
 
-  
+
 
   useEffect(() => {
     if (fieldData.longitude !== 106.660172 || fieldData.latitude !== 10.762622) {
@@ -118,8 +119,54 @@ const FieldForm = () => {
   const handleBack = () => {
     navigate('/admin/san');
   };
+  const validateFieldData = (data) => {
+    const errors = [];
+
+    // Kiểm tra tên sân
+    if (!data.fieldName || data.fieldName.trim() === "") {
+      errors.push("Tên sân là bắt buộc.");
+    }
+
+    // Kiểm tra dung lượng
+    if (!data.capacity || isNaN(data.capacity) || data.capacity <= 0) {
+      errors.push("Dung lượng sân phải là số dương.");
+    }
+
+    // Kiểm tra giá theo giờ
+    if (!data.pricePerHour || isNaN(data.pricePerHour) || data.pricePerHour <= 0) {
+      errors.push("Giá theo giờ phải là số dương.");
+    }
+
+    // Kiểm tra tọa độ
+    if (!data.longitude || !data.latitude) {
+      errors.push("Vị trí tọa độ không hợp lệ.");
+    }
+
+    // Kiểm tra địa chỉ
+    if (!data.fieldAddress || data.fieldAddress === "") {
+      errors.push("Địa chỉ sân là bắt buộc.");
+    }
+
+    // Kiểm tra loại sân
+    if (!data.fieldTypeId || data.fieldTypeId === "") {
+      errors.push("Loại sân là bắt buộc.");
+    }
+
+    return errors;
+  };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = validateFieldData(fieldData); // Kiểm tra dữ liệu
+
+    if (errors.length > 0) {
+      // Nếu có lỗi, hiển thị thông báo lỗi
+      toast.error(errors.join(" "));
+      return; // Dừng lại nếu có lỗi
+    }
+
     try {
       setLoading(true)
       if (fieldId) {
@@ -208,10 +255,19 @@ const FieldForm = () => {
               />
             </div>
           </div>
-          <div className="field-form-actions">
-            <div onClick={handleBack}> <GradientButtonBack /> </div>
-            <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
-          </div>
+          {fieldId ? ( // có fieldID nghĩa là sửa
+            
+              <div className="field-form-actions">
+                <div onClick={handleBack}> <GradientButtonBack /> </div>
+                <PermissionEditButton feature="Quản lí sân">
+                  <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
+                </PermissionEditButton>
+              </div>
+          ) : (
+            <div className="field-form-actions">
+              <div onClick={handleBack}> <GradientButtonBack /> </div>
+              <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
+            </div>)}
         </Form>
       </div>
     </Spin>

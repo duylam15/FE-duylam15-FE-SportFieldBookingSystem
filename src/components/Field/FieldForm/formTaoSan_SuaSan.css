@@ -12,6 +12,7 @@
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-bottom: 30px;
 }
 .map-container {
     width: 100%;
@@ -24,7 +25,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    padding-bottom: 50px;
+    padding-bottom: 150px;
   }
 
   .row_bottom_form_field .left {

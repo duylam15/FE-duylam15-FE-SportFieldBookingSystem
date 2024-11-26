@@ -21,3 +21,23 @@ export const uploadImageSan = async (fieldId, files) => {
     throw error;
   }
 };
+
+export const searchSan = async (fieldName, fieldTypeId, minCapacity, maxCapacity, page = 0, size = 10) => {
+  try {
+      // Gọi API với tham số tìm kiếm và phân trang
+      const response = await axios.get(`${baseURL}/api/fields/search/admin`, {
+          params: {
+              fieldName: fieldName,
+              fieldTypeId: fieldTypeId,
+              minCapacity: minCapacity,
+              maxCapacity: maxCapacity,
+              page,
+              size
+          }
+      });
+      console.log("search ~ ", response);
+      return response
+  } catch (error) {
+      console.error("Error fetching search quyen:", error);
+  }
+};
