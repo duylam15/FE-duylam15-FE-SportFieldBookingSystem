@@ -5,6 +5,7 @@ import './ChatBox.css'; // Thêm CSS cho khung chat
 const ChatBox = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const [isOpen, setIsOpen] = useState(false); // Quản lý trạng thái hiển thị khung chat
 
   // Hàm gửi tin nhắn đến API và nhận phản hồi
   const sendMessage = async () => {
@@ -40,24 +41,42 @@ const ChatBox = () => {
   };
 
   return (
-    <div className="chatbox-container">
-      <div className="chatbox-messages">
-        {messages.map((message, index) => (
-          <div key={index} className={`message ${message.role}`}>
-            <p>{message.content}</p>
+    <div className="chatbox-wrapper">
+      {/* Nút hình tròn để mở khung chat */}
+      {!isOpen && (
+        <button className="chatbox-toggle" onClick={() => setIsOpen(true)}>
+          💬
+        </button>
+      )}
+
+      {/* Khung chat */}
+      {isOpen && (
+        <div className="chatbox-container">
+          <div className="chatbox-header">
+            <h4>Hỗ trợ</h4>
+            <button className="chatbox-close" onClick={() => setIsOpen(false)}>
+              ✖
+            </button>
           </div>
-        ))}
-      </div>
-      <div className="chatbox-input">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-          placeholder="Nhập tin nhắn..."
-        />
-        <button onClick={sendMessage}>Gửi</button>
-      </div>
+          <div className="chatbox-messages">
+            {messages.map((message, index) => (
+              <div key={index} className={`message ${message.role}`}>
+                <p>{message.content}</p>
+              </div>
+            ))}
+          </div>
+          <div className="chatbox-input">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+              placeholder="Nhập tin nhắn..."
+            />
+            <button onClick={sendMessage}>Gửi</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

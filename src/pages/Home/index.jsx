@@ -11,6 +11,7 @@ import axios from "axios"
 import { notification } from "antd";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import ChatBox from '../../components/ChatBox/ChatBox';
 
 const Home = () => {
 	const [fieldTypes, setFieldTypes] = useState([]); // Danh sách loại sân
@@ -355,6 +356,7 @@ const Home = () => {
 						</Col>
 					</Row>
 				</Container>
+				<ChatBox />
 			</div>
 		</div>
 	);
