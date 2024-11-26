@@ -34,6 +34,7 @@ import FieldType from "../components/Field/FieldType";
 import FieldForm from "../components/Field/FieldForm";
 import ChatBox from "../components/ChatBox/ChatBox";
 import ThongKe from "../pages/Admin/ThongKe";
+import FieldTimeSlotsPage from "../pages/TimeSlot";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -130,8 +131,8 @@ export const router = createBrowserRouter([
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
       // { path: "thongke", element: <ThongKe /> },
-      { path: "san/create", element: <FieldFormPage />},
-      { path: "san/edit/:fieldId", element: <FieldForm></FieldForm>}
+      { path: "san/create", element: <FieldFormPage /> },
+      { path: "san/edit/:fieldId", element: <FieldForm></FieldForm> },
     ],
   },
   {
@@ -154,5 +155,9 @@ export const router = createBrowserRouter([
   {
     path: "/fields/fieldTimeRule/:fieldId",
     element: <FieldTimeRulesPage />,
+  },
+  {
+    path: "/fields/timeSlots/:fieldId",
+    element: <FieldTimeSlotsPage />,
   },
 ]);

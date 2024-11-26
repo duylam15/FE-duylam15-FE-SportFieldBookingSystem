@@ -7,23 +7,31 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useConfirm } from "../ConfirmProvider";
 import IconLabelButtons from "../Admin/ColorButtons";
-import './index'
-import { PermissionAddButton, PermissionButton, PermissionEditButton } from "../Admin/Sidebar";
+import "./index";
+import {
+  PermissionAddButton,
+  PermissionButton,
+  PermissionEditButton,
+} from "../Admin/Sidebar";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { searchSan } from "../../services/sanService";
 import TimeBtn from "../Admin/ColorButtons/TimeBtn";
-import { UserOutlined, MailOutlined, FileSearchOutlined } from '@ant-design/icons';
-import { Input, Select } from 'antd';
-import './san.scss'
+import {
+  UserOutlined,
+  MailOutlined,
+  FileSearchOutlined,
+} from "@ant-design/icons";
+import { Input, Select } from "antd";
+import "./san.scss";
 
 const Field = ({ size = 7 }) => {
   const [fields, setFields] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0)
-  const [fieldSeachName, setFieldSeachName] = useState("")
-  const [fieldTypeId, setFieldTypeId] = useState("")
-  const [minCapicity, setMinCapicity] = useState("")
+  const [totalPages, setTotalPages] = useState(0);
+  const [fieldSeachName, setFieldSeachName] = useState("");
+  const [fieldTypeId, setFieldTypeId] = useState("");
+  const [minCapicity, setMinCapicity] = useState("");
   const [maxCapicity, setMaxCapicity] = useState("");
   const { showConfirmMessage } = useConfirm();
   const navigate = useNavigate();
@@ -33,12 +41,24 @@ const Field = ({ size = 7 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
 
-
   // Fetch permissions based on current page and search term
-  const fetchSan = async (fieldName, fieldTypeId, minCapicity, maxCapicity, page, size) => {
+  const fetchSan = async (
+    fieldName,
+    fieldTypeId,
+    minCapicity,
+    maxCapicity,
+    page,
+    size
+  ) => {
     try {
-
-      const result = await searchSan(fieldName, fieldTypeId, minCapicity, maxCapicity, page - 1, size);
+      const result = await searchSan(
+        fieldName,
+        fieldTypeId,
+        minCapicity,
+        maxCapicity,
+        page - 1,
+        size
+      );
       console.log("TIM KIEM: ", result);
       if (result && result.data) {
         setFields(result.data.data.content);
@@ -66,8 +86,15 @@ const Field = ({ size = 7 }) => {
   }, [fieldSeachName]); // Only listen to searchName changes
 
   useEffect(() => {
-    fetchSan(fieldSeachName, fieldTypeId, minCapicity, maxCapicity, currentPage, size); // Fetch with the current page
-  }, [currentPage, fieldSeachName, fieldTypeId, minCapicity, maxCapicity]); // Fetch data when currentPage or searchName changes 
+    fetchSan(
+      fieldSeachName,
+      fieldTypeId,
+      minCapicity,
+      maxCapicity,
+      currentPage,
+      size
+    ); // Fetch with the current page
+  }, [currentPage, fieldSeachName, fieldTypeId, minCapicity, maxCapicity]); // Fetch data when currentPage or searchName changes
   useEffect(() => {
     const fetchFieldTypes = async () => {
       try {
@@ -80,14 +107,11 @@ const Field = ({ size = 7 }) => {
       }
     };
     fetchFieldTypes();
-  }, [])
-
-
+  }, []);
 
   const handleEditField = (fieldId) => {
     navigate(`/admin/san/edit/${fieldId}`);
   };
-
 
   const handleSort = (key) => {
     let direction = "ascending";
@@ -112,9 +136,7 @@ const Field = ({ size = 7 }) => {
   };
 
   const handleTimeRuleClick = (fieldId) => {
-    {
-      fieldId && <FieldTimeRules fieldId={fieldId} />;
-    }
+    navigate(`/fields/fieldTimeRule/${fieldId}`);
   };
   return (
     <div className="page_san_admin">
@@ -125,40 +147,40 @@ const Field = ({ size = 7 }) => {
         </Link>
       </PermissionAddButton>
 
-      <div className='timkiem'>
-        <div className='block_input'>
+      <div className="timkiem">
+        <div className="block_input">
           <label htmlFor="inputTenSan">Tên sân</label>
           <Input
             placeholder="Nhập tên sân"
             prefix={<FileSearchOutlined />}
-            id='inputTenSan'
+            id="inputTenSan"
             value={fieldSeachName}
             onChange={(e) => setFieldSeachName(e.target.value)}
           />
         </div>
-        <div className='block_input'>
+        <div className="block_input">
           <label htmlFor="minCapicity">Sức chứa min</label>
           <Input
             placeholder="Nhập sức chứa min"
             prefix={<UserOutlined />}
-            id='minCapicity'
+            id="minCapicity"
             value={minCapicity}
             onChange={(e) => setMinCapicity(e.target.value)}
           />
         </div>
 
-        <div className='block_input'>
+        <div className="block_input">
           <label htmlFor="minCapicity">Sức chứa max</label>
           <Input
             placeholder="Nhập sức chứa max"
             prefix={<UserOutlined />}
-            id='maxCapicity'
+            id="maxCapicity"
             value={maxCapicity}
             onChange={(e) => setMaxCapicity(e.target.value)}
           />
         </div>
 
-        <div className='block_input'>
+        <div className="block_input">
           <label>Loại sân</label>
           <div>
             <Select
@@ -212,8 +234,11 @@ const Field = ({ size = 7 }) => {
                 </PermissionEditButton>
               </td>
               <td>
-                <PermissionButton feature="Quản lí sân" idButton={field.fieldId} onEdit={handleEditField}>
-                </PermissionButton>
+                <PermissionButton
+                  feature="Quản lí sân"
+                  idButton={field.fieldId}
+                  onEdit={handleEditField}
+                ></PermissionButton>
               </td>
             </tr>
           ))}

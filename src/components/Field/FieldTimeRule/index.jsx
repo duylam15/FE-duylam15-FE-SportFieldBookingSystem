@@ -4,10 +4,13 @@ import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
 import Pagination from "../../Pagination"; // Import pagination component
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const FieldTimeRules = ({ fieldId }) => {
+const FieldTimeRules = () => {
+  const { fieldId } = useParams();
   const [fieldTimeRules, setFieldTimeRules] = useState([]);
   const [newTimeRule, setNewTimeRule] = useState({
+    fieldId: fieldId,
     startTime: "",
     endTime: "",
     startDate: "",
@@ -18,16 +21,14 @@ const FieldTimeRules = ({ fieldId }) => {
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(5); // Số lượng items mỗi trang
 
+  //navigate
+  const navigate = useNavigate();
   useEffect(() => {
     if (fieldId) {
       fetchFieldTimeRules(fieldId, currentPage);
-    } else {
-      fetchFieldTimeRules(fieldIdParam, currentPage);
     }
   }, [fieldId, currentPage]);
 
-  // Hàm lấy danh sách time rules cho trang hiện tại
-  console.log(`field id: ` + fieldId);
   const fetchFieldTimeRules = async (fieldId, page) => {
     try {
       const response = await crudService.read(
@@ -43,30 +44,43 @@ const FieldTimeRules = ({ fieldId }) => {
       );
       setFieldTimeRules(response.content);
       setTotalPages(response.totalPages);
-      console.log(response.data);
     } catch (error) {
       toast.error("Error fetching time rules.");
       console.error(error);
     }
   };
-  console.log(fieldTimeRules);
+  const formatDaysOfWeek = (daysArray) => {
+    if (!Array.isArray(daysArray)) return "";
+    return daysArray.join(",") + ",";
+  };
   // Thêm time rule mới
   const handleAddTimeRule = async () => {
-    try {
-      await crudService.create(`fieldTimeRules`, newTimeRule);
-      toast.success("Time rule added successfully.");
-      setNewTimeRule({
-        fieldId: fieldId,
-        startTime: "",
-        endTime: "",
-        startDate: "",
-        endDate: "",
-        daysOfWeek: [],
-      });
-      fetchFieldTimeRules(fieldId, currentPage);
-    } catch (error) {
-      toast.error("Error adding time rule.");
-      console.error(error);
+    if (validateTimeRule()) {
+      try {
+        const formatedDay = formatDaysOfWeek(newTimeRule.daysOfWeek);
+        newTimeRule.daysOfWeek = formatedDay;
+        console.log(newTimeRule);
+        const response = await crudService.create(
+          `fieldTimeRules`,
+          newTimeRule
+        );
+        toast.success("Time rule added successfully.");
+        setNewTimeRule({
+          fieldId: fieldId,
+          startTime: "",
+          endTime: "",
+          startDate: "",
+          endDate: "",
+          daysOfWeek: [],
+        });
+        fetchFieldTimeRules(fieldId, currentPage);
+      } catch (error) {
+        if (error.response && error.response.data) {
+          toast.error(`Error: ${error.response.data}`);
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
+      }
     }
   };
 
@@ -77,9 +91,47 @@ const FieldTimeRules = ({ fieldId }) => {
       toast.success("Time rule deleted successfully.");
       fetchFieldTimeRules(fieldId, currentPage);
     } catch (error) {
-      toast.error("Error deleting time rule.");
-      console.error(error);
+      if (error.response && error.response.data) {
+        toast.error(`Error: ${error.response.data}`);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
     }
+  };
+
+  const validateTimeRule = () => {
+    const { startTime, endTime, startDate, endDate, daysOfWeek } = newTimeRule;
+
+    if (!startTime || !endTime) {
+      toast.error("Bạn phải nhập thời gian bắt đầu và kết thúc");
+      return false;
+    }
+
+    if (startTime >= endTime) {
+      toast.error("Thời gian kết thúc không được thấp hơn thời gian bắt đầu");
+      return false;
+    }
+
+    if (!startDate || !endDate) {
+      toast.error("Bạn phải nhập ngày bắt đầu và kết thúc");
+      return false;
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("Thời gian kết thúc không được thấp hơn thời gian bắt đầu");
+      return false;
+    }
+
+    if (daysOfWeek.length === 0) {
+      toast.error("Xin hãy chọn ít nhất một ngày trong tuần");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleClickTimeSlot = (fieldId) => {
+    navigate(`/fields/timeSlots/${fieldId}`);
   };
 
   return (
@@ -116,7 +168,9 @@ const FieldTimeRules = ({ fieldId }) => {
           ))}
         </tbody>
       </Table>
-
+      <Button onClick={() => handleClickTimeSlot(fieldId)}>
+        Danh sánh time slot
+      </Button>
       <div style={{ textAlign: "center", marginTop: "20px" }}>
         <Pagination
           currentPage={currentPage}
@@ -199,7 +253,7 @@ const FieldTimeRules = ({ fieldId }) => {
         </Form.Group>
 
         <Button variant="primary" onClick={handleAddTimeRule}>
-          Add Time Rule
+          Thêm
         </Button>
       </Form>
     </div>
