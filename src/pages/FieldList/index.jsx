@@ -20,7 +20,7 @@ function FieldList() {
 	// Lấy danh sách sân từ location.state
 	const listField = location.state?.listField || [];
 	const [data, setData] = useState(listField);
-
+	console.log(listField)
 	// Tổng số sân sau khi lọc
 	const totalItems = data.length;
 
@@ -68,6 +68,16 @@ function FieldList() {
 			},
 		});
 	}
+	const truncateText = (text, maxWords) => {
+		const words = text.split(' ');
+		if (words.length > maxWords) {
+			return words.slice(0, maxWords).join(' ') + '...';
+		}
+		return text;
+	};
+
+
+	console.log(filteredData)
 	return (
 		<div className="fieldList">
 			<div className="container">
@@ -165,15 +175,16 @@ function FieldList() {
 							{filteredData.map((field) => (
 								<Col key={field.fieldId} xs={24} sm={12} md={8} lg={6}>
 									<Card
+										className='card'
 										hoverable
-										cover={<img alt={field.fieldName} src={field.images?.[0] || '/default.jpg'} />}
+										cover={<img alt={field.fieldImageList[0]} src={field.fieldImageList[0].fieldImageURL || '/default.jpg'} />}
 										onClick={() => handleFieldDetails(field.fieldId)}
 									>
 										<Meta
 											title={field.fieldName}
 											description={`Giá: ${field.pricePerHour} VND`}
 										/>
-										<p>Vị trí: {field.location}</p>
+										<p>Vị trí: {truncateText(field.fieldAddress, 5)}</p>
 										<p>Loại sân: {field.fieldType?.fieldTypeName}</p>
 										<p>Trạng thái: {field.status}</p>
 									</Card>

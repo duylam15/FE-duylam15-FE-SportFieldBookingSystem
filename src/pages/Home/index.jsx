@@ -28,7 +28,7 @@ const Home = () => {
 
 		if (statusCode === "200") {
 			toast.success(message || "Thanh toán thành công!");
-		} else if (statusCode === "400"){
+		} else if (statusCode === "400") {
 			toast.error(message || "Thanh toán thất bại!");
 		}
 	}, [searchParams]);
@@ -63,14 +63,14 @@ const Home = () => {
 
 		console.log("Loại sân:", selectedFieldType, "Tên sân:", fieldName, "Khu vực:", region);
 		// http://localhost:8080/api/fields/search?loai=1&ten=sân&diaChi=1
-		const url = `http://localhost:8080/api/fields/search?loai=${selectedFieldType}&ten=${fieldName}&diaChi=${region}`;
-
+		//const url = `http://localhost:8080/api/fields/search?loai=${selectedFieldType}&ten=${fieldName}&diaChi=${region}`;
+		const url = `	http://localhost:8080/api/fields/search/admin?fieldName=${fieldName}&fieldTypeId=${selectedFieldType}&minCapacity=&maxCapacity=&fieldAddress=${region}&page=0&size=5`
 		try {
 			const res = await axios.get(url);
-			console.log("res", res.data)
+			console.log("res", res.data.data.content)
 			navigate(`/fieldList`, {
 				state: {
-					listField: res.data,
+					listField: res.data.data.content,
 				},
 			});
 		} catch (error) {

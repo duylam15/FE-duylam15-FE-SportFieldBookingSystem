@@ -42,5 +42,10 @@
             justify-content: flex-end; // Đặt Pagination bên phải
             margin-top: 16px; // Thêm khoảng cách phía trên nếu cần
         }
+        .card img {
+            height: 200px;
+            object-fit: cover; /* Để hình ảnh không bị méo */
+            width: 100%; /* Đảm bảo hình ảnh bao phủ toàn bộ chiều rộng */
+        }
     }
 }

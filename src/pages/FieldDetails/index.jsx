@@ -41,7 +41,6 @@ function FieldDetails() {
 		fetchFieldTypes();
 	}, [userId]); // Depend on userId instead of id
 
-	console.log(field);
 	console.log(user);
 
 	// Handle booking button click
@@ -49,13 +48,49 @@ function FieldDetails() {
 		navigate(`/booking/${id}`); // Navigate to /calendar/:fieldId
 	};
 
+	// Hàm tự động thay đổi hình ảnh sau 3 giây
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setCurrentImage((prev) => (prev + 1) % field.fieldImageList.length);
+		}, 5000); // Thay đổi sau mỗi 3 giây
+		return () => clearInterval(timer); // Dọn dẹp timer khi component unmount
+	}, [field]);
+	if (!field) {
+		return <div>Loading...</div>;
+	}
+	const handleImageClick = (index) => {
+		setCurrentImage(index);
+	};
+
+	console.log("fieldfieldfieldfield", field);
+
+
 	return (
 		<div className="field-details">
 			<div className="field-details__container">
-			
+				<div className="field-details__images">
+					{/* Hình ảnh lớn */}
+					<img
+						src={field.fieldImageList[currentImage].fieldImageURL}
+						alt="Hình lớn"
+						className="field-details__large-image"
+					/>
+					{/* Danh sách hình ảnh nhỏ */}
+					<div className="field-details__small-images">
+						{field.fieldImageList.map((image, index) => (
+							<img
+								key={index}
+								src={image.fieldImageURL}
+								alt={`Hình nhỏ ${index + 1}`}
+								className="field-details__small-image"
+								onClick={() => handleImageClick(index)}
+							/>
+						))}
+					</div>
+				</div>
 				<div className="field-details__info">
 					<h1 className="field-details__title">{field?.fieldName}</h1>
-					<p className="field-details__location">Vị trí: {field?.location}</p>
+					<p className="field-details__location">Vị trí: {field?.fieldAddress}</p>
 					<p className="field-details__price">
 						Giá mỗi giờ: <span>{field?.pricePerHour} VND</span>
 					</p>
