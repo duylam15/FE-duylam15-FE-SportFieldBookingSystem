@@ -8,12 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { useConfirm } from "../ConfirmProvider";
 import IconLabelButtons from "../Admin/ColorButtons";
 import './index'
-import { PermissionButton } from "../Admin/Sidebar";
+import { PermissionAddButton, PermissionButton, PermissionEditButton } from "../Admin/Sidebar";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { searchSan } from "../../services/sanService";
 import TimeBtn from "../Admin/ColorButtons/TimeBtn";
-import { UserOutlined, MailOutlined, FileSearchOutlined} from '@ant-design/icons';
+import { UserOutlined, MailOutlined, FileSearchOutlined } from '@ant-design/icons';
 import { Input, Select } from 'antd';
 import './san.scss'
 
@@ -117,9 +117,12 @@ const Field = ({ size = 7 }) => {
   return (
     <div className="page_san_admin">
       <h1 className="title_center_page">Danh sách sân</h1>
-      <Link to="/admin/san/create">
-        <IconLabelButtons></IconLabelButtons>
-      </Link>
+      <PermissionAddButton feature="Quản lí sân">
+        <Link to="/admin/san/create">
+          <IconLabelButtons></IconLabelButtons>
+        </Link>
+      </PermissionAddButton>
+
       <div className='timkiem'>
         <div className='block_input'>
           <label htmlFor="inputTenSan">Tên sân</label>
@@ -200,9 +203,11 @@ const Field = ({ size = 7 }) => {
               <td>{field.pricePerHour}</td>
               <td>{field.status}</td>
               <td>
-                <div onClick={() => handleTimeRuleClick(field.fieldId)}>
-                  <TimeBtn></TimeBtn>
-                </div>
+                <PermissionEditButton feature="Quản lí sân">
+                  <div onClick={() => handleTimeRuleClick(field.fieldId)}>
+                    <TimeBtn></TimeBtn>
+                  </div>
+                </PermissionEditButton>
               </td>
               <td>
                 <PermissionButton feature="Quản lí sân" idButton={field.fieldId} onEdit={handleEditField}>

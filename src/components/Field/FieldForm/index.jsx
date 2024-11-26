@@ -12,6 +12,7 @@ import { GradientButton, GradientButtonBack } from "../../Admin/GradientButton";
 import { Spin } from "antd";
 import Map from "../Map";
 import axios from "axios";
+import { PermissionEditButton } from "../../Admin/Sidebar";
 
 
 const FieldForm = () => {
@@ -254,10 +255,19 @@ const FieldForm = () => {
               />
             </div>
           </div>
-          <div className="field-form-actions">
-            <div onClick={handleBack}> <GradientButtonBack /> </div>
-            <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
-          </div>
+          {fieldId ? ( // có fieldID nghĩa là sửa
+            
+              <div className="field-form-actions">
+                <div onClick={handleBack}> <GradientButtonBack /> </div>
+                <PermissionEditButton feature="Quản lí sân">
+                  <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
+                </PermissionEditButton>
+              </div>
+          ) : (
+            <div className="field-form-actions">
+              <div onClick={handleBack}> <GradientButtonBack /> </div>
+              <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
+            </div>)}
         </Form>
       </div>
     </Spin>
