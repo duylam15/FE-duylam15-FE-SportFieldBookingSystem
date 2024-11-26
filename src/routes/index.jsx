@@ -88,8 +88,8 @@ export const router = createBrowserRouter([
     element: <LayoutAdmin></LayoutAdmin>, // Route register, hiển thị Register
     errorElement: <Error></Error>,
     children: [
-      { index: true, element: <Dashboard /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
-      { path: "dashboard", element: <Dashboard /> },
+      { index: true, element: <ThongKe /> }, // Route mặc định khi vào "/admin" sẽ là Dashboard
+      { path: "thongke", element: <ThongKe /> },
       {
         path: "my_profile",
         element: <MyProfile />,
@@ -129,7 +129,7 @@ export const router = createBrowserRouter([
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
-      { path: "thongke", element: <ThongKe /> },
+      // { path: "thongke", element: <ThongKe /> },
       { path: "san/create", element: <FieldFormPage />},
       { path: "san/edit/:fieldId", element: <FieldForm></FieldForm>}
     ],

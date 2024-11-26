@@ -6,6 +6,11 @@ import "./sidebar.css";
 import EditBtn from '../ColorButtons/EditBtn';
 import XemChiTietBtn from '../ColorButtons/XemChiTietBtn.jsx';
 import { getMyProfile } from "../../../services/myProfileService.js";
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import PeopleIcon from '@mui/icons-material/People';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import SportsIcon from '@mui/icons-material/Sports';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 
 // Function to check if a specific permission exists for a feature
 const hasPermission = (featureName, action) => {
@@ -82,14 +87,14 @@ const SidebarItem = ({ path, feature, icon, name }) => {
 // Sidebar component
 const Sidebar = () => {
   const menuItems = [
-    { name: "Thống kê", path: "/admin/dashboard", feature: "Quản lí thống kê", icon: <MdSpaceDashboard /> },
-    { name: "Nhóm quyền", path: "/admin/quyen", feature: "Quản lí nhóm quyền", icon: <GiSoccerField /> },
-    { name: "Người dùng", path: "/admin/nguoidung", feature: "Quản lí người dùng", icon: <GiSoccerField /> },
-    { name: "Loại sân", path: "/admin/loaisan", feature: "Quản lí loại sân", icon: <GiSoccerField />},
+    { name: "Thống kê", path: "/admin/thongke", feature: "Quản lí thống kê", icon: <MdSpaceDashboard /> },
+    { name: "Nhóm quyền", path: "/admin/quyen", feature: "Quản lí nhóm quyền", icon: <AcUnitIcon /> },
+    { name: "Người dùng", path: "/admin/nguoidung", feature: "Quản lí người dùng", icon: <PeopleIcon /> },
+    { name: "Loại sân", path: "/admin/loaisan", feature: "Quản lí loại sân", icon: <SportsIcon />},
     { name: "Sân", path: "/admin/san", feature: "Quản lí sân", icon: <GiSoccerField /> },
     { name: "Khuyến mãi", path: "/admin/coupons", feature: "Quản lí khuyến mãi", icon: <GiSoccerField /> },
-    { name: "Hóa đơn", path: "/admin/invoices", feature: "Quản lí hoá đơn", icon: <GiSoccerField /> },
-    { name: "Booking", path: "/admin/bookings", feature: "Quản lí booking", icon: <GiSoccerField /> },
+    { name: "Hóa đơn", path: "/admin/invoices", feature: "Quản lí hoá đơn", icon: <ReceiptIcon /> },
+    { name: "Booking", path: "/admin/bookings", feature: "Quản lí booking", icon: <ConfirmationNumberIcon /> },
   ];
 
   return (
