@@ -9,6 +9,7 @@ import { useConfirm } from "../../ConfirmProvider";
 
 const FieldForm = () => {
   //confirm modal
+  const [dataNguoiDungSport, setDataNguoiDungSport] = useState(null);
   const { showConfirmMessage } = useConfirm();
   const navigate = useNavigate();
   const { fieldId } = useParams(); // Dùng để kiểm tra nếu đang edit
@@ -27,7 +28,21 @@ const FieldForm = () => {
   useEffect(() => {
     fetchFieldTypes();
     if (fieldId) fetchFieldData(fieldId); // Nếu có ID, fetch dữ liệu để edit
+    // Lấy dữ liệu từ localStorage
+    const storedData = localStorage.getItem("dataNguoiDungSport");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setDataNguoiDungSport(parsedData);
+      } catch (error) {
+        console.error(
+          "Failed to parse dataNguoiDungSport from localStorage:",
+          error
+        );
+      }
+    }
   }, [fieldId]);
+  console.log(dataNguoiDungSport);
   console.log(fieldData);
   const fetchFieldTypes = async () => {
     try {
@@ -91,7 +106,7 @@ const FieldForm = () => {
       <h2>{fieldId ? "Edit Field" : "Add New Field"}</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formFieldName">
-          <Form.Label>Field Name</Form.Label>
+          <Form.Label>Tên sân</Form.Label>
           <Form.Control
             type="text"
             value={fieldData.fieldName}
@@ -102,7 +117,7 @@ const FieldForm = () => {
         </Form.Group>
 
         <Form.Group controlId="formCapacity">
-          <Form.Label>Capacity</Form.Label>
+          <Form.Label>Sức chứa</Form.Label>
           <Form.Control
             type="number"
             value={fieldData.capacity}
@@ -113,7 +128,7 @@ const FieldForm = () => {
         </Form.Group>
 
         <Form.Group controlId="formPricePerHour">
-          <Form.Label>Price per Hour</Form.Label>
+          <Form.Label>Giá/giờ</Form.Label>
           <Form.Control
             type="number"
             value={fieldData.pricePerHour}
@@ -124,7 +139,7 @@ const FieldForm = () => {
         </Form.Group>
 
         <Form.Group controlId="formFieldTypeId">
-          <Form.Label>Field Type</Form.Label>
+          <Form.Label>Loại sân</Form.Label>
           <Form.Control
             as="select"
             value={fieldData.fieldTypeId}
@@ -142,7 +157,7 @@ const FieldForm = () => {
         </Form.Group>
 
         <Form.Group controlId="formFieldAddress">
-          <Form.Label>Field Address</Form.Label>
+          <Form.Label>Địa chỉ sân</Form.Label>
           <Form.Control
             type="text"
             value={fieldData.fieldAddress}
@@ -153,7 +168,7 @@ const FieldForm = () => {
         </Form.Group>
 
         <Form.Group controlId="formStatus">
-          <Form.Label>Status</Form.Label>
+          <Form.Label>Trạng thái</Form.Label>
           <Form.Control
             as="select"
             value={fieldData.status}
@@ -166,16 +181,18 @@ const FieldForm = () => {
           </Form.Control>
         </Form.Group>
 
-        <div className="field-form-actions">
-          <Button type="submit">{fieldId ? "Update" : "Create"} Field</Button>
-          <Link to="/admin/san">
-            <Button variant="secondary">Cancel</Button>
+        <div className="field-form-actions mt-3">
+          <Button type="submit">{fieldId ? "Sửa" : "Tạo"} Sân</Button>
+          <Link className="ms-3" to="/admin/san">
+            <Button variant="secondary">Thoát</Button>
           </Link>
         </div>
       </Form>
 
       {/* Include Field Time Rules */}
-      {/* {fieldId && <FieldTimeRules fieldId={fieldId} />} */}
+      <div className="mt-3">
+        {fieldId && <FieldTimeRules fieldId={fieldId} />}
+      </div>
     </div>
   );
 };

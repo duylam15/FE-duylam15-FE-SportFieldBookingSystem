@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Form } from "react-bootstrap";
 import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
+import Pagination from "../../Pagination"; // Import pagination component
+import { useParams } from "react-router-dom";
 
 const FieldTimeRules = ({ fieldId }) => {
   const [fieldTimeRules, setFieldTimeRules] = useState([]);
@@ -10,25 +12,45 @@ const FieldTimeRules = ({ fieldId }) => {
     endTime: "",
     startDate: "",
     endDate: "",
-    daysOfWeek: "",
+    daysOfWeek: [],
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [itemsPerPage] = useState(5); // Số lượng items mỗi trang
 
   useEffect(() => {
     if (fieldId) {
-      fetchFieldTimeRules(fieldId);
+      fetchFieldTimeRules(fieldId, currentPage);
+    } else {
+      fetchFieldTimeRules(fieldIdParam, currentPage);
     }
-  }, [fieldId]);
+  }, [fieldId, currentPage]);
 
-  const fetchFieldTimeRules = async (fieldId) => {
+  // Hàm lấy danh sách time rules cho trang hiện tại
+  console.log(`field id: ` + fieldId);
+  const fetchFieldTimeRules = async (fieldId, page) => {
     try {
-      const response = await crudService.read(`fieldTimeRules`, fieldId);
-      setFieldTimeRules(response);
+      const response = await crudService.read(
+        "fieldTimeRules/getByFieldId",
+        null, // No URL params to append
+        {
+          params: {
+            fieldId: fieldId,
+            page: page,
+            pageSize: itemsPerPage,
+          },
+        }
+      );
+      setFieldTimeRules(response.content);
+      setTotalPages(response.totalPages);
+      console.log(response.data);
     } catch (error) {
       toast.error("Error fetching time rules.");
       console.error(error);
     }
   };
-
+  console.log(fieldTimeRules);
+  // Thêm time rule mới
   const handleAddTimeRule = async () => {
     try {
       await crudService.create(`fieldTimeRules`, newTimeRule);
@@ -39,20 +61,21 @@ const FieldTimeRules = ({ fieldId }) => {
         endTime: "",
         startDate: "",
         endDate: "",
-        daysOfWeek: "",
+        daysOfWeek: [],
       });
-      fetchFieldTimeRules(fieldId);
+      fetchFieldTimeRules(fieldId, currentPage);
     } catch (error) {
       toast.error("Error adding time rule.");
       console.error(error);
     }
   };
 
+  // Xóa time rule
   const handleDeleteTimeRule = async (ruleId) => {
     try {
       await crudService.delete(`fieldTimeRules/${ruleId}`);
       toast.success("Time rule deleted successfully.");
-      fetchFieldTimeRules(fieldId);
+      fetchFieldTimeRules(fieldId, currentPage);
     } catch (error) {
       toast.error("Error deleting time rule.");
       console.error(error);
@@ -74,7 +97,7 @@ const FieldTimeRules = ({ fieldId }) => {
           </tr>
         </thead>
         <tbody>
-          {fieldTimeRules.map((rule) => (
+          {fieldTimeRules?.map((rule) => (
             <tr key={rule.id}>
               <td>{rule.startTime}</td>
               <td>{rule.endTime}</td>
@@ -93,6 +116,14 @@ const FieldTimeRules = ({ fieldId }) => {
           ))}
         </tbody>
       </Table>
+
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
+      </div>
 
       <h6>Add New Time Rule</h6>
       <Form>
@@ -138,15 +169,35 @@ const FieldTimeRules = ({ fieldId }) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>Days of Week</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="e.g., MONDAY,WEDNESDAY,FRIDAY"
-            value={newTimeRule.daysOfWeek}
-            onChange={(e) =>
-              setNewTimeRule({ ...newTimeRule, daysOfWeek: e.target.value })
-            }
-          />
+          <div>
+            {[
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY",
+              "SATURDAY",
+              "SUNDAY",
+            ].map((day) => (
+              <Form.Check
+                inline
+                key={day}
+                type="checkbox"
+                label={day}
+                value={day}
+                checked={newTimeRule.daysOfWeek.includes(day)}
+                onChange={(e) => {
+                  const updatedDays = e.target.checked
+                    ? [...newTimeRule.daysOfWeek, day]
+                    : newTimeRule.daysOfWeek.filter((d) => d !== day);
+
+                  setNewTimeRule({ ...newTimeRule, daysOfWeek: updatedDays });
+                }}
+              />
+            ))}
+          </div>
         </Form.Group>
+
         <Button variant="primary" onClick={handleAddTimeRule}>
           Add Time Rule
         </Button>

@@ -14,16 +14,23 @@ const crudService = {
             throw error;
         }
     },
-    read: async (entityName, id = null) => {
+    read: async (entityName, id = null, params = {}) => {
         try {
-            const url = id ? `${API_BASE_URL}/${entityName}/${id}` : `${API_BASE_URL}/${entityName}`;
-            const response = await axios.get(url);
-            return response.data;
+            // Tạo URL cơ bản
+            const url = id
+                ? `${API_BASE_URL}/${entityName}/${id}` // Nếu có id, thêm vào cuối URL
+                : `${API_BASE_URL}/${entityName}`;     // Không có id thì giữ URL gốc
+    
+            // Gửi request GET với axios, bao gồm query parameters
+            const response = await axios.get(url, params );
+    
+            return response.data; // Trả về dữ liệu response
         } catch (error) {
             toast.error(`Error while getting ${entityName}: ${error.message}`);
-            throw error;
+            throw error; // Ném lỗi ra ngoài để xử lý thêm (nếu cần)
         }
     },
+    
     update: async (entityName, id, data) => {
         try {
             const response = await axios.put(`${API_BASE_URL}/${entityName}/${id}`, data);

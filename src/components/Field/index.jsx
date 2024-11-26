@@ -26,6 +26,7 @@ const Field = () => {
     fieldId: "",
     fieldCode: "",
     fieldName: "",
+    fieldAddress: "",
     capacity: "",
     pricePerHour: "",
     fieldTypeId: "",
@@ -79,32 +80,6 @@ const Field = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
-      const formData = new FormData();
-      Object.entries(fieldData).forEach(([key, value]) => {
-        if (key === "images") {
-          value.forEach((image) => formData.append("images", image));
-        } else {
-          formData.append(key, value);
-        }
-      });
-
-      if (isEditing) {
-        await crudService.updateWithFile("fields", fieldData.fieldId, formData);
-        toast.success("Field updated successfully.");
-      } else {
-        await crudService.createWithFile("fields", formData);
-        toast.success("Field added successfully.");
-      }
-      fetchFields();
-      setShowModal(false);
-    } catch (error) {
-      toast.error("Error saving field.");
-      console.error(error);
-    }
-  };
-
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
@@ -128,34 +103,35 @@ const Field = () => {
   };
 
   const handleTimeRuleClick = (fieldId) => {
-    navigate(`/fields/fieldTimeRule/${fieldId}`);
+    {
+      fieldId && <FieldTimeRules fieldId={fieldId} />;
+    }
   };
   return (
     <div>
       <Link to="/admin/san/create">
-        <Button variant="primary">
-        Add New Field
-        </Button>
+        <Button variant="primary">Thêm mới</Button>
       </Link>
-     
+
       <Table striped bordered hover>
         <thead>
           <tr>
             {[
-              "field Code",
-              "field Name",
-              "field Type",
-              "capacity",
-              "pricePerHour",
-              "status",
+              "Mã",
+              "Tên sân",
+              "fLoại sân",
+              "Sức chứa",
+              "Giá/giờ",
+              "Địa chỉ",
+              "Trạng thái",
             ].map((key) => (
               <th key={key} onClick={() => handleSort(key)}>
                 {key.charAt(0).toUpperCase() + key.slice(1)} {getSortIcon(key)}
               </th>
             ))}
-            <th>Images</th>
-            <th>Time Rules</th>
-            <th>Actions</th>
+            <th>Hình ảnh</th>
+            <th>Quản lý thời gian đặt</th>
+            <th>Hành động</th>
           </tr>
         </thead>
         <tbody>
@@ -166,6 +142,7 @@ const Field = () => {
               <td>{field.fieldType.fieldTypeName}</td>
               <td>{field.capacity}</td>
               <td>{field.pricePerHour}</td>
+              <td>{field.fieldAddress}</td>
               <td>{field.status === "ACTIVE" ? "Active" : "Inactive"}</td>
               <td>Images Placeholder</td>
               <td>
@@ -173,7 +150,7 @@ const Field = () => {
                   variant="primary"
                   onClick={() => handleTimeRuleClick(field.fieldId)}
                 >
-                  Time Rule
+                  Danh sách
                 </Button>
               </td>
               <td>
@@ -181,13 +158,13 @@ const Field = () => {
                   onClick={() => handleEditField(field.fieldId)}
                   variant="warning"
                 >
-                  Edit
+                  Sửa
                 </Button>
                 <Button
                   onClick={() => handleDeleteField(field.fieldId)}
                   variant="danger"
                 >
-                  Delete
+                  Xóa
                 </Button>
               </td>
             </tr>
