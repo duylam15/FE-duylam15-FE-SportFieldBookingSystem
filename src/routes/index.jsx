@@ -125,7 +125,7 @@ export const router = createBrowserRouter([
         ],
       }, // Route con của admin
       { path: "san", element: <FieldPage /> }, // Route con của admin
-      { path: "loaisan", element: <FieldType></FieldType>},
+      { path: "loaisan", element: <FieldType></FieldType> },
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
@@ -150,14 +150,6 @@ export const router = createBrowserRouter([
   {
     path: "/fieldFacility",
     element: <FieldFacilityPage />,
-  },
-  {
-    path: "/fields/fieldTimeRule/:fieldId",
-    element: <FieldTimeRulesPage />,
-  },
-  {
-    path: "/fields/fieldTimeRule/:fieldId",
-    element: <FieldTimeRulesPage />,
   },
   {
     path: "/fields/fieldTimeRule/:fieldId",

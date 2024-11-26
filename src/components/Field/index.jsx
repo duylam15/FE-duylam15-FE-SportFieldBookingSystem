@@ -112,7 +112,9 @@ const Field = ({ size = 7 }) => {
   };
 
   const handleTimeRuleClick = (fieldId) => {
-    navigate(`/fields/fieldTimeRule/${fieldId}`);
+    {
+      fieldId && <FieldTimeRules fieldId={fieldId} />;
+    }
   };
   return (
     <div className="page_san_admin">
