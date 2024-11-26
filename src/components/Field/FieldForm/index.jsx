@@ -10,6 +10,8 @@ import './formTaoSan_SuaSan.css'
 import { uploadImageSan } from "../../../services/sanService";
 import { GradientButton, GradientButtonBack } from "../../Admin/GradientButton";
 import { Spin } from "antd";
+import Map from "../Map";
+import axios from "axios";
 
 
 const FieldForm = () => {
@@ -19,10 +21,12 @@ const FieldForm = () => {
     capacity: "",
     pricePerHour: "",
     fieldTypeId: "",
-    fieldAddress: "",
     userId: 1,
     status: "AVAILABLE",
-    fieldImageUrls: [],
+    longitude: 106.660172, // Tọa độ mặc định (TP.HCM)
+    latitude: 10.762622,
+    fieldAddress: "TP.HCM",
+    fieldImageUrls: []
   });
   const [fieldTypes, setFieldTypes] = useState([]);
   const { showConfirmMessage } = useConfirm();
@@ -42,6 +46,50 @@ const FieldForm = () => {
       console.error("Error fetching field types:", error);
     }
   };
+  const fetchAddressFromCoordinates = async (longitude, latitude) => {
+    const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
+
+    try {
+      const response = await axios.get(url);
+      if (response.data && response.data.display_name) {
+        console.log("Địa chỉ lấy được:", response.data.display_name);
+        return response.data.display_name || "Không xác định";
+      } else {
+        throw new Error("Không tìm thấy địa chỉ.");
+      }
+    } catch (error) {
+      toast.error("Lỗi khi gọi API Nominatim.");
+      console.error("Lỗi API Nominatim:", error);
+      throw error;
+    }
+  };
+
+  // Cập nhật tọa độ và tên địa điểm khi vị trí thay đổi
+  const handleLocationChange = async (lng, lat) => {
+    setFieldData(prevState => ({
+      ...prevState,
+      longitude: lng,
+      latitude: lat
+    }));
+
+    try {
+      const address = await fetchAddressFromCoordinates(lng, lat);
+      setFieldData(prevState => ({
+        ...prevState,
+        fieldAddress: address
+      }));
+    } catch (error) {
+      toast.error("Không thể lấy địa chỉ từ tọa độ.");
+    }
+  };
+
+  
+
+  useEffect(() => {
+    if (fieldData.longitude !== 106.660172 || fieldData.latitude !== 10.762622) {
+      handleLocationChange(fieldData.longitude, fieldData.latitude);
+    }
+  }, [fieldData.longitude, fieldData.latitude]);
 
   const fetchFieldData = async (id) => {
     try {
@@ -49,6 +97,8 @@ const FieldForm = () => {
       const response = await crudService.read("fields", id);
       setFieldData({
         ...fieldData,
+        longitude: response.longitude || 106.660172,
+        latitude: response.latitude || 10.762622,
         fieldName: response.fieldName,
         capacity: response.capacity,
         pricePerHour: response.pricePerHour,
@@ -62,7 +112,7 @@ const FieldForm = () => {
     } finally {
       setLoading(false)
     }
-    
+
   };
 
   const handleBack = () => {
@@ -138,16 +188,26 @@ const FieldForm = () => {
             setFieldData={setFieldData}
             fieldTypes={fieldTypes}
           />
-          <div className="list_uploader">
-            <span>Ảnh sân</span>
-            <ImageUploader
-              fileList={fieldData.fieldImageUrls}
-              setFileList={(fileList) =>
-                setFieldData({ ...fieldData, fieldImageUrls: fileList })
-              }
-            />
+          <div className="row_bottom_form_field">
+            <div className="list_uploader left">
+              <span>Ảnh sân</span>
+              <ImageUploader
+                fileList={fieldData.fieldImageUrls}
+                setFileList={(fileList) =>
+                  setFieldData({ ...fieldData, fieldImageUrls: fileList })
+                }
+              />
+            </div>
+            <div className="map-container right">
+              <Map
+                lng={fieldData.longitude}
+                lat={fieldData.latitude}
+                onLocationChange={(lng, lat) =>
+                  setFieldData({ ...fieldData, longitude: lng, latitude: lat })
+                }
+              />
+            </div>
           </div>
-
           <div className="field-form-actions">
             <div onClick={handleBack}> <GradientButtonBack /> </div>
             <div onClick={handleSubmit}> <GradientButton /> </div> {/* Save Button */}
