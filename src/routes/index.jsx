@@ -33,6 +33,7 @@ import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 import FieldType from "../components/Field/FieldType";
 import FieldForm from "../components/Field/FieldForm";
 import ChatBox from "../components/ChatBox/ChatBox";
+import ThongKe from "../pages/Admin/ThongKe";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -128,6 +129,7 @@ export const router = createBrowserRouter([
       { path: "bookings", element: <Booking /> },
       { path: "coupons", element: <Coupon /> },
       { path: "invoices", element: <Invoice /> },
+      { path: "thongke", element: <ThongKe /> },
       { path: "san/create", element: <FieldFormPage />},
       { path: "san/edit/:fieldId", element: <FieldForm></FieldForm>}
     ],
