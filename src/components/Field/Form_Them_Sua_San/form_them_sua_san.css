@@ -2,10 +2,11 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+    gap: 20px;
 }
-.container_form .left {
-    width: 40%;
+.container-top .left {
+    width: 100%;
 }
-.container_form .right {
-    width: 40%;
+.container-top .right {
+    width: 100%;
 }
