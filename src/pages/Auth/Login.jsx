@@ -42,14 +42,19 @@ const Login = () => {
     }
     if (result.statusCode == 200) {
       setShow(false)
-      navigate("/home"); // Navigate to the home page after successful login
       localStorage.setItem("accessToken", result.data)
       // Fetch user profile
       const myProfile = await getMyProfile(result.data);
+
       localStorage.setItem(
         "dataNguoiDungSport",
         JSON.stringify(myProfile.data.data)
       );
+      if (myProfile?.data?.data?.role?.tenQuyen === "khachhang") {
+        navigate("/home"); // Navigate to the home page after successful login
+      } else {
+        navigate("/admin"); // Navigate to the home page after successful login
+      }
     }
     // } else {
     //   const redirectTo = location.state?.from?.pathname || "/home"; // Trang đích mặc định
