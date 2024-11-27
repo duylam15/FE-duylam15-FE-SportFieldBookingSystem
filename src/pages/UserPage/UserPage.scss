@@ -14,6 +14,10 @@
         font-size: 24px;
         padding-bottom: 25px;
     }
+    .row {
+        display: flex;
+        align-items: center;
+    }
 }
 .users-page__body {
     display: flex;
@@ -26,10 +30,7 @@
         width: 840px;
     }
 }
-.row {
-    display: flex;
-    align-items: center;
-}
+
 .row-title {
     color: #00558f;
     font-weight: 400;
@@ -39,4 +40,17 @@
 }
 .icon-home {
     color: #00558f;
+}
+
+.booking-table {
+    width: 100%;
+    border: 2px solid #ccc;
+    th {
+        background: #535353;
+        min-width: 100px;
+    }
+}
+
+.history--right {
+    width: 100%;
 }

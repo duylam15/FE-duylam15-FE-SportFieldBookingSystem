@@ -28,17 +28,16 @@ export default function ThongKe() {
         const fetchData = async () => {
             try {
                 const response1 = await axios.get('http://localhost:8080/api/fields/count/status', { params: { status: 'AVAILABLE' }, });
-                setCount(response1.data);
+                setCount(response1?.data);
 
                 const response2 = await axios.get('http://localhost:8080/api/fields/count');
-                setCountFull(response2.data);
+                setCountFull(response2?.data);
 
-                const response3 = await axios.get('http://localhost:8080/listCoupons');
-                setCountFullCoupons(response3.data.data.length);
-
+                const response3 = await axios.get('http://localhost:8080/api/fieldType');
+                setCountFullCoupons(response3?.data?.length);
 
                 const response4 = await axios.get('http://localhost:8080/user/count');
-                setCountFullUser(response4.data.userCount);
+                setCountFullUser(response4?.data?.userCount);
             } catch (err) {
                 setError(err.message);
             }
@@ -234,7 +233,7 @@ export default function ThongKe() {
             <div className="stats-container">
                 <Card className="card orange" title="Tổng số khách hàng" bordered>
                     <div className="card-wrap">
-                        {countUser}
+                        {countUser || 0}
                         <img
                             className="icon"
                             src="/public/icons/people-svgrepo-com.svg"
@@ -244,7 +243,7 @@ export default function ThongKe() {
                 </Card>
                 <Card className="card pink" title="Số sân có sẵn" bordered>
                     <div className="card-wrap">
-                        {count}
+                        {count || 0}
                         <img
                             className="icon"
                             src="/public/icons/available-calendar-date-svgrepo-com (2).svg"
@@ -254,7 +253,7 @@ export default function ThongKe() {
                 </Card>
                 <Card className="card green" title="Tổng số sân" bordered>
                     <div className="card-wrap">
-                        {countFull}
+                        {countFull || 0}
                         <img
                             className="icon"
                             src="/public/icons/field-football-svgrepo-com.svg"
@@ -262,12 +261,12 @@ export default function ThongKe() {
                         />
                     </div>
                 </Card>
-                <Card className="card blue" title="Số khuyến mãi" bordered>
+                <Card className="card blue" title="Số loại sân" bordered>
                     <div className="card-wrap">
-                        {countCoupons}
+                        {countCoupons || 0}
                         <img
                             className="icon"
-                            src="/public/icons/flight-ticket-svgrepo-com.svg"
+                            src="/public/icons/olympic-games-logo-svgrepo-com.svg"
                             alt=""
                         />
                     </div>

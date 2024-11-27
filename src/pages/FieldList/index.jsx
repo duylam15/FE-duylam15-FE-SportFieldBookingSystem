@@ -86,61 +86,6 @@ function FieldList() {
 				<div className="fieldList__inner">
 					{/* Bảng loại sân */}
 					<div className="fieldList__left">
-						<h3>Loại sân</h3>
-						<div className="fieldList__left--type">
-							<div>
-								<Checkbox
-									checked={!selectedType}
-									onChange={() => {
-										setSelectedType(null);
-										setCurrentPage(1);
-									}}
-								>
-									Tất cả
-								</Checkbox>
-							</div>
-							{[...new Set(listField.map((field) => field.fieldType?.fieldTypeName))].map(
-								(type, index) => (
-									<div key={index}>
-										<Checkbox
-											checked={selectedType === type}
-											onChange={() => handleTypeClick(type)}
-										>
-											{type}
-										</Checkbox>
-									</div>
-								)
-							)}
-						</div>
-
-						{/* Bộ lọc vị trí */}
-						<h3>Vị trí</h3>
-						<div className="fieldList__left--location">
-							<div>
-								<Checkbox
-									checked={!selectedLocation}
-									onChange={() => {
-										setSelectedLocation(null);
-										setCurrentPage(1);
-									}}
-								>
-									Tất cả
-								</Checkbox>
-							</div>
-							{[...new Set(listField.map((field) => field.location))].map(
-								(location, index) => (
-									<div key={index}>
-										<Checkbox
-											checked={selectedLocation === location}
-											onChange={() => handleLocationClick(location)}
-										>
-											{location}
-										</Checkbox>
-									</div>
-								)
-							)}
-						</div>
-
 						{/* Bộ lọc giá tiền */}
 						<h3>Giá tiền</h3>
 						<div className="fieldList__left--price">

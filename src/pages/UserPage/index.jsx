@@ -29,6 +29,7 @@ const UsersPage = () => {
             <UserPageInfoDetail profile={profile} loading={loading} error={error}></UserPageInfoDetail>
             <h2 className="users-page__body--right title title_2">Thay đổi mật khẩu</h2>
             <UserPageInfoPassword profile={profile} loading={loading} error={error}></UserPageInfoPassword>
+            
           </div>
         </div>
       </div>

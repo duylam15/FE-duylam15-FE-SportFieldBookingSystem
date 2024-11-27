@@ -34,8 +34,9 @@ import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 import FieldType from "../components/Field/FieldType";
 import FieldForm from "../components/Field/FieldForm";
 import ChatBox from "../components/ChatBox/ChatBox";
-import ThongKe from "../pages/Admin/ThongKe";
+import ThongKe from "../pages/admin/ThongKe";
 import FieldTimeSlotsPage from "../pages/TimeSlot";
+import HistoryBook from "../pages/UserPage/HistoryBook";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -57,7 +58,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/my_profile",
-        element: <UsersPage />,
+        children: [
+          { index: true, element: <UsersPage />, },
+          {
+            path: "historyBook",
+            element: <HistoryBook />,
+          },
+        ]
       },
       {
         path: "/booking/:fieldId",
