@@ -235,9 +235,7 @@ const Home = () => {
 									width: '155.8px',
 								}}
 							/>
-							<h5 className="offset-sm-7 col-sm-5 col-12">
-								Đây là một đoạn text được căn dính bên lề phải, mô tả về điều gì đó liên quan đến trang web của bạn.
-							</h5>
+
 						</Col>
 
 						{/* Column 2: Form */}
@@ -245,28 +243,28 @@ const Home = () => {
 							<Form>
 								<Row>
 									{/* Column for Name */}
-									<Col xs={12} md={3} className="mb-3">
+									<Col xs={12} md={2} className="mb-3">
 										<Form.Group controlId="formName">
 											<Form.Control type="text" placeholder="Nhập họ tên" />
 										</Form.Group>
 									</Col>
 
 									{/* Column for Phone Number */}
-									<Col xs={12} md={3} className="mb-3">
+									<Col xs={12} md={2} className="mb-3">
 										<Form.Group controlId="formPhone">
 											<Form.Control type="text" placeholder="Nhập số điện thoại" />
 										</Form.Group>
 									</Col>
 
 									{/* Column for Email */}
-									<Col xs={12} md={3} className="mb-3">
+									<Col xs={12} md={2} className="mb-3">
 										<Form.Group controlId="formEmail">
 											<Form.Control type="email" placeholder="Nhập email" />
 										</Form.Group>
 									</Col>
 
 									{/* Column for Submit Button */}
-									<Col xs={12} md={3} className="mb-3">
+									<Col xs={12} md={2} className="mb-3">
 										<Button variant="primary" type="submit" className="w-100">
 											Gửi
 										</Button>

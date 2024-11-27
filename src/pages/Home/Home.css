@@ -40,6 +40,11 @@
     width: 100%;
 }
 
+
+.row{
+    width: 100%;
+}
+
 .home__row-2,
 .home__row-3 {
     background-color: #f8f9fa;
