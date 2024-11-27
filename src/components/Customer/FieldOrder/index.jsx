@@ -10,6 +10,7 @@ import {
   Card,
 } from "react-bootstrap";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import Map from "../../Field/Map";
 import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
 //THONG TIN BOOKING
@@ -29,6 +30,11 @@ const FieldOrder = () => {
   const [userEmail, setUserEmail] = useState("");
   const [message, setMessage] = useState("");
   const [events, setEvents] = useState(dataBooking.selectedEvents || []);
+  const [address, setAddress] = useState({
+    longitude: 0,
+    latitude: 0,
+  });
+
 
   useEffect(() => {
     const handlePopState = () => {
@@ -37,14 +43,13 @@ const FieldOrder = () => {
         navigate(-1, { state: { dataBooking } });
       }
     };
-
     window.addEventListener("popstate", handlePopState);
 
     // Dọn dẹp sự kiện khi component unmount
     return () => {
       window.removeEventListener("popstate", handlePopState);
     };
-  }, [dataBooking, navigate]);
+  }, [dataBooking, navigate, address]);
 
   const handleSubmit = async () => {
     const booking = {

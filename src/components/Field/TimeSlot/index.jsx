@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "./timeSlot.scss";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { useConfirm } from "../../ConfirmProvider";
 const FieldTimeSlots = () => {
   // first data
   const { fieldId } = useParams();
@@ -21,6 +22,8 @@ const FieldTimeSlots = () => {
   const [endDate, setEndDate] = useState();
   const [status, setStatus] = useState();
 
+  //confirm message
+  const { showConfirmMessage } = useConfirm();
   //navigate
   const navigate = useNavigate();
 
@@ -65,9 +68,15 @@ const FieldTimeSlots = () => {
   // Xóa time rule
   const handleDeleteTimeSlot = async (id) => {
     try {
-      await crudService.delete(`timeSlot/${id}`);
-      toast.success("Time slot deleted successfully.");
-      fetchTimeSlots(fieldId, currentPage);
+      const check = await crudService.read;
+
+      const message = `Bạn có muốn có xóa time slot có id: ${id}`;
+      const rs = await showConfirmMessage(message);
+      if (rs) {
+        await crudService.delete(`timeSlot`, id);
+        toast.success("Time slot deleted successfully.");
+        fetchTimeSlots(fieldId, currentPage);
+      }
     } catch (error) {
       toast.error("An unexpected error occurred.");
     }

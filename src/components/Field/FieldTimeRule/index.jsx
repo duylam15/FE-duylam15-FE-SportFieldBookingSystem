@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import Pagination from "../../Pagination"; // Import pagination component
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useConfirm } from "../../ConfirmProvider";
 
 const FieldTimeRules = () => {
   const { fieldId } = useParams();
+  const { showConfirmMessage } = useConfirm();
   const [fieldTimeRules, setFieldTimeRules] = useState([]);
   const [newTimeRule, setNewTimeRule] = useState({
     fieldId: fieldId,
@@ -89,11 +91,19 @@ const FieldTimeRules = () => {
   const handleDeleteTimeRule = async (id) => {
     console.log("Deleting time rule with ID:", id); // Debugging log
     try {
-      await crudService.delete(`fieldTimeRules/${id}`);
-      toast.success("Time rule deleted successfully.");
-      fetchFieldTimeRules(fieldId, currentPage);
+      const check = crudService.read(
+        `fieldTimeRules/checkBeforeDelete?id=${id}`
+      );
+      toast.success(check);
+      const confirm = `Bạn có muốn xóa dòng có id: ${id} không?.`;
+      const rs = await showConfirmMessage(confirm);
+      if (rs) {
+        await crudService.delete(`fieldTimeRules`, id);
+        toast.success("Time rule deleted successfully.");
+        fetchFieldTimeRules(fieldId, currentPage);
+      }
     } catch (error) {
-      if (error.response && error.response.data) {
+      if (error.response) {
         toast.error(`Error: ${error.response.data}`);
       } else {
         toast.error("An unexpected error occurred.");
