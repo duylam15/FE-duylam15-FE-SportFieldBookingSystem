@@ -1,8 +1,9 @@
-import { Card, Select, Spin, Table } from 'antd';
+import { Card, Select, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import './Thongke.scss';
 import axios from 'axios';
 import { Column, Pie, Line } from '@ant-design/charts';
+import XuatExcelComponet from '../XuatExcel/XuatExcelComponent';
 
 export default function ThongKe() {
     const [error, setError] = useState(null);
@@ -344,6 +345,9 @@ export default function ThongKe() {
                                         </div>
                                     );
                                 })}
+                            </div>
+                            <div className="ranking-list">
+                                <XuatExcelComponet></XuatExcelComponet>
                             </div>
                         </div>
                     </div>
