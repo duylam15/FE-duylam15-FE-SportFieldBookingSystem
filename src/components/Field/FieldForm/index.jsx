@@ -17,12 +17,13 @@ import { PermissionEditButton } from "../../Admin/Sidebar";
 
 const FieldForm = () => {
   const [loading, setLoading] = useState(false);
+  const dataNguoiDungSport = JSON.parse(localStorage.getItem("dataNguoiDungSport"))
   const [fieldData, setFieldData] = useState({
     fieldName: "",
     capacity: "",
     pricePerHour: "",
     fieldTypeId: "",
-    userId: 1,
+    userId: dataNguoiDungSport?.userId || 1,
     status: "AVAILABLE",
     longitude: 106.660172, // Tọa độ mặc định (TP.HCM)
     latitude: 10.762622,
