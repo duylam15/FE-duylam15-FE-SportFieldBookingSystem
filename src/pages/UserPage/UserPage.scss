@@ -41,3 +41,16 @@
 .icon-home {
     color: #00558f;
 }
+
+.booking-table {
+    width: 100%;
+    border: 2px solid #ccc;
+    th {
+        background: #535353;
+        min-width: 100px;
+    }
+}
+
+.history--right {
+    width: 100%;
+}

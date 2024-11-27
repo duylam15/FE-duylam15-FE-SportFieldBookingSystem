@@ -33,8 +33,9 @@ import FieldTimeRulesPage from "../pages/Field/FieldTimeRule";
 import FieldType from "../components/Field/FieldType";
 import FieldForm from "../components/Field/FieldForm";
 import ChatBox from "../components/ChatBox/ChatBox";
-import ThongKe from "../pages/Admin/ThongKe";
+import ThongKe from "../pages/admin/ThongKe";
 import FieldTimeSlotsPage from "../pages/TimeSlot";
+import HistoryBook from "../pages/UserPage/HistoryBook";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -56,7 +57,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/my_profile",
-        element: <UsersPage />,
+        children: [
+          { index: true, element: <UsersPage />, },
+          {
+            path: "historyBook",
+            element: <HistoryBook />,
+          },
+        ]
       },
     ],
   },
@@ -64,7 +71,7 @@ export const router = createBrowserRouter([
     path: "/chat",
     element: <ChatBox />,
   },
-  
+
   {
     path: "/login",
     element: <Login />, // Route register, hiển thị Register
@@ -81,7 +88,7 @@ export const router = createBrowserRouter([
     path: "/reset_password",
     element: <ResetPassword />,
   },
-  
+
   {
     path: "/payment-result",
     element: <Home />, // Route register, hiển thị Register
