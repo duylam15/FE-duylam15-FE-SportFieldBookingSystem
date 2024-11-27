@@ -5,6 +5,7 @@ import './FieldDetails.scss'; // Import CSS file
 import HeaderUser from '../../components/HeaderUser';
 import Footer from '../../components/Footer';
 import FooterUser from '../../components/FooterUser';
+import MapDisplayUser from '../../components/Field/MapDisplayUser';
 
 function FieldDetails() {
 	const { id } = useParams(); // Lấy id từ URL
@@ -20,7 +21,7 @@ function FieldDetails() {
 			try {
 				const response = await fetch(`http://localhost:8080/api/fields/${id}`); // Thay API_URL_TO_GET_FIELD_TYPES bằng URL API của bạn
 				const data = await response.json();
-				console.log(data.userId);
+				console.log("HUU LOC: ", data);
 				setUserId(data.userId);
 				setField(data);
 			} catch (error) {
@@ -92,19 +93,22 @@ function FieldDetails() {
 					</div>
 				</div>
 				<div className="field-details__info">
-					<h1 className="field-details__title">{field?.fieldName}</h1>
-					<p className="field-details__location">Vị trí: {field?.fieldAddress}</p>
-					<p className="field-details__price">
-						Giá mỗi giờ: <span>{field?.pricePerHour} VND</span>
-					</p>
-					<p className="field-details__owner">Tên chủ sân: {user?.fullName}</p>
-					<p className="field-details__phone">SĐT: {user?.phone}</p>
-					<button
-						className="field-details__book-button"
-						onClick={handleBookingClick} // Add click handler
-					>
-						Đặt sân
-					</button>
+					<div>
+						<h1 className="field-details__title">{field?.fieldName}</h1>
+						<p className="field-details__location">Vị trí: {field?.fieldAddress}</p>
+						<p className="field-details__price">
+							Giá mỗi giờ: <span>{field?.pricePerHour} VND</span>
+						</p>
+						<p className="field-details__owner">Tên chủ sân: {user?.fullName}</p>
+						<p className="field-details__phone">SĐT: {user?.phone}</p>
+						<button
+							className="field-details__book-button"
+							onClick={handleBookingClick} // Add click handler
+						>
+							Đặt sân
+						</button>
+					</div>
+					<MapDisplayUser lng={field.longitude} lat={field.latitude}></MapDisplayUser>
 				</div>
 			</div>
 		</div>
