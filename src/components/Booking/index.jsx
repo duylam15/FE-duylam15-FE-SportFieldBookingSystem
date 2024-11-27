@@ -18,6 +18,7 @@ const Booking = () => {
     try {
       const response = await getAllBookings();
       setBookings(response.data);
+      console.log("response bokking: ", response.data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
     }

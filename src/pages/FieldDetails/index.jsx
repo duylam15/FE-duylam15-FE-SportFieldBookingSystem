@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 import './FieldDetails.scss'; // Import CSS file
+import HeaderUser from '../../components/HeaderUser';
+import Footer from '../../components/Footer';
+import FooterUser from '../../components/FooterUser';
 
 function FieldDetails() {
 	const { id } = useParams(); // Lấy id từ URL

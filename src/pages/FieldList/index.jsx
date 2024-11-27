@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, Pagination, Row, Col, Checkbox } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './FieldList.scss';
+import HeaderUser from '../../components/HeaderUser';
+import FooterUser from '../../components/FooterUser';
 
 const { Meta } = Card;
 

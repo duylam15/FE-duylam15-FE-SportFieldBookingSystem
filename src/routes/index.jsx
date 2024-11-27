@@ -43,6 +43,10 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
+        path: "home",
+        element: <Home />,
+      },
+      {
         path: "fieldList",
         element: <FieldList />,
       },
@@ -50,16 +54,17 @@ export const router = createBrowserRouter([
         path: "fieldDetails/:id",
         element: <FieldDetails />,
       },
+      {
+        path: "/my_profile",
+        element: <UsersPage />,
+      },
     ],
   },
   {
     path: "/chat",
     element: <ChatBox />,
   },
-  {
-    path: "/home",
-    element: <Home />,
-  },
+  
   {
     path: "/login",
     element: <Login />, // Route register, hiển thị Register
@@ -76,10 +81,7 @@ export const router = createBrowserRouter([
     path: "/reset_password",
     element: <ResetPassword />,
   },
-  {
-    path: "/my_profile",
-    element: <UsersPage />, // Route register, hiển thị Register
-  },
+  
   {
     path: "/payment-result",
     element: <Home />, // Route register, hiển thị Register
