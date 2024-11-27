@@ -8,8 +8,8 @@ import { Container, Alert, Button, Row, Col, Card } from "react-bootstrap";
 import { toast } from "react-toastify";
 import crudService from "../../services/crudService";
 import { useBooking } from "../BookingContext";
-import { Client, Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import { Client, Stomp } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 import axios from "axios";
 
 const localizer = momentLocalizer(moment);
@@ -19,6 +19,7 @@ const BookingCalendar = () => {
   const location = useLocation();
   const { fieldId } = useParams();
   const navigate = useNavigate();
+  const [totalAmountInvoice, setTotalAmountInvoice] = useState(0);
 
   // Dữ liệu chính của booking
   const { dataBooking, setDataBooking } = useBooking();
@@ -29,35 +30,48 @@ const BookingCalendar = () => {
   const filteredEvents = events.filter((event) => new Date(event.start) >= now);
 
   const [idTimeSlot, setidTimeSlot] = useState(null); // Lỗi
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
   const [client, setClient] = useState(null);
   const [stompClient, setStompClient] = useState(null);
+
+  //
+  useEffect(() => {
+    const calculatedAmount =
+      dataBooking?.selectedEvents?.reduce((sum, event) => {
+        const hours =
+          (new Date(event.end) - new Date(event.start)) / (1000 * 60 * 60); // Convert to hours
+        return sum + hours * dataBooking.fieldPrice;
+      }, 0) || 0;
+
+    setTotalAmountInvoice(calculatedAmount);
+  }, [dataBooking]);
   // socket from kiet code
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS("http://localhost:8080/ws");
     const stompClientInstance = Stomp.over(socket);
-    stompClientInstance.connect({},
+    stompClientInstance.connect(
+      {},
       (frame) => {
-        console.log('Connected: ' + frame);
-        stompClientInstance.subscribe('/topic/holdTimeslot', (message) => {
+        console.log("Connected: " + frame);
+        stompClientInstance.subscribe("/topic/holdTimeslot", (message) => {
           const heldSlotId = message.body; // Giả sử message.body là ID của time slot
-          console.log('Time slot held:', heldSlotId);
+          console.log("Time slot held:", heldSlotId);
 
           // Cập nhật màu nền của time slot đã được giữ
           setEvents((prevEvents) =>
             prevEvents.map((event) =>
               event.id === parseInt(heldSlotId)
-                ? { ...event, status: 'PENDING', backgroundColor: 'lightcoral' } // Cập nhật trạng thái và màu nền
+                ? { ...event, status: "PENDING", backgroundColor: "lightcoral" } // Cập nhật trạng thái và màu nền
                 : event
             )
           );
         });
-        stompClientInstance.subscribe('/topic/seatCancelHold', (message) => {
-          alert('Canceled seat after 20 seconds: ' + message.body);
+        stompClientInstance.subscribe("/topic/seatCancelHold", (message) => {
+          alert("Canceled seat after 20 seconds: " + message.body);
         });
       },
       (error) => {
-        console.error('WebSocket connection error:', error);  // Xử lý lỗi kết nối
+        console.error("WebSocket connection error:", error); // Xử lý lỗi kết nối
       }
     );
     setStompClient(stompClientInstance);
@@ -93,14 +107,17 @@ const BookingCalendar = () => {
           }) || [];
         setEvents(timeSlotToEvents);
         setErrorMessage("");
+        const stored = localStorage.getItem("dataNguoiDungSport");
+        const parsedUserData = JSON.parse(stored);
         if (!dataBooking) {
           setDataBooking({
-            userId: "1",
+            userId: parsedUserData.userId,
             fieldId: fieldId,
             fieldName: field.fieldName,
-            fieldAddress: "Không có địa chỉ",
+            fieldAddress: field.fieldAddress,
             date: new Date(),
-            fieldPrice: field.pricePerHour || 0,
+            fieldPrice: field.pricePerHour,
+            totalAmount: totalAmountInvoice,
             selectedEvents: [],
           });
         }
@@ -110,11 +127,10 @@ const BookingCalendar = () => {
     };
     fetchFieldDetails();
   }, [fieldId, dataBooking]);
-  console.log(events);
 
   // -------------------------------------------------------------------------------------------------
   const handleSelectEvent = (event) => {
-    setidTimeSlot(event.id)
+    setidTimeSlot(event.id);
     if (event.status === "BOOKED" || event.status === "PENDING") {
       toast.error("Khung giờ này không khả dụng!");
       return;
@@ -128,11 +144,11 @@ const BookingCalendar = () => {
 
     setDataBooking({ ...dataBooking, selectedEvents: updatedEvents });
   };
-  console.log(dataBooking);
   const totalAmount =
     dataBooking?.selectedEvents?.reduce((sum, event) => {
       const hours = (event.end - event.start) / (1000 * 60 * 60);
-      return sum + hours * dataBooking.fieldPrice;
+      const sumInvoice = sum + hours * dataBooking.fieldPrice;
+      return sumInvoice;
     }, 0) || 0;
 
   const eventStyleGetter = (event) => {
@@ -145,8 +161,8 @@ const BookingCalendar = () => {
       event.status === "BOOKED" || event.status === "PENDING"
         ? "#e0e0e0" // Màu xám cho trạng thái không khả dụng
         : isSelected
-          ? "lightblue" // Màu xanh nhạt nếu đã chọn
-          : "white"; // Màu trắng cho trạng thái khả dụng
+        ? "lightblue" // Màu xanh nhạt nếu đã chọn
+        : "white"; // Màu trắng cho trạng thái khả dụng
 
     return {
       style: {
@@ -163,9 +179,13 @@ const BookingCalendar = () => {
     };
   };
 
-  const handleBooking = async  () => {
-    const response = await axios.put(`http://localhost:8080/api/timeSlot/hold/${idTimeSlot}`);
-    console.log(response)
+  const handleBooking = async () => {
+    const response = await axios.put(
+      `http://localhost:8080/api/timeSlot/hold/${idTimeSlot}`
+    );
+
+    dataBooking.totalAmount = totalAmountInvoice;
+    console.log(dataBooking);
     navigate("/orderpage", {
       state: { dataBooking },
     });

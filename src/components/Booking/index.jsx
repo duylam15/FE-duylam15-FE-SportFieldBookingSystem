@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import BookingTable from './BookingTable';
-import BookingModal from './BookingModal';
-import {getAllBookings} from '../../services/bookingService';
+import React, { useState, useEffect } from "react";
+import BookingTable from "./BookingTable";
+import BookingModal from "./BookingModal";
+import { getAllBookings } from "../../services/bookingService";
 
 const Booking = () => {
   const [bookings, setBookings] = useState([]);
-  const [formValues, setFormValues] = useState({ bookingCode: '', user: '', field: '', startTime: '', endTime: '', bookingDate: '' });
+  const [formValues, setFormValues] = useState({
+    bookingCode: "",
+    user: "",
+    field: "",
+    startTime: "",
+    endTime: "",
+    bookingDate: "",
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,12 +27,19 @@ const Booking = () => {
       setBookings(response.data);
       console.log("response bokking: ", response.data);
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error("Error fetching bookings:", error);
     }
   };
 
   const handleOpenAddModal = () => {
-    setFormValues({ bookingCode: '', user: '', field: '', startTime: '', endTime: '', bookingDate: '' });
+    setFormValues({
+      bookingCode: "",
+      user: "",
+      field: "",
+      startTime: "",
+      endTime: "",
+      bookingDate: "",
+    });
     setIsEditing(false);
     setIsModalOpen(true);
   };
@@ -37,13 +51,20 @@ const Booking = () => {
       setIsEditing(true);
       setIsModalOpen(true);
     } catch (error) {
-      console.error('Error setting up edit modal for booking:', error);
+      console.error("Error setting up edit modal for booking:", error);
     }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setFormValues({ bookingCode: '', user: '', field: '', startTime: '', endTime: '', bookingDate: '' });
+    setFormValues({
+      bookingCode: "",
+      user: "",
+      field: "",
+      startTime: "",
+      endTime: "",
+      bookingDate: "",
+    });
   };
 
   const handleSubmit = async () => {
@@ -56,7 +77,7 @@ const Booking = () => {
       fetchBookings();
       handleCloseModal();
     } catch (error) {
-      console.error('Error saving booking:', error);
+      console.error("Error saving booking:", error);
     }
   };
 
@@ -65,15 +86,20 @@ const Booking = () => {
       await bookingService.deleteBooking(id);
       fetchBookings();
     } catch (error) {
-      console.error('Error deleting booking:', error);
+      console.error("Error deleting booking:", error);
     }
   };
+  console.log(bookings);
 
   return (
     <div>
       <h1>Booking Management</h1>
       {/* <button onClick={handleOpenAddModal}>Add Booking</button> */}
-      <BookingTable bookings={bookings} onEdit={handleOpenEditModal} onDelete={handleDeleteBooking} />
+      <BookingTable
+        bookings={bookings}
+        onEdit={handleOpenEditModal}
+        onDelete={handleDeleteBooking}
+      />
       <BookingModal
         show={isModalOpen}
         handleClose={handleCloseModal}

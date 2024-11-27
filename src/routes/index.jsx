@@ -5,6 +5,7 @@ import Error from "../pages/Error";
 import UsersPage from "../pages/UserPage";
 import FieldDetails from "../pages/FieldDetails";
 import Dashboard from "../pages/admin/dashboard";
+import ProtectedRoute from "../components/ProtectedRoute";
 import San from "../pages/admin/San";
 import Quyen from "../pages/admin/Quyen";
 import LayoutAdmin from "../pages/admin/layoutAdmin";
@@ -64,6 +65,18 @@ export const router = createBrowserRouter([
             element: <HistoryBook />,
           },
         ]
+      },
+      {
+        path: "/booking/:fieldId",
+        element: <BookingPage />,
+      },
+      {
+        path: "/orderpage",
+        element: (
+          <ProtectedRoute>
+            <OrderPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -142,31 +155,18 @@ export const router = createBrowserRouter([
       // { path: "thongke", element: <ThongKe /> },
       { path: "san/create", element: <FieldFormPage /> },
       { path: "san/edit/:fieldId", element: <FieldForm></FieldForm> },
+      {
+        path: "san/fieldTimeRule/:fieldId",
+        element: <FieldTimeRulesPage />,
+      },
+      {
+        path: "san/timeSlots/:fieldId",
+        element: <FieldTimeSlotsPage />,
+      },
     ],
-  },
-  {
-    path: "/booking/:fieldId",
-    element: <BookingPage />,
-  },
-  {
-    path: "/orderpage",
-    element: <OrderPage />,
-    element: (
-      // <ProtectedRoute>
-      <OrderPage />
-      // </ProtectedRoute>
-    ),
   },
   {
     path: "/fieldFacility",
     element: <FieldFacilityPage />,
-  },
-  {
-    path: "/fields/fieldTimeRule/:fieldId",
-    element: <FieldTimeRulesPage />,
-  },
-  {
-    path: "/fields/timeSlots/:fieldId",
-    element: <FieldTimeSlotsPage />,
   },
 ]);
