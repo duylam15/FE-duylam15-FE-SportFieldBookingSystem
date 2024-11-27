@@ -92,7 +92,6 @@ const Sidebar = () => {
     { name: "Người dùng", path: "/admin/nguoidung", feature: "Quản lí người dùng", icon: <PeopleIcon /> },
     { name: "Loại sân", path: "/admin/loaisan", feature: "Quản lí loại sân", icon: <SportsIcon />},
     { name: "Sân", path: "/admin/san", feature: "Quản lí sân", icon: <GiSoccerField /> },
-    { name: "Khuyến mãi", path: "/admin/coupons", feature: "Quản lí khuyến mãi", icon: <GiSoccerField /> },
     { name: "Hóa đơn", path: "/admin/invoices", feature: "Quản lí hoá đơn", icon: <ReceiptIcon /> },
     { name: "Booking", path: "/admin/bookings", feature: "Quản lí booking", icon: <ConfirmationNumberIcon /> },
   ];

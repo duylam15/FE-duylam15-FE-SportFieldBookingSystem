@@ -10,6 +10,7 @@ import { Input } from "antd";
 import { FileSearchOutlined } from "@ant-design/icons";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { PermissionAddButton, PermissionEditButton } from "../../Admin/Sidebar";
 const URL_NAME = `fieldType`;
 
 const FieldType = () => {
@@ -116,9 +117,12 @@ const FieldType = () => {
   return (
     <div className="container mt-4">
       <h1 className="title_center_page">Danh sách loại sân</h1>
-      <div onClick={openModal}>
-        <IconLabelAddButtons></IconLabelAddButtons>
-      </div>
+      <PermissionAddButton feature="Quản lí loại sân">
+        <div onClick={openModal}>
+          <IconLabelAddButtons></IconLabelAddButtons>
+        </div>
+      </PermissionAddButton>
+
       <div className="timkiem">
         <div className="block_input">
           <label htmlFor="inputTenSan">Tên loại sân</label>
@@ -139,8 +143,10 @@ const FieldType = () => {
             <th>ID</th>
             <th>Tên Loại Sân</th>
             <th>Mô Tả</th>
-            <th>Chỉnh sửa</th>
-            <th>Xóa</th>
+            <PermissionEditButton feature="Quản lí loại sân">
+              <th>Chỉnh sửa</th>
+              <th>Xóa</th>
+            </PermissionEditButton>
           </tr>
         </thead>
         <tbody>
@@ -149,17 +155,19 @@ const FieldType = () => {
               <td>{fieldType.fieldTypeId}</td>
               <td>{fieldType.fieldTypeName}</td>
               <td>{fieldType.fieldTypeDescription}</td>
-              <td>
-                <div onClick={() => openModal(fieldType)}>
-                  <EditBtn></EditBtn>
-                </div>
-              </td>
-              <td>
-                <div onClick={() => handleDelete(fieldType.fieldTypeId)}>
-                  {" "}
-                  <DeleteBtn></DeleteBtn>
-                </div>
-              </td>
+              <PermissionEditButton feature="Quản lí loại sân">
+                <td>
+                  <div onClick={() => openModal(fieldType)}>
+                    <EditBtn></EditBtn>
+                  </div>
+                </td>
+                <td>
+                  <div onClick={() => handleDelete(fieldType.fieldTypeId)}>
+                    {" "}
+                    <DeleteBtn></DeleteBtn>
+                  </div>
+                </td>
+              </PermissionEditButton>
             </tr>
           ))}
         </tbody>
