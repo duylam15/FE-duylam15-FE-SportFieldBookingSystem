@@ -26,7 +26,7 @@ const crudService = {
     
             return response.data; // Trả về dữ liệu response
         } catch (error) {
-            toast.error(`Error while getting ${entityName}: ${error.message}`);
+            // toast.error(`Error while getting ${entityName}: ${error.message}`);
             throw error; // Ném lỗi ra ngoài để xử lý thêm (nếu cần)
         }
     },
@@ -45,7 +45,7 @@ const crudService = {
         try {
             const response = await axios.delete(`${API_BASE_URL}/${entityName}/${id}`);
             // toast.success(`Delete ${entityName} id: "${id}" successfully`);
-            return response.data;
+            return response;
         } catch (error) {
             toast.error(`Erroe while deleting ${entityName}: ${error.message}`);
             throw error;

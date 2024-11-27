@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Table, Button, Form } from "react-bootstrap";
 import crudService from "../../../services/crudService";
 import { toast } from "react-toastify";
-import Pagination from "../../Pagination"; // Import pagination component
 import { useParams } from "react-router-dom";
 import { Input } from "antd";
 import { FileSearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./timeSlot.scss";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 const FieldTimeSlots = () => {
   // first data
   const { fieldId } = useParams();
@@ -94,8 +95,8 @@ const FieldTimeSlots = () => {
     return " ↕";
   };
 
-  const handleBackClick = (fieldId) => {
-    navigate(`/fields/fieldTimeRule/${fieldId}`);
+  const handleBackClick = () => {
+    navigate(-1);
   };
   console.log(timeSlots);
   return (
@@ -154,12 +155,16 @@ const FieldTimeSlots = () => {
           ))}
         </tbody>
       </Table>
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => setCurrentPage(page)}
-        />
+      <div className="center_pagination">
+        <Stack spacing={2}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            variant="outlined"
+            shape="rounded"
+            onChange={(event, value) => setCurrentPage(value)}
+          />
+        </Stack>
       </div>
     </div>
   );

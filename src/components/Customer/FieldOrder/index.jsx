@@ -100,25 +100,43 @@ const FieldOrder = () => {
 
   // Hàm để xóa sự kiện và chuyển trang
   const handleDeleteEvent = (index) => {
+    // Lọc các sự kiện, loại bỏ sự kiện tại vị trí index
     const updatedEvents = events.filter(
       (_, eventIndex) => eventIndex !== index
     );
+
+    // Cập nhật state với danh sách sự kiện mới
     setEvents(updatedEvents);
 
-    // Nếu có sự kiện nào còn lại, truyền lại dataBooking
+    // Tính toán lại tổng tiền dựa trên các sự kiện còn lại
+    const totalAmount = updatedEvents.reduce((sum, event) => {
+      const hours = (event.end - event.start) / (1000 * 60 * 60); // Tính số giờ
+      return sum + hours * dataBooking.fieldPrice; // Cộng dồn giá
+    }, 0);
+
+    // Cập nhật giá trị trong dataBooking
+    dataBooking.totalAmount = totalAmount;
+    dataBooking.selectedEvents = updatedEvents;
+
+    // Kiểm tra xem danh sách sự kiện có còn không
     if (updatedEvents.length > 0) {
-      dataBooking.selectedEvents = updatedEvents;
-      // Truyền dataBooking khi điều hướng
+      toast.success("Đã xóa sự kiện thành công.");
     } else {
       toast.error("Không còn sự kiện nào.");
-      dataBooking.selectedEvents = updatedEvents;
-      navigate(`/booking/${dataBooking.fieldId}`, {});
+      // Điều hướng trở lại trang booking nếu không còn sự kiện
+      navigate(`/booking/${dataBooking.fieldId}`, { state: { dataBooking } });
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
     <Container fluid className="p-4" style={{ backgroundColor: "#f8f9fa" }}>
-      <Button className="col-1 m-3">Back</Button>
+      <Button className="col-1 m-3" onClick={() => handleBack()}>
+        Back
+      </Button>
       <Row className="mb-4">
         <Col md={5}>
           <Card>
@@ -209,7 +227,9 @@ const FieldOrder = () => {
                       ))}
                     </tbody>
                   </table>
-                  <div>Tổng tiền {dataBooking.totalAmount}</div>
+                  <div>
+                    Tổng tiền {dataBooking.totalAmount.toLocaleString()} đ
+                  </div>
                 </div>
               ) : (
                 <p>Không có khung giờ nào được chọn.</p>

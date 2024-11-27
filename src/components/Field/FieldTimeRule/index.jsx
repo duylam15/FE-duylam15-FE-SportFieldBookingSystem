@@ -20,7 +20,7 @@ const FieldTimeRules = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [itemsPerPage] = useState(5); // Số lượng items mỗi trang
-
+  console.log(newTimeRule);
   //navigate
   const navigate = useNavigate();
   useEffect(() => {
@@ -43,6 +43,7 @@ const FieldTimeRules = () => {
         }
       );
       setFieldTimeRules(response.content);
+      console.log(response.content);
       setTotalPages(response.totalPages);
     } catch (error) {
       toast.error("Error fetching time rules.");
@@ -85,9 +86,10 @@ const FieldTimeRules = () => {
   };
 
   // Xóa time rule
-  const handleDeleteTimeRule = async (ruleId) => {
+  const handleDeleteTimeRule = async (id) => {
+    console.log("Deleting time rule with ID:", id); // Debugging log
     try {
-      await crudService.delete(`fieldTimeRules/${ruleId}`);
+      await crudService.delete(`fieldTimeRules/${id}`);
       toast.success("Time rule deleted successfully.");
       fetchFieldTimeRules(fieldId, currentPage);
     } catch (error) {
@@ -131,7 +133,7 @@ const FieldTimeRules = () => {
   };
 
   const handleClickTimeSlot = (fieldId) => {
-    navigate(`/fields/timeSlots/${fieldId}`);
+    navigate(`/admin/san/timeSlots/${fieldId}`);
   };
 
   return (
@@ -140,6 +142,7 @@ const FieldTimeRules = () => {
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th>Id</th>
             <th>Start Time</th>
             <th>End Time</th>
             <th>Start Date</th>
@@ -151,6 +154,7 @@ const FieldTimeRules = () => {
         <tbody>
           {fieldTimeRules?.map((rule) => (
             <tr key={rule.id}>
+              <td>{rule.id}</td>
               <td>{rule.startTime}</td>
               <td>{rule.endTime}</td>
               <td>{rule.startDate}</td>
