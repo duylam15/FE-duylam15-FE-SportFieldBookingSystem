@@ -136,7 +136,7 @@ const Field = ({ size = 7 }) => {
   };
 
   const handleTimeRuleClick = (fieldId) => {
-    navigate(`/fields/fieldTimeRule/${fieldId}`);
+    navigate(`/admin/san/fieldTimeRule/${fieldId}`);
   };
   return (
     <div className="page_san_admin">
