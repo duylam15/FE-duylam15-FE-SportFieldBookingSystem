@@ -31,8 +31,10 @@ const Home = () => {
 
 		if (statusCode === "200") {
 			toast.success(message || "Thanh toán thành công!");
+			navigate("/");
 		} else if (statusCode === "400") {
 			toast.error(message || "Thanh toán thất bại!");
+			navigate("/");
 		}
 	}, [searchParams]);
 	useEffect(() => {

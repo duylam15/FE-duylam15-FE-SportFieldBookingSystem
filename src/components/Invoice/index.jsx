@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import InvoiceTable from './InvoiceTable';
 import InvoiceModal from './InvoiceModal';
-import {getAllInvoices, 
-  getInvoiceByCode, 
-  createInvoice, 
-  updateInvoice, 
-  deleteInvoice} from '../../services/InvoiceService';
+import {
+  getAllInvoices,
+  getInvoiceByCode,
+  createInvoice,
+  updateInvoice,
+  deleteInvoice,
+  getInvoiceByDate
+} from '../../services/InvoiceService';
 
 const Invoice = () => {
   const [invoices, setInvoices] = useState([]);
@@ -13,6 +16,8 @@ const Invoice = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     fetchInvoices();
@@ -72,9 +77,77 @@ const Invoice = () => {
     }
   };
 
+  const handleFilterInvoices = async () => {
+    if (!startDate || !endDate) {
+      console.warn('Please select both start and end dates.');
+      return;
+    }
+    try {
+      const response = await getInvoiceByDate(startDate, endDate);
+      setInvoices(response.data.data);
+    } catch (error) {
+      console.error('Error filtering invoices:', error);
+    }
+  };
+
   return (
     <div>
-      <h1>Invoice Management</h1>
+      <h2>Invoice List</h2>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '15px',
+          marginBottom: '20px'
+        }}
+      >
+        <label style={{ fontWeight: 'bold', fontSize: '14px', color: '#333' }}>
+          Start Date:
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            style={{
+              padding: '8px 10px',
+              fontSize: '14px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              outline: 'none'
+            }}
+          />
+        </label>
+        <label style={{ fontWeight: 'bold', fontSize: '14px', color: '#333' }}>
+          End Date:
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            style={{
+              padding: '8px 10px',
+              fontSize: '14px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              outline: 'none'
+            }}
+          />
+        </label>
+        <button
+          onClick={handleFilterInvoices}
+          style={{
+            backgroundColor: '#007bff',
+            color: 'white',
+            padding: '10px 15px',
+            fontSize: '14px',
+            fontWeight: 'bold',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+          }}
+        >
+          Filter
+        </button>
+      </div>
+
       {/* <button onClick={handleOpenAddModal}>Add Invoice</button> */}
       <InvoiceTable invoices={invoices} onEdit={handleOpenEditModal} onDelete={handleDeleteInvoice} />
       <InvoiceModal
