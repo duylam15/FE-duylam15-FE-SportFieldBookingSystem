@@ -179,7 +179,7 @@ function FieldList() {
 									<Card
 										className='card'
 										hoverable
-										cover={<img alt={field.fieldImageList[0]} src={field.fieldImageList[0].fieldImageURL || '/default.jpg'} />}
+										cover={<img alt={field?.fieldImageList[0]} src={field?.fieldImageList[0]?.fieldImageURL || '/default.jpg'} />}
 										onClick={() => handleFieldDetails(field.fieldId)}
 									>
 										<Meta

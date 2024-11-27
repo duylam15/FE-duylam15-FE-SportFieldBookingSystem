@@ -75,7 +75,7 @@ function FieldDetails() {
 				<div className="field-details__images">
 					{/* Hình ảnh lớn */}
 					<img
-						src={field.fieldImageList[currentImage].fieldImageURL}
+						src={field.fieldImageList[currentImage]?.fieldImageURL}
 						alt="Hình lớn"
 						className="field-details__large-image"
 					/>
