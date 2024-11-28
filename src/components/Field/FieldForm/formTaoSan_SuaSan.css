@@ -1,0 +1,36 @@
+.list_uploader {
+    margin-top: 30px;
+    display: flex;
+    align-self: center;
+    gap: 20px;
+}
+
+.field-form-actions {
+    width: 84%;
+    justify-content: flex-end;
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 30px;
+}
+.map-container {
+    width: 100%;
+    height: 400px; /* Tùy chỉnh kích thước */
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  .row_bottom_form_field {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding-bottom: 150px;
+  }
+
+  .row_bottom_form_field .left {
+    width: 40%;
+  }
+  .row_bottom_form_field .right {
+    width: 40%;
+  }

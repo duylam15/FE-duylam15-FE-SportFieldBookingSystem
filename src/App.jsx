@@ -1,12 +1,22 @@
 // App.jsx
-import React from 'react';
-import UsersPage from './pages/UserPage';
+import React, { useState } from "react";
+import { router } from "./routes";
+import { ToastContainer } from "react-toastify";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { clientId } from "./utils/thongTinChung";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
-    <div className="App">
-      <UsersPage />
-    </div>
+    <GoogleOAuthProvider clientId={clientId}>
+      <div className="App">
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </div>
+    </GoogleOAuthProvider>
   );
 }
 

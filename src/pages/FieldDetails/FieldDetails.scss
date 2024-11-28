@@ -1,0 +1,112 @@
+.field-details {
+    padding: 20px 0;
+    &__container {
+        display: flex; /* Sử dụng flexbox cho bố cục */
+        flex-direction: row; /* Hình ảnh bên trái, thông tin bên phải */
+        width: 1128px; // Chiều rộng cố định
+        max-width: calc(100% - 48px);
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    &__images {
+        flex: 1; /* Chiếm 1 phần */
+        display: flex;
+        flex-direction: column; /* Hình ảnh xếp theo cột */
+        margin-right: 20px; /* Khoảng cách giữa hình ảnh và thông tin */
+
+        &__large-image {
+            width: 100%; /* Chiếm toàn bộ chiều rộng */
+            max-height: 400px; /* Giới hạn chiều cao */
+            border-radius: 8px; /* Bo góc hình ảnh lớn */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Đổ bóng cho hình ảnh */
+            margin-bottom: 10px; /* Khoảng cách giữa hình lớn và hình nhỏ */
+            object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+        }
+
+        &__small-images {
+            display: flex; /* Sử dụng flexbox cho hình ảnh nhỏ */
+            gap: 10px; /* Khoảng cách giữa các hình ảnh nhỏ */
+            flex-wrap: wrap; /* Xếp chồng hình ảnh nếu không đủ không gian */
+
+            &__small-image {
+                width: calc(33.33% - 10px); /* Chiếm 33% chiều rộng */
+                max-height: 100px; /* Giới hạn chiều cao */
+                border-radius: 5px; /* Bo góc hình ảnh nhỏ */
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); /* Đổ bóng cho hình ảnh nhỏ */
+                object-fit: cover; /* Đảm bảo hình ảnh không bị biến dạng */
+                cursor: pointer; /* Thay đổi con trỏ chuột khi hover */
+
+                &:hover {
+                    border: 2px solid #4caf50; /* Hiệu ứng hover */
+                }
+            }
+        }
+    }
+
+    &__info {
+        flex: 2; /* Chiếm 2 phần */
+        display: flex;
+        flex-direction: column; /* Thông tin xếp theo cột */
+    }
+
+    &__title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333; /* Màu chữ */
+    }
+
+    &__location,
+    &__price,
+    &__owner,
+    &__phone {
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #555; /* Màu chữ nhẹ hơn */
+    }
+
+    &__price {
+        font-weight: bold;
+        span {
+            color: #e74c3c; /* Màu cho giá */
+            font-size: 18px;
+        }
+    }
+
+    &__book-button {
+        padding: 10px 20px; /* Padding cho nút */
+        border: none; /* Bỏ viền */
+        border-radius: 5px; /* Bo góc */
+        background-color: #4caf50; /* Màu nền nút */
+        color: white; /* Màu chữ */
+        font-size: 16px; /* Kích thước chữ */
+        cursor: pointer; /* Con trỏ chuột */
+        transition: background-color 0.3s; /* Hiệu ứng chuyển màu */
+
+        &:hover {
+            background-color: #45a049; /* Màu nền khi hover */
+        }
+    }
+}
+
+.field-details__large-image {
+    width: 600px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.field-details__small-images {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.field-details__small-image {
+    width: 100px;
+    height: 80px;
+    border-radius: 10px;
+}

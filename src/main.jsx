@@ -1,11 +1,15 @@
-// index.jsx
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { ConfirmProvider } from "./components/ConfirmProvider";
+import { BookingProvider } from "./components/BookingContext";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+  <ConfirmProvider>
+    <BookingProvider>
+      <App />
+    </BookingProvider>
+  </ConfirmProvider>
 );

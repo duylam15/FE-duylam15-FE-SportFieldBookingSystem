@@ -1,0 +1,81 @@
+/* ---------- SIGN IN ---------- */
+.sign-in__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .sign-in__backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  
+  .sign-in__wrapper form {
+    width: 24rem;
+    max-width: 90%;
+    z-index: 1;
+    animation: showSignInForm 1s;
+  }
+  
+  .sign-in__wrapper form img {
+    width: 4rem;
+  }
+  
+  @keyframes showSignInForm {
+    0%,
+    30% {
+      transform: translate(0, -150%);
+    }
+    70%,
+    90% {
+      transform: translate(0, 1rem);
+    }
+    80%,
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+.block_distance {
+  padding: 10px;
+}
+.title {
+  position: relative;
+}
+.block_icon {
+  cursor: pointer;
+  top: -63px;
+  left: -4px;
+  position: absolute;
+}
+.btn_login_google, .btn_login_github {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background-color:rgb(245, 245, 245);
+  border-radius: 6px;
+  padding: 8px;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 18px;
+  margin-top: 10px;
+  position: relative;
+}
+.btn_login_google .img_google, .btn_login_github .img_github{
+  position: absolute;
+  top: 7px;
+  left: 14px;
+}
+.btn_login_google .text, .btn_login_github .text {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
